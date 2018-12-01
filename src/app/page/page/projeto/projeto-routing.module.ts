@@ -9,5 +9,8 @@ export const ProjetoRoutes: Route[] = [
   }, {
     path: 'cadastro_projeto',
     component: ProjetoCadastroComponent,
+  }, {
+    path: 'cadastro_projeto/:idProjeto',
+    component: ProjetoCadastroComponent,
   },
 ];

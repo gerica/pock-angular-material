@@ -12,6 +12,7 @@ export const MSG100 = 'MSG100';
 export const MSG101 = 'MSG101';
 
 export class AppMessages {
+
     static msgs: AppMessage[] = [
         // MESSAGE DOCUMENTAÇÃO
         { id: MSG001, msg: 'Campo obrigatório.', type: 'Alerta' },
@@ -29,5 +30,8 @@ export class AppMessages {
 
     static getAllObj(): AppMessage[] {
         return this.msgs;
+    }
+    static getObjByMsg(message: any, type: string): AppMessage {
+        return { id: 'CUSTOM', msg: message, type };
     }
 }

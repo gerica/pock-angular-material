@@ -31,4 +31,8 @@ export class ProjetoService implements SepinService {
     return this.http.delete(`${URL_PROJETO}/${id}`);
   }
 
+  recuperarPorId(id: any): Observable<any> {
+    return this.http.get(`${URL_PROJETO}/${id}`);
+  }
+
 }

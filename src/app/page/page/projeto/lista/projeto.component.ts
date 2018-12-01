@@ -63,7 +63,7 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
   }
 
   preEdit(obj: any): void {
-    console.log(obj);
+    this.router.navigate(['/cadastro_projeto', obj.IDProjeto]);
   }
 
   deleteRow(row: any) {
@@ -78,8 +78,7 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
           onNext => { },
           onError => {
             if (onError.error) {
-              const custom: AppMessage = { id: 'CUSTOM', msg: onError.error.message, type: 'Erro' };
-              this.addSnackBar(custom);
+              this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
             } else {
               this.addSnackBar(AppMessages.getObj(MSG101));
             }
