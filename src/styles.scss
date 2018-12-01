@@ -12,8 +12,17 @@ a:hover {
     color: #0159f0;
 }
 
-.snackbar-custom{
+.snackbar-default{
     background-color: #3f51b5;
+}
+.snackbar-success{
+    background-color: #088c0c;
+}
+.snackbar-warning{
+    background-color: #cfc21d;
+}
+.snackbar-error{
+    background-color: #f4928a;
 }
 
 .mat-simple-snackbar-action {

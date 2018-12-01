@@ -5,6 +5,7 @@ import { PageComponent } from './page.component';
 import { MatCardModule } from '@angular/material/card';
 import { ProjetoModule } from './projeto/ projeto.module';
 import { HttpClientModule } from '@angular/common/http';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatIconModule,
     MatCardModule,
     ProjetoModule,
+    MatSnackBarModule
   ],
   providers: [],
 })

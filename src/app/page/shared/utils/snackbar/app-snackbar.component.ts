@@ -28,12 +28,27 @@ export class AppSnackBarService {
     constructor(public snackBar: MatSnackBar) {
     }
 
-    open(message: string, customConfig: MatSnackBarConfig) {
+    open(message: string, type: string) {
         const config = new MatSnackBarConfig();
         config.verticalPosition = this.verticalPosition;
         config.horizontalPosition = this.horizontalPosition;
         config.duration = this.setAutoHide ? this.autoHide : 0;
-        config.panelClass = this.addExtraClass ? ['snackbar-custom'] : undefined;
-        this.snackBar.open(message, this.action ? this.actionButtonLabel : undefined, customConfig ? customConfig : config);
+
+        switch (type) {
+            case 'Erro':
+                config.panelClass = ['snackbar-error'];
+                break;
+            case 'Alerta':
+                config.panelClass = ['snackbar-warning'];
+                break;
+            case 'Sucesso':
+                config.panelClass = ['snackbar-success'];
+                break;
+
+            default:
+                config.panelClass = ['snackbar-default'];
+                break;
+        }
+        this.snackBar.open(message, this.action ? this.actionButtonLabel : undefined, config);
     }
 }

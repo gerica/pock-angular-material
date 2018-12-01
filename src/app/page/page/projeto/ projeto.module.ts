@@ -11,14 +11,19 @@ import { FormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { DeleteDialogComponent } from '../../shared/utils/modal/delete/delete.dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AppSnackBarService } from '../../shared/utils/snackbar/app-snackbar.component';
+
 
 @NgModule({
   declarations: [
     ProjetoListaComponent,
     ProjetoCadastroComponent,
+    DeleteDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -31,10 +36,13 @@ import { MatSortModule } from '@angular/material/sort';
     MatDividerModule,
     MatTableModule,
     MatFormFieldModule,
-    MatSnackBarModule,
     MatPaginatorModule,
     MatSortModule,
+    MatDialogModule,
   ],
-  providers: []
+  entryComponents: [
+    DeleteDialogComponent
+  ],
+  providers: [AppSnackBarService]
 })
 export class ProjetoModule { }

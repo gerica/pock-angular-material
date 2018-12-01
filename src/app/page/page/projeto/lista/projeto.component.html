@@ -26,29 +26,38 @@
   <div class="mat-elevation-z8" style="margin-top: 3%">
     <table mat-table [dataSource]="entities" matSort>
 
-      <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Ações </th>
+        <td mat-cell *matCellDef="let row; let i=index;">
+          <button mat-icon-button color="primary" (click)="preEdit(row)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteRow(row)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
 
       <!-- Position Column -->
-      <ng-container matColumnDef="pos1">
+      <ng-container matColumnDef="IDProjeto">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Projeot </th>
         <td mat-cell *matCellDef="let element"> {{element.IDProjeto}} </td>
       </ng-container>
 
       <!-- Name Column -->
-      <ng-container matColumnDef="pos2">
+      <ng-container matColumnDef="NRIdentificado">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Identificação </th>
         <td mat-cell *matCellDef="let element"> {{element.NRIdentificado}} </td>
       </ng-container>
 
       <!-- Weight Column -->
-      <ng-container matColumnDef="pos3">
+      <ng-container matColumnDef="NRSigla">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Sigla </th>
         <td mat-cell *matCellDef="let element"> {{element.NRSigla}} </td>
       </ng-container>
 
       <!-- Symbol Column -->
-      <ng-container matColumnDef="pos4">
+      <ng-container matColumnDef="NRNome">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
         <td mat-cell *matCellDef="let element"> {{element.NRNome}} </td>
       </ng-container>

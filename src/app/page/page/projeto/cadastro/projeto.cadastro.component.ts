@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { ProjetoService } from '../service/projeto.service';
 import { Router } from '@angular/router';
 import { AppSnackBarService } from 'src/app/page/shared/utils/snackbar/app-snackbar.component';
-
-const msgErrorForm = 'Informe os campos obrigatórios';
+import { BaseComponent } from '../../base.component';
+import { AppMessages, MSG001 } from 'src/app/page/shared/utils/app.messages';
 
 @Component({
   selector: 'app-projeto-cadastro',
   templateUrl: './projeto.cadastro.component.html',
   styleUrls: ['./projeto.cadastro.component.scss'],
-  providers: [ProjetoService, AppSnackBarService]
+  providers: [ProjetoService]
 })
-export class ProjetoCadastroComponent implements OnInit {
+export class ProjetoCadastroComponent extends BaseComponent implements OnInit {
   activeForm = true;
 
   entity: any;
@@ -19,8 +19,10 @@ export class ProjetoCadastroComponent implements OnInit {
   constructor(
     private projetoService: ProjetoService,
     private router: Router,
-    private appSnackBarService: AppSnackBarService
-  ) { }
+    public appSnackBarService: AppSnackBarService
+  ) {
+    super(appSnackBarService);
+  }
 
   ngOnInit() {
     this.entity = {};
@@ -33,10 +35,10 @@ export class ProjetoCadastroComponent implements OnInit {
   gravar(event: any, form: any): void {
     event.preventDefault();
     if (!form.valid) {
-      this.appSnackBarService.open(msgErrorForm, null);
+      this.addSnackBar(AppMessages.getObj(MSG001));
       return;
     }
-    this.projetoService.gravar(this.entity).subscribe(
+    this.projetoService.salvar(this.entity).subscribe(
       onNext => {
         console.log(onNext);
       }, onError => {
