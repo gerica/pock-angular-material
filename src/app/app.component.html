@@ -1,0 +1,14 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Nome da aplicação</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-sidenav-container class="app-container">
+  <mat-sidenav mode="side" opened style="width: 90px;">
+    <a routerLink="/lista_projeto" routerLinkActive="active">Projeto</a>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
