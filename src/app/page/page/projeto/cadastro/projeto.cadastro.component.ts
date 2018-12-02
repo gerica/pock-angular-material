@@ -5,29 +5,33 @@ import { AppSnackBarService } from 'src/app/page/shared/utils/snackbar/app-snack
 import { BaseComponent } from '../../base.component';
 import { AppMessages, MSG001, MSG101 } from 'src/app/page/shared/utils/app.messages';
 import { Subscription } from 'rxjs';
+import { TipoProjetoService } from '../service/tipo.projeto.service';
 
 @Component({
   selector: 'app-projeto-cadastro',
   templateUrl: './projeto.cadastro.component.html',
   styleUrls: ['./projeto.cadastro.component.scss'],
-  providers: [ProjetoService]
+  providers: [ProjetoService, TipoProjetoService]
 })
 export class ProjetoCadastroComponent extends BaseComponent implements OnInit, OnDestroy {
   activeForm = true;
   private subscription: Subscription;
   entity: any;
   entities: any[];
+  types: any[];
   constructor(
     private projetoService: ProjetoService,
     private router: Router,
     private actionRoute: ActivatedRoute,
-    public appSnackBarService: AppSnackBarService
+    private tipoProjetoService: TipoProjetoService,
+    public appSnackBarService: AppSnackBarService,
   ) {
     super(appSnackBarService);
   }
 
   ngOnInit() {
     this.entity = {};
+    this.recuperarTodosTipoProjeto();
     this.subscription = this.actionRoute.params.subscribe(params => {
       if (params && params['idProjeto']) {
         this.recuperarPorId(params['idProjeto']);
@@ -52,6 +56,22 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
     );
   }
 
+  recuperarTodosTipoProjeto(): void {
+    this.tipoProjetoService.fetchAll().subscribe(
+      onNext => {
+        this.types = onNext;
+      }, onError => {
+        if (onError.error) {
+          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
+        } else {
+          this.addSnackBar(AppMessages.getObj(MSG101));
+        }
+      }, () => {
+        console.log('recuperarTodosTipoProjeto');
+      }
+    );
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
@@ -62,6 +82,7 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
 
   gravar(event: any, form: any): void {
     event.preventDefault();
+    console.log(this.entity);
     if (!form.valid) {
       this.addSnackBar(AppMessages.getObj(MSG001));
       return;

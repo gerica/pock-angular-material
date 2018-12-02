@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ProjetoListaComponent } from './lista/projeto.component';
 import { ProjetoCadastroComponent } from './cadastro/projeto.cadastro.component';
 import { MatMenuModule } from '@angular/material/menu';
@@ -17,6 +18,9 @@ import { MatSortModule } from '@angular/material/sort';
 import { DeleteDialogComponent } from '../../shared/utils/modal/delete/delete.dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AppSnackBarService } from '../../shared/utils/snackbar/app-snackbar.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
@@ -27,6 +31,7 @@ import { AppSnackBarService } from '../../shared/utils/snackbar/app-snackbar.com
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     MatMenuModule,
     MatIconModule,
     MatCardModule,
@@ -39,10 +44,16 @@ import { AppSnackBarService } from '../../shared/utils/snackbar/app-snackbar.com
     MatPaginatorModule,
     MatSortModule,
     MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule,
   ],
   entryComponents: [
     DeleteDialogComponent
   ],
-  providers: [AppSnackBarService]
+  providers: [
+    AppSnackBarService,
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+  ]
 })
 export class ProjetoModule { }
