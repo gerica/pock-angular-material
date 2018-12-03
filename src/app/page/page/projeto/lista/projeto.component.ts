@@ -65,7 +65,6 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
           this.addSnackBar(AppMessages.getObj(MSG101));
         }
       }, () => {
-        console.log('recuperarTodosTipoProjeto');
         this.consultar();
       }
     );

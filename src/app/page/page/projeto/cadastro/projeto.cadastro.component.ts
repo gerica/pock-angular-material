@@ -44,7 +44,6 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
       onNext => {
         if (onNext && onNext.value && onNext.value.length > 0) {
           this.entity = onNext.value[0];
-          console.log(this.entity);
         }
       }, onError => {
         if (onError.error) {
@@ -68,7 +67,6 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
           this.addSnackBar(AppMessages.getObj(MSG101));
         }
       }, () => {
-        console.log('recuperarTodosTipoProjeto');
       }
     );
   }

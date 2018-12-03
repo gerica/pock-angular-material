@@ -4,7 +4,12 @@
 
 export const environment = {
   production: false,
-  urlBase: 'http://localhost:8080',
+  urlApp: 'http://localhost:8080',
+  urlBase: 'http://localhost:8080/base',
+  tables: [
+    { nameId: 'IDProjeto', nameTable: 'TBProjeto' },
+    { nameId: 'IDTipoProjeto', nameTable: 'TBTipoProjeto' }
+  ],
 };
 
 /*

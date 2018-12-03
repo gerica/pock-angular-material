@@ -20,8 +20,7 @@ import { AppSnackBarService } from '../../shared/utils/snackbar/app-snackbar.com
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
-import { MatStepperModule } from '@angular/material/stepper'
-
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
   declarations: [
