@@ -6,17 +6,19 @@ import { DeleteDialogComponent, DeleteDialogData } from 'src/app/page/shared/uti
 import { AppSnackBarService } from 'src/app/page/shared/utils/snackbar/app-snackbar.component';
 import { BaseComponent } from '../../base.component';
 import { AppMessages, MSG100, MSG002, MSG101, AppMessage } from 'src/app/page/shared/utils/app.messages';
+import { TipoProjetoService } from '../service/tipo.projeto.service';
 
 @Component({
   selector: 'app-projeto-lista',
   templateUrl: './projeto.component.html',
   styleUrls: ['./projeto.component.scss'],
-  providers: [ProjetoService]
+  providers: [ProjetoService, TipoProjetoService]
 })
 export class ProjetoListaComponent extends BaseComponent implements OnInit {
   entity: any;
+  types: any[];
   entities: MatTableDataSource<any>;
-  displayedColumns: string[] = ['IDProjeto', 'NRIdentificado', 'NRSigla', 'NRNome', 'actions'];
+  displayedColumns: string[] = ['NRIdentificado', 'NRNome', 'DTInicioDTFim', 'TipoProjeto', 'actions'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() templateRef: TemplateRef<any>;
@@ -26,13 +28,14 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     public appSnackBarService: AppSnackBarService,
+    public tipoProjetoService: TipoProjetoService,
   ) {
     super(appSnackBarService);
   }
 
   ngOnInit() {
     this.entity = {};
-    this.consultar();
+    this.recuperarTodosTipoProjeto();
     this.paginator._intl.itemsPerPageLabel = 'Registros por página';
     this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.previousPageLabel = 'Anterior';
@@ -44,7 +47,6 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
     this.projetoService.fetchAll().subscribe(
       onNext => {
         this.montarEntities(onNext);
-        // this.entities = onNext;
       }, onError => {
         this.addSnackBar(AppMessages.getObj(MSG100));
       }, () => {
@@ -52,10 +54,21 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
     );
   }
 
-  private montarEntities(onNext: any) {
-    this.entities = new MatTableDataSource<any>(onNext);
-    this.entities.paginator = this.paginator;
-    this.entities.sort = this.sort;
+  recuperarTodosTipoProjeto(): void {
+    this.tipoProjetoService.fetchAll().subscribe(
+      onNext => {
+        this.types = onNext;
+      }, onError => {
+        if (onError.error) {
+          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
+        } else {
+          this.addSnackBar(AppMessages.getObj(MSG101));
+        }
+      }, () => {
+        console.log('recuperarTodosTipoProjeto');
+        this.consultar();
+      }
+    );
   }
 
   incluir(): void {
@@ -90,6 +103,23 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
         );
       }
     });
+  }
+
+  getTipoDescricao(element: any): String {
+    if (!this.types || this.types.length === 0) {
+      return '';
+    }
+    const type = this.types.find(t => t.IDTipoProjeto === element.IDTipoProjeto);
+    if (type) {
+      return type.NRDescricao;
+    }
+    return '';
+  }
+
+  private montarEntities(onNext: any) {
+    this.entities = new MatTableDataSource<any>(onNext);
+    this.entities.paginator = this.paginator;
+    this.entities.sort = this.sort;
   }
 
 }

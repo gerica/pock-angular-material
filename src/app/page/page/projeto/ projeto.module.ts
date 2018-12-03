@@ -12,7 +12,6 @@ import { FormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
-
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { DeleteDialogComponent } from '../../shared/utils/modal/delete/delete.dialog.component';
@@ -21,6 +20,7 @@ import { AppSnackBarService } from '../../shared/utils/snackbar/app-snackbar.com
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
+import { MatStepperModule } from '@angular/material/stepper'
 
 
 @NgModule({
@@ -47,6 +47,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
+    MatStepperModule,
   ],
   entryComponents: [
     DeleteDialogComponent

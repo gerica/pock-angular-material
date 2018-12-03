@@ -23,7 +23,7 @@ export class ProjetoService implements SepinService {
     const body = {
       ...entity
     };
-
+    console.log(body);
     return this.http.post(URL_PROJETO, body);
   }
 

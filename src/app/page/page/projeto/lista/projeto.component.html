@@ -38,11 +38,10 @@
         </td>
       </ng-container>
 
-      <!-- Position Column -->
-      <ng-container matColumnDef="IDProjeto">
+      <!-- <ng-container matColumnDef="IDProjeto">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Projeot </th>
         <td mat-cell *matCellDef="let element"> {{element.IDProjeto}} </td>
-      </ng-container>
+      </ng-container> -->
 
       <!-- Name Column -->
       <ng-container matColumnDef="NRIdentificado">
@@ -50,16 +49,27 @@
         <td mat-cell *matCellDef="let element"> {{element.NRIdentificado}} </td>
       </ng-container>
 
-      <!-- Weight Column -->
-      <ng-container matColumnDef="NRSigla">
+      <!-- <ng-container matColumnDef="NRSigla">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Sigla </th>
         <td mat-cell *matCellDef="let element"> {{element.NRSigla}} </td>
-      </ng-container>
+      </ng-container> -->
 
       <!-- Symbol Column -->
       <ng-container matColumnDef="NRNome">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
         <td mat-cell *matCellDef="let element"> {{element.NRNome}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="TipoProjeto">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+        <td mat-cell *matCellDef="let element"> {{getTipoDescricao(element)}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="DTInicioDTFim">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Período de Vigência </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.DTInicio | date:'dd/MM/yyyy'}} até {{element.DTFim | date:'dd/MM/yyyy'}}
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
