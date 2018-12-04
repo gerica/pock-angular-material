@@ -5,13 +5,15 @@ import { AppSnackBarService } from 'src/app/page/shared/utils/snackbar/app-snack
 import { BaseComponent } from '../../base.component';
 import { AppMessages, MSG001, MSG101 } from 'src/app/page/shared/utils/app.messages';
 import { Subscription } from 'rxjs';
-import { TipoProjetoService } from '../service/tipo.projeto.service';
+import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
+import { environment } from 'src/environments/environment';
 
+const MODULE_TIPO_PROJETO = environment.modules[1];
 @Component({
   selector: 'app-projeto-cadastro',
   templateUrl: './projeto.cadastro.component.html',
   styleUrls: ['./projeto.cadastro.component.scss'],
-  providers: [ProjetoService, TipoProjetoService]
+  providers: [ProjetoService, SepinService]
 })
 export class ProjetoCadastroComponent extends BaseComponent implements OnInit, OnDestroy {
   activeForm = true;
@@ -23,7 +25,7 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
     private projetoService: ProjetoService,
     private router: Router,
     private actionRoute: ActivatedRoute,
-    private tipoProjetoService: TipoProjetoService,
+    private sepinService: SepinService,
     public appSnackBarService: AppSnackBarService,
   ) {
     super(appSnackBarService);
@@ -57,7 +59,7 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
   }
 
   recuperarTodosTipoProjeto(): void {
-    this.tipoProjetoService.fetchAll().subscribe(
+    this.sepinService.fetchAll(MODULE_TIPO_PROJETO).subscribe(
       onNext => {
         this.types = onNext;
       }, onError => {

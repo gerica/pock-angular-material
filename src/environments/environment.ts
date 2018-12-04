@@ -10,6 +10,10 @@ export const environment = {
     { nameId: 'IDProjeto', nameTable: 'TBProjeto' },
     { nameId: 'IDTipoProjeto', nameTable: 'TBTipoProjeto' }
   ],
+  modules: [
+    { nameModule: 'Projeto' },
+    { nameModule: 'TipoProjeto' }
+  ],
 };
 
 /*

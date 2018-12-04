@@ -6,13 +6,15 @@ import { DeleteDialogComponent, DeleteDialogData } from 'src/app/page/shared/uti
 import { AppSnackBarService } from 'src/app/page/shared/utils/snackbar/app-snackbar.component';
 import { BaseComponent } from '../../base.component';
 import { AppMessages, MSG100, MSG002, MSG101, AppMessage } from 'src/app/page/shared/utils/app.messages';
-import { TipoProjetoService } from '../service/tipo.projeto.service';
+import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
+import { environment } from 'src/environments/environment';
 
+const MODULE_TIPO_PROJETO = environment.modules[1];
 @Component({
   selector: 'app-projeto-lista',
   templateUrl: './projeto.component.html',
   styleUrls: ['./projeto.component.scss'],
-  providers: [ProjetoService, TipoProjetoService]
+  providers: [ProjetoService, SepinService]
 })
 export class ProjetoListaComponent extends BaseComponent implements OnInit {
   entity: any;
@@ -28,7 +30,7 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     public appSnackBarService: AppSnackBarService,
-    public tipoProjetoService: TipoProjetoService,
+    public sepinService: SepinService,
   ) {
     super(appSnackBarService);
   }
@@ -55,7 +57,7 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
   }
 
   recuperarTodosTipoProjeto(): void {
-    this.tipoProjetoService.fetchAll().subscribe(
+    this.sepinService.fetchAll(MODULE_TIPO_PROJETO).subscribe(
       onNext => {
         this.types = onNext;
       }, onError => {

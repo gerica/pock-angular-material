@@ -32,10 +32,10 @@ export class AppSnackBarService {
         const config = new MatSnackBarConfig();
         config.verticalPosition = this.verticalPosition;
         config.horizontalPosition = this.horizontalPosition;
-        config.duration = this.setAutoHide ? this.autoHide : 0;
 
         switch (type) {
             case 'Erro':
+                config.duration = 0;
                 config.panelClass = ['snackbar-error'];
                 break;
             case 'Alerta':
