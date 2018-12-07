@@ -21,9 +21,9 @@ export class SepinService {
         headers = headers.set('Content-Type', 'application/json');
         headers = headers.set('Accept', 'application/json');
         if (config) {
-            headers = headers.set('NameTable', config.nameTable || '');
-            headers = headers.set('NamePrimaryKey', config.nameId || '');
-            headers = headers.set('NameModule', config.nameModule || '');
+            // headers = headers.set('NameTable', config.name || '');
+            // headers = headers.set('NamePrimaryKey', config.nameId || '');
+            headers = headers.set('NameModule', config.name || '');
         }
         return {
             headers: headers

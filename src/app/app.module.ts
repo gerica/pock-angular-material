@@ -25,7 +25,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatGridListModule,
     MatSidenavModule,
     MatToolbarModule,
-
   ],
   providers: [],
   bootstrap: [AppComponent]

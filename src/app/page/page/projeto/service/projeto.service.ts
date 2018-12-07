@@ -6,7 +6,10 @@ import { Observable } from 'rxjs';
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 
 const URL_BASE = environment.urlBase;
-const MODULE_PROJETO = environment.modules[0];
+const URL_PROJETO = `${environment.urlApp}/projeto`;
+const MODULE_PROJETO = environment.moduleProjeto;
+const MODULE_PROJETO_DISPENDIO = environment.moduleProjetoDispendio;
+const CUSTOM_SAVE = '/customSave';
 
 @Injectable()
 export class ProjetoService extends SepinService {
@@ -17,23 +20,28 @@ export class ProjetoService extends SepinService {
 
   fetchAll(): Observable<any> {
     // const params = new HttpParams().set('_page', "1").set('_limit', "1");
-    return this.http.get(URL_BASE, this.getHeader(MODULE_PROJETO));
+    return this.http.get(URL_PROJETO, this.getHeader(MODULE_PROJETO));
   }
 
-  salvar(entity: any): Observable<any> {
-    // const body = JSON.stringify(entity);
+  salvar(entityStep1: any, entityStep2: any): Observable<any> {
+    entityStep1.module = MODULE_PROJETO.name;
+    entityStep2.module = MODULE_PROJETO_DISPENDIO.name;
+    const entitiesChilds = [entityStep2];
     const body = {
-      ...entity
+      entityParent: entityStep1,
+      // entity2: entityStep2,
+      entitiesChilds
     };
-    return this.http.post(URL_BASE, body, this.getHeader(MODULE_PROJETO));
+    return this.http.post(`${URL_PROJETO}${CUSTOM_SAVE}`, body, this.getHeader(MODULE_PROJETO));
   }
 
   apagar(id: any): Observable<any> {
-    return this.http.delete(`${URL_BASE}/${id}`, this.getHeader(MODULE_PROJETO));
+    console.log(MODULE_PROJETO);
+    return this.http.delete(`${URL_PROJETO}/${id}`, this.getHeader(MODULE_PROJETO));
   }
 
   recuperarPorId(id: any): Observable<any> {
-    return this.http.get(`${URL_BASE}/${id}`, this.getHeader(MODULE_PROJETO));
+    return this.http.get(`${URL_PROJETO}/${id}`, this.getHeader(MODULE_PROJETO));
   }
 
 

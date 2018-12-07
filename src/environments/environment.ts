@@ -6,14 +6,18 @@ export const environment = {
   production: false,
   urlApp: 'http://localhost:8080',
   urlBase: 'http://localhost:8080/base',
-  tables: [
-    { nameId: 'IDProjeto', nameTable: 'TBProjeto' },
-    { nameId: 'IDTipoProjeto', nameTable: 'TBTipoProjeto' }
-  ],
-  modules: [
-    { nameModule: 'Projeto' },
-    { nameModule: 'TipoProjeto' }
-  ],
+  // tables: [
+  //   { nameId: 'IDProjeto', nameTable: 'TBProjeto' },
+  //   { nameId: 'IDTipoProjeto', nameTable: 'TBTipoProjeto' }
+  // ],
+  // modules: [
+  //   { nameModule: 'Projeto' },
+  //   { nameModule: 'TipoProjeto' },
+  //   { nameModule: 'ProjetoDispendio' },
+  // ],
+  moduleProjeto: { name: 'Projeto' },
+  moduleTipoProjeto: { name: 'TipoProjeto' },
+  moduleProjetoDispendio: { name: 'ProjetoDispendio' },
 };
 
 /*

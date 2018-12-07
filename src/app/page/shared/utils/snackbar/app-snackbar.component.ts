@@ -35,17 +35,20 @@ export class AppSnackBarService {
 
         switch (type) {
             case 'Erro':
-                config.duration = 0;
+                config.duration = 60000;
                 config.panelClass = ['snackbar-error'];
                 break;
             case 'Alerta':
+                config.duration = this.autoHide;
                 config.panelClass = ['snackbar-warning'];
                 break;
             case 'Sucesso':
+                config.duration = this.autoHide;
                 config.panelClass = ['snackbar-success'];
                 break;
 
             default:
+                config.duration = this.autoHide;
                 config.panelClass = ['snackbar-default'];
                 break;
         }

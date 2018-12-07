@@ -9,7 +9,7 @@ import { AppMessages, MSG100, MSG002, MSG101, AppMessage } from 'src/app/page/sh
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 
-const MODULE_TIPO_PROJETO = environment.modules[1];
+const MODULE_TIPO_PROJETO = environment.moduleProjetoDispendio;
 @Component({
   selector: 'app-projeto-lista',
   templateUrl: './projeto.component.html',
