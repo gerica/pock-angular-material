@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ProjetoListaComponent } from './lista/projeto.component';
-import { ProjetoCadastroComponent } from './cadastro/projeto.cadastro.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -14,17 +12,19 @@ import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-// import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { AppSnackBarService } from '../../shared/utils/snackbar/app-snackbar.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
+import { FormacaoListaComponent } from './lista/formacao.lista.component';
+import { FormacaoCadastroComponent } from './cadastro/formacao.cadastro.component';
 
 @NgModule({
   declarations: [
-    ProjetoListaComponent,
-    ProjetoCadastroComponent,
+    FormacaoListaComponent,
+    FormacaoCadastroComponent,
   ],
   imports: [
     CommonModule,
@@ -40,7 +40,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatFormFieldModule,
     MatPaginatorModule,
     MatSortModule,
-    // MatDialogModule,
+    MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
@@ -51,4 +51,4 @@ import { MatStepperModule } from '@angular/material/stepper';
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
   ]
 })
-export class ProjetoModule { }
+export class FormacaoModule { }

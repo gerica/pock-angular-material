@@ -6,7 +6,12 @@
 
 <mat-sidenav-container class="app-container">
   <mat-sidenav mode="side" opened style="width: 90px;">
-    <a routerLink="/lista_projeto" routerLinkActive="active">Projeto</a>
+    <div>
+      <a routerLink="/lista_projeto" routerLinkActive="active">Projeto</a>
+    </div>
+    <div>
+      <a routerLink="/lista_formacao" routerLinkActive="active">Formação</a>
+    </div>
   </mat-sidenav>
   <mat-sidenav-content>
     <router-outlet></router-outlet>

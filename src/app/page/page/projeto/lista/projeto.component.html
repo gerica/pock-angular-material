@@ -4,7 +4,7 @@
   </mat-card-header>
   <mat-card-content>
     <form class="app-form">
-      <mat-form-field style="width: 20%; padding-left: 0.5em;">
+      <!-- <mat-form-field style="width: 20%; padding-left: 0.5em;">
         <input matInput placeholder="Identificação" name="identificacao" [(ngModel)]="entity.identificacao">
       </mat-form-field>
       <mat-form-field style="width: 20%; padding-left: 0.5em;">
@@ -12,12 +12,15 @@
       </mat-form-field>
       <mat-form-field style="width: 55%; padding-left: 0.5em;">
         <input matInput placeholder="Nome" name="nome" [(ngModel)]="entity.nome">
+      </mat-form-field> -->
+      <mat-form-field style="width: 99%; padding-left: 0.5em;">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtro">
       </mat-form-field>
     </form>
   </mat-card-content>
   <mat-card-actions>
     <div class="app-button-row">
-      <button mat-raised-button (click)="consultar()">Consultar</button>
+      <!-- <button mat-raised-button (click)="consultar()">Consultar</button> -->
       <button mat-raised-button (click)="incluir()" color="primary">Incluir Projeto</button>
     </div>
   </mat-card-actions>

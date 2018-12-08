@@ -11,9 +11,24 @@ export class SepinService {
     constructor(public http: HttpClient) {
     }
 
-    fetchAll(objModule): Observable<any> {
+    fetchAll(objModule: any): Observable<any> {
         // const params = new HttpParams().set('_page', "1").set('_limit', "1");
         return this.http.get(URL_BASE, this.getHeader(objModule));
+    }
+
+    salvar(objModule: any, entity: any): Observable<any> {
+        const body = {
+            ...entity
+        };
+        return this.http.post(`${URL_BASE}`, body, this.getHeader(objModule));
+    }
+
+    apagar(objModule: any, id: any): Observable<any> {
+        return this.http.delete(`${URL_BASE}/${id}`, this.getHeader(objModule));
+    }
+
+    recuperarPorId(objModule: any, id: any): Observable<any> {
+        return this.http.get(`${URL_BASE}/${id}`, this.getHeader(objModule));
     }
 
     getHeader(config: any): object {

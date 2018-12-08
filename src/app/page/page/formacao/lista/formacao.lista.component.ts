@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, TemplateRef, Input } from '@angular/core';
-import { ProjetoService } from '../service/projeto.service';
 import { Router } from '@angular/router';
 import { MatPaginator, MatTableDataSource, MatSort, Sort, MatDialog } from '@angular/material';
 import { DeleteDialogComponent, DeleteDialogData } from 'src/app/page/shared/utils/modal/delete/delete.dialog.component';
@@ -9,24 +8,23 @@ import { AppMessages, MSG100, MSG002, MSG101, AppMessage } from 'src/app/page/sh
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 
-const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
+const MODULE_FORMACAO = environment.moduleFormacao;
+
 @Component({
-  selector: 'app-projeto-lista',
-  templateUrl: './projeto.component.html',
-  styleUrls: ['./projeto.component.scss'],
-  providers: [ProjetoService, SepinService]
+  selector: 'app-formacao-lista',
+  templateUrl: './formacao.lista.component.html',
+  styleUrls: ['./formacao.lista.component.scss'],
+  providers: [SepinService]
 })
-export class ProjetoListaComponent extends BaseComponent implements OnInit {
+export class FormacaoListaComponent extends BaseComponent implements OnInit {
   entity: any;
-  types: any[];
   entities: MatTableDataSource<any>;
-  displayedColumns: string[] = ['NRIdentificado', 'NRNome', 'DTInicioDTFim', 'TipoProjeto', 'actions'];
+  displayedColumns: string[] = ['NOFormacao', 'actions'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() templateRef: TemplateRef<any>;
 
   constructor(
-    private projetoService: ProjetoService,
     private router: Router,
     public dialog: MatDialog,
     public appSnackBarService: AppSnackBarService,
@@ -37,12 +35,12 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.entity = {};
-    this.recuperarTodosTipoProjeto();
     this.paginator._intl.itemsPerPageLabel = 'Registros por página';
     this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.previousPageLabel = 'Anterior';
     this.paginator._intl.firstPageLabel = 'Primeira Página';
     this.paginator._intl.lastPageLabel = 'Última Página';
+    this.consultar();
   }
 
   applyFilter(filterValue: string) {
@@ -50,7 +48,7 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
   }
 
   consultar(): void {
-    this.projetoService.fetchAll().subscribe(
+    this.sepinService.fetchAll(MODULE_FORMACAO).subscribe(
       onNext => {
         this.montarEntities(onNext);
       }, onError => {
@@ -60,39 +58,23 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
     );
   }
 
-  recuperarTodosTipoProjeto(): void {
-    this.sepinService.fetchAll(MODULE_TIPO_PROJETO).subscribe(
-      onNext => {
-        this.types = onNext;
-      }, onError => {
-        if (onError.error) {
-          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
-        } else {
-          this.addSnackBar(AppMessages.getObj(MSG101));
-        }
-      }, () => {
-        this.consultar();
-      }
-    );
-  }
-
   incluir(): void {
-    this.router.navigate(['/cadastro_projeto']);
+    this.router.navigate(['/cadastro_formacao']);
   }
 
   preEdit(obj: any): void {
-    this.router.navigate(['/cadastro_projeto', obj.IDProjeto]);
+    this.router.navigate(['/cadastro_formacao', obj.IDFormacao]);
   }
 
   deleteRow(row: any) {
-    const dataDialog: DeleteDialogData = { id: row.IDProjeto, title: 'Confirma a exclusão?', message: `Sigla: ${row.NRSigla}` };
+    const dataDialog: DeleteDialogData = { id: row.IDFormacao, title: 'Confirma a exclusão?', message: `Valor: ${row.NOFormacao}` };
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: dataDialog,
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.delete) {
-        this.projetoService.apagar(row.IDProjeto).subscribe(
+        this.sepinService.apagar(MODULE_FORMACAO, row.IDFormacao).subscribe(
           onNext => { },
           onError => {
             if (onError.error) {
@@ -108,17 +90,6 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
         );
       }
     });
-  }
-
-  getTipoDescricao(element: any): String {
-    if (!this.types || this.types.length === 0) {
-      return '';
-    }
-    const type = this.types.find(t => t.IDTipoProjeto === element.IDTipoProjeto);
-    if (type) {
-      return type.NRDescricao;
-    }
-    return '';
   }
 
   private montarEntities(onNext: any) {

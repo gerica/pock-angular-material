@@ -1,0 +1,20 @@
+<mat-card class="cardProjeto">
+  <form class="app-form" #form="ngForm" (submit)="gravar($event, form)">
+    <mat-card-header>
+      <mat-card-title>Dados Básicos</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field style="width: 99%; padding-left: 0.5em;">
+        <input matInput placeholder="Descricao" name="NOFormacao" [(ngModel)]="entity.NOFormacao" #NOFormacao="ngModel"
+          required max="255" maxlength="255">
+        <mat-error *ngIf="NOFormacao.invalid">Campo obrigatório</mat-error>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+      <div class="app-button-row">
+        <button mat-raised-button type="submit" color="primary">Salvar</button>
+        <button mat-raised-button (click)="routerConsulta()">Voltar</button>
+      </div>
+    </mat-card-actions>
+  </form>
+</mat-card>

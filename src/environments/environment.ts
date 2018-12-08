@@ -18,6 +18,7 @@ export const environment = {
   moduleProjeto: { name: 'Projeto' },
   moduleTipoProjeto: { name: 'TipoProjeto' },
   moduleProjetoDispendio: { name: 'ProjetoDispendio' },
+  moduleFormacao: { name: 'Formacao' },
 };
 
 /*
