@@ -1,0 +1,29 @@
+.app-card {
+  max-width: 100%;
+  margin: 0.5em;
+}
+
+.app-button-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+
+.app-button-row button{  
+  margin-right: 8px;
+}
+
+.app-form {  
+  width: 100%;
+  // border: 1px solid black;
+}
+
+.app-full-width {
+  width: 20%;
+  padding-left: 0.5em;
+}
+
+table {
+  width: 100%;
+}

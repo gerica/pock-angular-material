@@ -10,6 +10,7 @@ import { FormacaoModule } from './formacao/formacao.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DeleteDialogComponent } from '../shared/utils/modal/delete/delete.dialog.component';
 import { MatButtonModule } from '@angular/material/button';
+import { AreaAplicacaoModule } from './areaAplicacao/area.aplicacao.module';
 
 @NgModule({
   declarations: [
@@ -24,11 +25,12 @@ import { MatButtonModule } from '@angular/material/button';
     MatMenuModule,
     MatIconModule,
     MatCardModule,
-    ProjetoModule,
     MatSnackBarModule,
-    FormacaoModule,
     MatDialogModule,
     MatButtonModule,
+    ProjetoModule,
+    FormacaoModule,
+    AreaAplicacaoModule,
   ],
   exports: [DeleteDialogComponent],
   providers: [],

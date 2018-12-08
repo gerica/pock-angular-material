@@ -1,0 +1,27 @@
+<mat-card class="cardProjeto">
+  <form class="app-form" #form="ngForm" (submit)="gravar($event, form)">
+    <mat-card class="cardProjeto">
+      <mat-card-header>
+        <mat-card-title>Área de Atuação (cadastro)</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field style="width: 99%; padding-left: 0.5em;">
+          <input matInput placeholder="Código" name="CDCodigo" [(ngModel)]="entity.CDCodigo" #CDCodigo="ngModel"
+            required max="255" maxlength="255" type="number">
+          <mat-error *ngIf="CDCodigo.invalid">Campo obrigatório</mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 99%; padding-left: 0.5em;">
+          <input matInput placeholder="Nome" name="NRNome" [(ngModel)]="entity.NRNome" #NRNome="ngModel" required max="255"
+            maxlength="255">
+          <mat-error *ngIf="NRNome.invalid">Campo obrigatório</mat-error>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+    <mat-card-actions>
+      <div class="app-button-row">
+        <button mat-raised-button type="submit" color="primary">Salvar</button>
+        <button mat-raised-button (click)="routerConsulta()">Voltar</button>
+      </div>
+    </mat-card-actions>
+  </form>
+</mat-card>

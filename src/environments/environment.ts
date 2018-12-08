@@ -10,6 +10,7 @@ export const environment = {
   moduleTipoProjeto: { name: 'TipoProjeto' },
   moduleProjetoDispendio: { name: 'ProjetoDispendio' },
   moduleFormacao: { name: 'Formacao' },
+  moduleAreaAplicacao: { name: 'AreaAplicacao' },
   isDevelope: true,
 };
 
