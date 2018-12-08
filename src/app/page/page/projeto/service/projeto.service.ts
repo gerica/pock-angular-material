@@ -36,7 +36,6 @@ export class ProjetoService extends SepinService {
   }
 
   apagar(id: any): Observable<any> {
-    console.log(MODULE_PROJETO);
     return this.http.delete(`${URL_PROJETO}/${id}`, this.getHeader(MODULE_PROJETO));
   }
 

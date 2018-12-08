@@ -1,6 +1,6 @@
 <mat-horizontal-stepper class="containerProjeto" #stepper>
   <mat-step [stepControl]="firstFormGroup">
-    <form class="app-form" #form="ngForm">
+    <form class="app-form" #form1="ngForm">
       <ng-template matStepLabel>Dados Básicos</ng-template>
       <mat-card class="cardProjeto">
         <mat-card-header>
@@ -45,10 +45,51 @@
             </mat-select>
             <mat-error *ngIf="IDTipoProjeto">Campo obrigatório</mat-error>
           </mat-form-field>
-          <mat-form-field style="width: 55%; padding-left: 0.5em;">
+          <mat-form-field style="width: 55%; padding-left: 0.5em;" *ngIf="entity.IDTipoProjeto === 8">
             <input matInput placeholder="Especificador" name="NREspecificador" [(ngModel)]="entity.NREspecificador"
               #NREspecificador="ngModel" required max="255" maxlength="255">
             <mat-error *ngIf="NREspecificador.invalid">Campo obrigatório</mat-error>
+          </mat-form-field>
+          <section class="section-group">
+            <label style="padding-right: 10px;">Projeto para cumprir troca de PPB por P,D&I?:</label>
+            <mat-radio-group [(ngModel)]="entity.BLTrocaPPBparaPD" name="BLTrocaPPBparaPD">
+              <mat-radio-button value="true" style="padding-right: 10px;">Sim</mat-radio-button>
+              <mat-radio-button value="false">Não</mat-radio-button>
+            </mat-radio-group>
+          </section>
+          <mat-divider style="margin-top: 10px;"></mat-divider>
+          <section class="section-group">
+            <label>Alcance:</label>
+            <mat-radio-group [(ngModel)]="entity.NRAlcance" name="NRAlcance">
+              <mat-radio-button class="radio-item" value="Na Instituição">Na Instituição</mat-radio-button>
+              <mat-radio-button class="radio-item" value="Na Empresa">Na Empresa</mat-radio-button>
+              <mat-radio-button class="radio-item" value="No Mercado Interno">No Mercado Interno</mat-radio-button>
+              <mat-radio-button class="radio-item" value="Exportação">Exportação</mat-radio-button>
+            </mat-radio-group>
+          </section>
+          <section class="section-group">
+            <label style="width: 120px;">Grau de Inovação:</label>
+            <mat-radio-group [(ngModel)]="entity.NRGrauInivacaoG1" name="NRGrauInivacaoG1" style="width: 50%;">
+              <mat-radio-button class="radio-item" value="Novo para a empresa, mas existente no mercado nacional">Novo
+                para a empresa, mas existente no mercado nacional</mat-radio-button>
+              <mat-radio-button class="radio-item" value="Novo no mercado Nacional, mas já existente no mercado mundial">Novo
+                no mercado Nacional, mas já existente no mercado mundial</mat-radio-button>
+              <mat-radio-button class="radio-item" value="Novo no mercado Mundial">Novo no mercado Mundial</mat-radio-button>
+            </mat-radio-group>
+            <mat-radio-group [(ngModel)]="entity.NRGrauInivacaoG2" name="NRGrauInivacaoG2" style="width: 40%;">
+              <mat-radio-button class="radio-item" value="Aprimoramentos a partir de algo existente">Aprimoramentos a
+                partir de algo existente</mat-radio-button>
+              <mat-radio-button class="radio-item" value="before">Desenvolvimento de algo novo</mat-radio-button>
+            </mat-radio-group>
+          </section>
+          <mat-form-field style="margin-top: 3%; padding-left: 0.5em;">
+            <mat-select placeholder="Área de aplicação" [(ngModel)]="entity.IDTipoProjeto" name="IDTipoProjeto"
+              #IDTipoProjeto="ngModel" required>
+              <mat-option *ngFor="let t of types" [value]="t.IDTipoProjeto">
+                {{t.NRDescricao}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="IDTipoProjeto">Campo obrigatório</mat-error>
           </mat-form-field>
         </mat-card-content>
       </mat-card>
@@ -126,9 +167,30 @@
     </form>
   </mat-step>
   <mat-step>
-    <form (submit)="gravar($event, form)">
+    <form class="app-form" #form2="ngForm" (submit)="gravar($event, form1, form2)">
       <ng-template matStepLabel>Descricção</ng-template>
-
+      <mat-card class="cardProjeto">
+        <mat-card-header>
+          <mat-card-title>Dispêncio {{entityStep2.DTAnoBase}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field style="width: 99%; padding-left: 0.5em;">
+            <textarea matInput placeholder="Objetivo" name="DSObjetivo" [(ngModel)]="entity.DSObjetivo" #DSObjetivo="ngModel"
+              required></textarea>
+            <mat-error *ngIf="DSObjetivo.invalid">Campo obrigatório</mat-error>
+          </mat-form-field>
+          <mat-form-field style="width: 99%; padding-left: 0.5em;">
+            <textarea matInput placeholder="Descrição das Etapas" name="DSDescricaoEtapa" [(ngModel)]="entity.DSDescricaoEtapa"
+              #DSDescricaoEtapa="ngModel" required></textarea>
+            <mat-error *ngIf="DSDescricaoEtapa.invalid">Campo obrigatório</mat-error>
+          </mat-form-field>
+          <mat-form-field style="width: 99%; padding-left: 0.5em;">
+            <textarea matInput placeholder="Resultados Obtidos" name="DSResultadoObtido" [(ngModel)]="entity.DSResultadoObtido"
+              #DSResultadoObtido="ngModel" required></textarea>
+            <mat-error *ngIf="DSResultadoObtido.invalid">Campo obrigatório</mat-error>
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
       <div>
         <button mat-button matStepperPrevious>Voltar</button>
         <button mat-button (click)="stepper.reset()">Concluir</button>

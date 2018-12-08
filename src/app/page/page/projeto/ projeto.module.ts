@@ -20,6 +20,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatNativeDateModule,
     MatSelectModule,
     MatStepperModule,
+    MatRadioModule,
+    MatCheckboxModule,
   ],
   providers: [
     AppSnackBarService,

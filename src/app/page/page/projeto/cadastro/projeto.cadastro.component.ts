@@ -42,7 +42,7 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
     this.subscription = this.actionRoute.params.subscribe(params => {
       if (params && params['idProjeto']) {
         this.recuperarPorId(params['idProjeto']);
-      } else {
+      } else if (environment.isDevelope) {
         this.initForDevelop();
       }
     });
@@ -89,9 +89,9 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
     this.router.navigate(['lista_projeto']);
   }
 
-  gravar(event: any, form: any): void {
+  gravar(event: any, form1: any, form2: any): void {
     event.preventDefault();
-    if (!form.valid) {
+    if (!form1.valid || !form2.valid) {
       this.addSnackBar(AppMessages.getObj(MSG001));
       return;
     }
@@ -119,6 +119,12 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
       NREspecificador: 'específico',
       DTInicio: new Date(),
       DTFim: new Date(),
+      // tslint:disable-next-line:max-line-length
+      DSObjetivo: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex',
+      // tslint:disable-next-line:max-line-length
+      DSDescricaoEtapa: 'But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally',
+      // tslint:disable-next-line:max-line-length
+      DSResultadoObtido: 'Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular. Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules. Omnicos directe al desirabilite de un nov lingua franca: On refusa continuar payar custosi traductores. At solmen va esser necessi far uniform grammatica, pronunciation e plu sommun paroles. Ma quande lingues coalesce, li grammatica del resultant lingue es plu simplic e regulari quam ti del coalescent lingues. Li nov lingua franca va esser plu simplic e regulari quam li existent Europan',
     };
 
     this.entityStep2 = {
