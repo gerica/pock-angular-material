@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 
 const MODULE_FORMACAO = environment.moduleFormacao;
 
+const URL_FORMACAO = 'formacao';
 @Component({
   selector: 'app-formacao-cadastro',
   templateUrl: './formacao.cadastro.component.html',
@@ -60,7 +61,7 @@ export class FormacaoCadastroComponent extends BaseComponent implements OnInit, 
   }
 
   routerConsulta(): void {
-    this.router.navigate(['lista_formacao']);
+    this.router.navigate([URL_FORMACAO]);
   }
 
   gravar(event: any, form: any): void {

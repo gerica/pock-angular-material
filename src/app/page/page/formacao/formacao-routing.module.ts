@@ -4,14 +4,20 @@ import { FormacaoCadastroComponent } from './cadastro/formacao.cadastro.componen
 
 export const FormacaoRoutes: Route[] = [
   {
-    path: 'lista_formacao',
-    component: FormacaoListaComponent,
-  },
-  {
-    path: 'cadastro_formacao',
-    component: FormacaoCadastroComponent,
-  }, {
-    path: 'cadastro_formacao/:idFormacao',
-    component: FormacaoCadastroComponent,
+    path: 'formacao',
+    children: [
+      {
+        path: '',
+        component: FormacaoListaComponent,
+        pathMatch: 'full'
+      },
+      {
+        path: 'cadastro',
+        component: FormacaoCadastroComponent,
+      }, {
+        path: 'cadastro/:idFormacao',
+        component: FormacaoCadastroComponent,
+      },
+    ]
   },
 ];

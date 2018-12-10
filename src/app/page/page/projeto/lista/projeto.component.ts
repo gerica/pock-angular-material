@@ -10,6 +10,7 @@ import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 
 const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
+const URL_PROJETO_CADASTRO = 'projeto/cadastro';
 @Component({
   selector: 'app-projeto-lista',
   templateUrl: './projeto.component.html',
@@ -77,11 +78,11 @@ export class ProjetoListaComponent extends BaseComponent implements OnInit {
   }
 
   incluir(): void {
-    this.router.navigate(['/cadastro_projeto']);
+    this.router.navigate([URL_PROJETO_CADASTRO]);
   }
 
   preEdit(obj: any): void {
-    this.router.navigate(['/cadastro_projeto', obj.IDProjeto]);
+    this.router.navigate([URL_PROJETO_CADASTRO, obj.IDProjeto]);
   }
 
   deleteRow(row: any) {

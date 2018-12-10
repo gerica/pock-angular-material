@@ -4,14 +4,21 @@ import { AreaAplicacaoCadastroComponent } from './cadastro/area.aplicacao.cadast
 
 export const AreaAplicacaoRoutes: Route[] = [
   {
-    path: 'lista_area_aplicacao',
-    component: AreaAplicacaoListaComponent,
-  },
-  {
-    path: 'cadastro_area_aplicacao',
-    component: AreaAplicacaoCadastroComponent,
-  }, {
-    path: 'cadastro_area_aplicacao/:idAreaAplicacao',
-    component: AreaAplicacaoCadastroComponent,
+    path: 'area_aplicacao',
+    children: [
+      {
+        path: '',
+        component: AreaAplicacaoListaComponent,
+        pathMatch: 'full'
+      },
+      {
+        path: 'cadastro',
+        component: AreaAplicacaoCadastroComponent,
+      },
+      {
+        path: 'cadastro/:idAreaAplicacao',
+        component: AreaAplicacaoCadastroComponent,
+      },
+    ]
   },
 ];

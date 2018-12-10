@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 
 const MODULE_AREA_APLICACAO = environment.moduleAreaAplicacao;
 
+const URL_AREA_APLICACAO = 'area_aplicacao';
 @Component({
   selector: 'app-area.aplicacao-cadastro',
   templateUrl: './area.aplicacao.cadastro.component.html',
@@ -60,7 +61,7 @@ export class AreaAplicacaoCadastroComponent extends BaseComponent implements OnI
   }
 
   routerConsulta(): void {
-    this.router.navigate(['lista_area_aplicacao']);
+    this.router.navigate([URL_AREA_APLICACAO]);
   }
 
   gravar(event: any, form: any): void {

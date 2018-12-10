@@ -10,6 +10,7 @@ import { PageModule } from './page/page/page.module';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatGridListModule,
     MatSidenavModule,
     MatToolbarModule,
+    MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

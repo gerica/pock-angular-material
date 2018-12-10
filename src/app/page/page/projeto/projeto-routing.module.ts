@@ -4,13 +4,20 @@ import { ProjetoCadastroComponent } from './cadastro/projeto.cadastro.component'
 
 export const ProjetoRoutes: Route[] = [
   {
-    path: 'lista_projeto',
-    component: ProjetoListaComponent,
-  }, {
-    path: 'cadastro_projeto',
-    component: ProjetoCadastroComponent,
-  }, {
-    path: 'cadastro_projeto/:idProjeto',
-    component: ProjetoCadastroComponent,
+    path: 'projeto',
+    children: [
+      {
+        path: '',
+        component: ProjetoListaComponent,
+        pathMatch: 'full',
+      },
+      {
+        path: 'cadastro',
+        component: ProjetoCadastroComponent,
+      }, {
+        path: 'cadastro/:idProjeto',
+        component: ProjetoCadastroComponent,
+      },
+    ]
   },
 ];

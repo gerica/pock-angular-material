@@ -9,6 +9,7 @@ import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 
 const MODULE_AREA_APLICACAO = environment.moduleAreaAplicacao;
+const URL_CADASTRO = 'area_aplicacao/cadastro';
 
 @Component({
   selector: 'app-area.aplicacao-lista',
@@ -59,11 +60,11 @@ export class AreaAplicacaoListaComponent extends BaseComponent implements OnInit
   }
 
   incluir(): void {
-    this.router.navigate(['/cadastro_area_aplicacao']);
+    this.router.navigate([URL_CADASTRO]);
   }
 
   preEdit(obj: any): void {
-    this.router.navigate(['/cadastro_area_aplicacao', obj.IDAreaAplicacao]);
+    this.router.navigate([URL_CADASTRO, obj.IDAreaAplicacao]);
   }
 
   deleteRow(row: any) {

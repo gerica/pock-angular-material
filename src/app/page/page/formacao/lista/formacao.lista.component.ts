@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 
 const MODULE_FORMACAO = environment.moduleFormacao;
 
+const URL_FORMACAO_CADASTRO = 'formacao/cadastro';
 @Component({
   selector: 'app-formacao-lista',
   templateUrl: './formacao.lista.component.html',
@@ -59,11 +60,11 @@ export class FormacaoListaComponent extends BaseComponent implements OnInit {
   }
 
   incluir(): void {
-    this.router.navigate(['/cadastro_formacao']);
+    this.router.navigate([URL_FORMACAO_CADASTRO]);
   }
 
   preEdit(obj: any): void {
-    this.router.navigate(['/cadastro_formacao', obj.IDFormacao]);
+    this.router.navigate([URL_FORMACAO_CADASTRO, obj.IDFormacao]);
   }
 
   deleteRow(row: any) {

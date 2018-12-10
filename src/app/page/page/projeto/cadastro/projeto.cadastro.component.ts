@@ -15,6 +15,7 @@ const MODULE_PROJETO = environment.moduleProjeto;
 const MODULE_PROJETO_DISPENDIO = environment.moduleProjetoDispendio;
 const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
 const MODULE_AREA_APLICACAO = environment.moduleAreaAplicacao;
+const URL_PROJETO = 'projeto';
 @Component({
   selector: 'app-projeto-cadastro',
   templateUrl: './projeto.cadastro.component.html',
@@ -126,7 +127,7 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
   }
 
   routerConsulta(): void {
-    this.router.navigate(['lista_projeto']);
+    this.router.navigate([URL_PROJETO]);
   }
 
   gravar(event: any, form1: any, form2: any): void {
@@ -200,17 +201,26 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
   }
 
   calcularTotalDispendio(): void {
-    const { VLEquipamentoSoftware } = this.entityStep2;
-    console.log(VLEquipamentoSoftware);
-    this.entityStep2.VLTotalValido = this.entityStep2.VLEquipamentoSoftware +
-      this.entityStep2.VLLivroPeriodico +
-      this.entityStep2.VLMaterialConsumo +
-      this.entityStep2.VLObraCivil +
-      this.entityStep2.VLOuroCorrelato +
-      this.entityStep2.VLRecursosHumanoa +
-      this.entityStep2.VLServicoTerceiro +
-      this.entityStep2.VLTreinamento +
-      this.entityStep2.VLViagem;
+    const {
+      VLEquipamentoSoftware,
+      VLLivroPeriodico,
+      VLMaterialConsumo,
+      VLObraCivil,
+      VLOuroCorrelato,
+      VLRecursosHumanoa,
+      VLServicoTerceiro,
+      VLTreinamento,
+      VLViagem } = this.entityStep2;
+
+    this.entityStep2.VLTotalValido = VLEquipamentoSoftware +
+      VLLivroPeriodico +
+      VLMaterialConsumo +
+      VLObraCivil +
+      VLOuroCorrelato +
+      VLRecursosHumanoa +
+      VLServicoTerceiro +
+      VLTreinamento +
+      VLViagem;
   }
 
   private _filter(values) {
