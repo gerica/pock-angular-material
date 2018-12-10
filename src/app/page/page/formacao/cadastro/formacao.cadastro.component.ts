@@ -32,19 +32,15 @@ export class FormacaoCadastroComponent extends BaseComponent implements OnInit, 
   ngOnInit() {
     this.entity = {};
     this.subscription = this.actionRoute.params.subscribe(params => {
-      console.log(params);
       if (params && params['idFormacao']) {
-        console.log('entrou');
         this.recuperarPorId(params['idFormacao']);
       }
     });
   }
 
   recuperarPorId(id: any): any {
-    console.log(id);
     this.sepinService.recuperarPorId(MODULE_FORMACAO, id).subscribe(
       onNext => {
-        console.log(onNext);
         if (onNext && onNext.value && onNext.value.length > 0) {
           this.entity = onNext.value[0];
         }

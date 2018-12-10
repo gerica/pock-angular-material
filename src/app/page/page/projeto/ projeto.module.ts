@@ -22,6 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatStepperModule,
     MatRadioModule,
     MatCheckboxModule,
+    MatAutocompleteModule,
   ],
   providers: [
     AppSnackBarService,
