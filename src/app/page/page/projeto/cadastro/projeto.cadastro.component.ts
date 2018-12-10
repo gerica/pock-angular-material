@@ -43,13 +43,29 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
 
   ngOnInit() {
     this.entity = {};
-    this.entityStep2 = { DTAnoBase: moment().format('YYYY') };
+    this.entityStep2 = {
+      DTAnoBase: moment().format('YYYY'),
+      VLTotalValido: 0,
+      VLEquipamentoSoftware: 0,
+      VLLivroPeriodico: 0,
+      VLMaterialConsumo: 0,
+      VLObraCivil: 0,
+      VLOuroCorrelato: 0,
+      VLRecursosHumanoa: 0,
+      VLServicoTerceiro: 0,
+      VLTreinamento: 0,
+      VLViagem: 0,
+    };
     this.recuperarTodosTipoProjeto();
     this.recuperarTodasAreasAplicacao();
     this.subscription = this.actionRoute.params.subscribe(params => {
       if (params && params['idProjeto']) {
         this.recuperarPorId(params['idProjeto']);
-      } else if (environment.isDevelope) {
+      } else {
+        this.calcularTotalDispendio();
+      }
+
+      if (environment.isDevelope) {
         this.initForDevelop();
       }
     });
@@ -58,7 +74,6 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
   recuperarPorId(id: any): any {
     this.projetoService.recuperarPorId(id).subscribe(
       onNext => {
-        // console.log(onNext);
         if (onNext && onNext.value && onNext.value.length > 0) {
           this.entity = onNext.value[0][0];
           if (onNext.value[1]) {
@@ -78,6 +93,7 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
             this.currentAreaAplicacao = `${areaAplicacao.CDCodigo} - ${areaAplicacao.NRNome}`;
           }
         });
+        this.calcularTotalDispendio();
         // console.log(this.entity);
         // const keys = Object.keys(this.entity);
         // console.log(keys);
@@ -178,6 +194,25 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
     this.entity.CKArtigoIV1 = false;
   }
 
+  currencyInputChanged(value) {
+    const num = value.replace(/[R][$]/, '').replace(/[+*?.,]/, '');
+    return num;
+  }
+
+  calcularTotalDispendio(): void {
+    const { VLEquipamentoSoftware } = this.entityStep2;
+    console.log(VLEquipamentoSoftware);
+    this.entityStep2.VLTotalValido = this.entityStep2.VLEquipamentoSoftware +
+      this.entityStep2.VLLivroPeriodico +
+      this.entityStep2.VLMaterialConsumo +
+      this.entityStep2.VLObraCivil +
+      this.entityStep2.VLOuroCorrelato +
+      this.entityStep2.VLRecursosHumanoa +
+      this.entityStep2.VLServicoTerceiro +
+      this.entityStep2.VLTreinamento +
+      this.entityStep2.VLViagem;
+  }
+
   private _filter(values) {
     return values.filter(obj => {
       if (obj.NRNome.toLowerCase().includes(this.currentAreaAplicacao.toLocaleLowerCase())) {
@@ -236,7 +271,7 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
       VLMaterialConsumo: 51,
       VLOuroCorrelato: 51,
       VLServicoTerceiro: 51,
-      VLTotalValido: 51,
+      // VLTotalValido: 51,
     };
   }
 }

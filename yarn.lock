@@ -4588,6 +4588,11 @@ neo-async@^2.5.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
 
+ngx-currency@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/ngx-currency/-/ngx-currency-1.5.1.tgz#c160936cb7b6566e606812fd64305c1a7b93c896"
+  integrity sha512-Qfk4BcpmcZ7xZZac+FEb5mYvJ4a4IGlxfS4E2ololwo5/EByTBBS3mAHoZKZ33vqI0HNQQ4lYkE+V6vsa661VQ==
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"

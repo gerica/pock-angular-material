@@ -212,54 +212,59 @@
         <mat-card-content>
           <mat-form-field style="width: 22%; padding-left: 0.5em;">
             <input matInput placeholder="Recursos Humanos" name="VLRecursosHumanoa" [(ngModel)]="entityStep2.VLRecursosHumanoa"
-              #VLRecursosHumanoa="ngModel" max="255" maxlength="255">
-            <span matPrefix>R$&nbsp;</span>
+              #VLRecursosHumanoa="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
           </mat-form-field>
           <mat-form-field style="width: 22%; padding-left: 0.5em;">
             <input matInput placeholder="Treinamento" name="VLTreinamento" [(ngModel)]="entityStep2.VLTreinamento"
-              #VLTreinamento="ngModel" max="255" maxlength="255">
-            <span matPrefix>R$&nbsp;</span>
+              #VLTreinamento="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
           </mat-form-field>
           <mat-form-field style="width: 22%; padding-left: 0.5em;">
             <input matInput placeholder="Equipamento/Software" name="VLEquipamentoSoftware" [(ngModel)]="entityStep2.VLEquipamentoSoftware"
-              #VLEquipamentoSoftware="ngModel" max="255" maxlength="255">
-            <span matPrefix>R$&nbsp;</span>
+              #VLEquipamentoSoftware="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
           </mat-form-field>
           <mat-form-field style="width: 22%; padding-left: 0.5em;">
             <input matInput placeholder="Livros ou Periôdicos" name="VLLivroPeriodico" [(ngModel)]="entityStep2.VLLivroPeriodico"
-              #VLLivroPeriodico="ngModel" max="255" maxlength="255">
-            <span matPrefix>R$&nbsp;</span>
+              #VLLivroPeriodico="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
           </mat-form-field>
           <mat-form-field style="width: 22%; padding-left: 0.5em;">
             <input matInput placeholder="Obras Civis" name="VLObraCivil" [(ngModel)]="entityStep2.VLObraCivil"
-              #VLObraCivil="ngModel" max="255" maxlength="255">
-            <span matPrefix>R$&nbsp;</span>
+              #VLObraCivil="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
           </mat-form-field>
           <mat-form-field style="width: 22%; padding-left: 0.5em;">
             <input matInput placeholder="Viagens" name="VLViagem" [(ngModel)]="entityStep2.VLViagem" #VLViagem="ngModel"
-              max="255" maxlength="255">
-            <span matPrefix>R$&nbsp;</span>
+              max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
           </mat-form-field>
           <mat-form-field style="width: 22%; padding-left: 0.5em;">
             <input matInput placeholder="Material de Consumo" name="VLMaterialConsumo" [(ngModel)]="entityStep2.VLMaterialConsumo"
-              #VLMaterialConsumo="ngModel" max="255" maxlength="255">
-            <span matPrefix>R$&nbsp;</span>
+              #VLMaterialConsumo="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
           </mat-form-field>
           <mat-form-field style="width: 22%; padding-left: 0.5em;">
             <input matInput placeholder="Outros Correlatos" name="VLOuroCorrelato" [(ngModel)]="entityStep2.VLOuroCorrelato"
-              #VLOuroCorrelato="ngModel" max="255" maxlength="255">
-            <span matPrefix>R$&nbsp;</span>
+              #VLOuroCorrelato="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
           </mat-form-field>
           <mat-form-field style="width: 22%; padding-left: 0.5em;">
             <input matInput placeholder="Serviços Técnicos de Terceiros" name="VLServicoTerceiro" [(ngModel)]="entityStep2.VLServicoTerceiro"
-              #VLServicoTerceiro="ngModel" max="255" maxlength="255">
-            <span matPrefix>R$&nbsp;</span>
+              #VLServicoTerceiro="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
           </mat-form-field>
-          <mat-form-field style="width: 44.3%; padding-left: 23.2%;">
+          <mat-divider></mat-divider>
+          <section class="containerTotal">
+            <label>Total válido para cumprimento de obrigações: {{entityStep2.DTAnoBase}}: {{entityStep2.VLTotalValido
+              | currency:'BRL':'symbol':'0.0-2':'pt'}}</label>
+          </section>
+          <!-- <mat-form-field style="width: 22.3%; padding-left: 0.5em;">
             <input matInput placeholder="Total válido para cumprimento de obrigações. {{entityStep2.DTAnoBase}}" name="VLTotalValido"
-              [(ngModel)]="entityStep2.VLTotalValido" #VLTotalValido="ngModel" max="255" maxlength="255">
-            <span matPrefix>R$&nbsp;</span>
-          </mat-form-field>
+              [(ngModel)]="entityStep2.VLTotalValido" #VLTotalValido="ngModel" max="255" maxlength="255" currencyMask
+              [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }" (ngModelChange)="calcularTotalDispendio()">
+          </mat-form-field> -->
 
 
         </mat-card-content>
