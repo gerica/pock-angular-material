@@ -28,3 +28,18 @@ a:hover {
 .mat-simple-snackbar-action {
      color: #ffffff; 
 }
+
+/* regra para o box-sizing */
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+/* regra para o clear float */
+.cf:before,
+.cf:after {content: " ";display: table;}
+.cf:after {clear: both;}
+.cf {*zoom: 1;}
+body {	
+	font:  62.5%/1.2 Verdana, Helvetica, Arial, sans-serif;
+	}

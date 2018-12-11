@@ -1,29 +1,151 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
     <span>SEPIN</span>
   </mat-toolbar-row>
 </mat-toolbar>
 
 <mat-sidenav-container class="app-container">
-  <mat-sidenav mode="side" opened style="width: 160px;">
-    <button mat-raised-button routerLink="/projeto" class="link-actions" #rla1="routerLinkActive" routerLinkActive="active"
-      [color]="rla1.isActive ? 'primary' : ''">Projeto</button>
-    <button mat-raised-button color="basic" class="link-actions" [color]="rla3.isActive || rla2.isActive ? 'primary' : ''"
-      [matMenuTriggerFor]="menu">Administrativo</button>
-    <mat-menu #menu="matMenu">
-      <!-- <a mat-raised-button routerLink="/formacao" color="basic" class="link-actions" #rla2="routerLinkActive"
-        routerLinkActive="active" [color]="rla2.isActive ? 'primary' : ''">Formação</a>
-      <a mat-raised-button routerLink="/area_aplicacao" color="basic" class="link-actions" #rla3="routerLinkActive"
-        routerLinkActive="active" [color]="rla3.isActive ? 'primary' : ''">Área
-        Aplicação</a> -->
-      <button mat-menu-item routerLink="/formacao" #rla2="routerLinkActive" routerLinkActive="active">Formação</button>
-      <button mat-menu-item routerLink="/area_aplicacao" #rla3="routerLinkActive" routerLinkActive="active">Área
-        Aplicação</button>
-    </mat-menu>
+  <!--
+    <mat-sidenav #sidenav mode="side" opened style="width: 10%;">
+      <button mat-raised-button routerLink="/projeto" class="link-actions" #rlaProjeto="routerLinkActive" routerLinkActive="active"
+        [color]="rlaProjeto.isActive ? 'primary' : ''">Projeto Própio</button>
+      <button mat-raised-button routerLink="/conveniado" class="link-actions" #rlaConveniado="routerLinkActive" routerLinkActive="active"
+        [color]="rlaConveniado.isActive ? 'primary' : ''">Projeto Conveniado</button>
+      <button mat-raised-button color="basic" class="link-actions" [color]="rla3.isActive || rla2.isActive ? 'primary' : ''"
+        [matMenuTriggerFor]="menu">Administrativo</button>
+    </mat-sidenav>
+  -->
+  <mat-sidenav #sidenav mode="side" opened role="navigation">
+    <!--
+      <mat-nav-list>
+        <mat-list-item *ngFor="let link of menus">
+          <a matLine routerLink="{{link.router}}">{{ link.name }}
+            <button mat-icon-button>
+              <mat-icon matLine>{{link.icon}}</mat-icon>
+            </button>
+          </a>
+        </mat-list-item>
+      </mat-nav-list>
+    -->
+    <mat-list>
+      <mat-list-item class="link-menu" [ngClass]="getCssActive(['/projeto'])">
+        <div class="menu-item" (click)="goPage('/projeto')">
+          <mat-icon matListIcon>business_center</mat-icon>
+          <h3 matLine>Projeto Próprio</h3>
+        </div>
+      </mat-list-item>
+      <mat-list-item
+        class="link-menu"
+        [ngClass]="getCssActive(['/conveniado'])"
+      >
+        <div class="menu-item" (click)="goPage('/conveniado')">
+          <mat-icon matListIcon>home</mat-icon>
+          <h3 matLine>Projeto Conveniado</h3>
+        </div>
+      </mat-list-item>
+      <mat-list-item
+        class="link-menu"
+        [ngClass]="getCssActive(['/area_aplicacao', '/formacao'])"
+      >
+        <div class="menu-item" (click)="toggleShowSubMenu('adm')">
+          <mat-icon matListIcon>account_balance</mat-icon>
+          <h3 matLine>Administrativo</h3>
+          <mat-icon *ngIf="isShowSubMenu">expand_less</mat-icon>
+          <mat-icon *ngIf="!isShowSubMenu">expand_more</mat-icon>
+        </div>
+      </mat-list-item>
+      <mat-list *ngIf="!isShowSubMenu" style="padding-top: 0px">
+        <mat-list-item class="link-menu">
+          <div class="submenu-item" (click)="goPage('/formacao')">
+            <h5 matLine>Formação</h5>
+          </div>
+        </mat-list-item>
+        <mat-list-item class="link-menu">
+          <div class="submenu-item" (click)="goPage('/area_aplicacao')">
+            <h5 matLine>Área Aplicação</h5>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </mat-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <router-outlet></router-outlet>
+    <mat-sidenav-container class="app-container-child">
+      <mat-sidenav
+        #sidenav2
+        [opened]="!sidenav.opened"
+        mode="side"
+        opened
+        style="width: 60px; margin-right: 100px"
+      >
+        <button
+          mat-icon-button
+          routerLink="/projeto"
+          class="link-actions-icon"
+          #rla1="routerLinkActive"
+          routerLinkActive="active"
+          [color]="rla1.isActive ? 'primary' : ''"
+        >
+          <mat-icon>business_center</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          class="link-actions-icon"
+          routerLinkActive="active"
+          [color]="rla3.isActive || rla2.isActive ? 'primary' : ''"
+          [matMenuTriggerFor]="menu"
+        >
+          <mat-icon>account_balance</mat-icon>
+        </button>
+      </mat-sidenav>
+      <mat-sidenav-content>
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<!-- (click)="checkIsActive(rt)" #rt routerLinkActive="primary"  -->
+<mat-menu #menu="matMenu">
+  <button
+    mat-menu-item
+    routerLink="/formacao"
+    #rla2="routerLinkActive"
+    routerLinkActive="active"
+  >
+    Formação
+  </button>
+  <button
+    mat-menu-item
+    routerLink="/area_aplicacao"
+    #rla3="routerLinkActive"
+    routerLinkActive="active"
+  >
+    Área Aplicação
+  </button>
+</mat-menu>
+
+<!--
+  <a mat-raised-button routerLink="/formacao" color="basic" class="link-actions" #rla2="routerLinkActive"
+    routerLinkActive="active" [color]="rla2.isActive ? 'primary' : ''">Formação</a>
+  <a mat-raised-button routerLink="/area_aplicacao" color="basic" class="link-actions" #rla3="routerLinkActive"
+    routerLinkActive="active" [color]="rla3.isActive ? 'primary' : ''">Área
+    Aplicação</a>
+-->
+<!-- (click)="checkIsActive(rt)" #rt routerLinkActive="primary" -->
+
+<!--
+  <mat-sidenav-container class="app-container">
+    <mat-sidenav #drawer mode="side" opened role="navigation">
+      <mat-nav-list>
+        <a mat-list-item routerLink="/projeto" #rla2="routerLinkActive" routerLinkActive="active">Projeto Próprio</a>
+        <a mat-list-item routerLink="/formacao" #rla2="routerLinkActive" routerLinkActive="active">Projeto Conveniado</a>
+        <a mat-list-item [matMenuTriggerFor]="menu">Admnistrativo</a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+-->
