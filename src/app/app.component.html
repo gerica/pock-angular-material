@@ -6,13 +6,20 @@
 
 <mat-sidenav-container class="app-container">
   <mat-sidenav mode="side" opened style="width: 160px;">
-    <a mat-raised-button routerLink="/projeto" class="link-actions" #rla1="routerLinkActive" routerLinkActive="active"
-      [color]="rla1.isActive ? 'primary' : ''">Projeto</a>
-    <a mat-raised-button routerLink="/formacao" color="basic" class="link-actions" #rla2="routerLinkActive"
-      routerLinkActive="active" [color]="rla2.isActive ? 'primary' : ''">Formação</a>
-    <a mat-raised-button routerLink="/area_aplicacao" color="basic" class="link-actions" #rla3="routerLinkActive"
-      routerLinkActive="active" [color]="rla3.isActive ? 'primary' : ''">Área
-      Aplicação</a>
+    <button mat-raised-button routerLink="/projeto" class="link-actions" #rla1="routerLinkActive" routerLinkActive="active"
+      [color]="rla1.isActive ? 'primary' : ''">Projeto</button>
+    <button mat-raised-button color="basic" class="link-actions" [color]="rla3.isActive || rla2.isActive ? 'primary' : ''"
+      [matMenuTriggerFor]="menu">Administrativo</button>
+    <mat-menu #menu="matMenu">
+      <!-- <a mat-raised-button routerLink="/formacao" color="basic" class="link-actions" #rla2="routerLinkActive"
+        routerLinkActive="active" [color]="rla2.isActive ? 'primary' : ''">Formação</a>
+      <a mat-raised-button routerLink="/area_aplicacao" color="basic" class="link-actions" #rla3="routerLinkActive"
+        routerLinkActive="active" [color]="rla3.isActive ? 'primary' : ''">Área
+        Aplicação</a> -->
+      <button mat-menu-item routerLink="/formacao" #rla2="routerLinkActive" routerLinkActive="active">Formação</button>
+      <button mat-menu-item routerLink="/area_aplicacao" #rla3="routerLinkActive" routerLinkActive="active">Área
+        Aplicação</button>
+    </mat-menu>
   </mat-sidenav>
   <mat-sidenav-content>
     <router-outlet></router-outlet>
