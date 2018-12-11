@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLinkActive } from '@angular/router';
 import { clearLine } from 'readline';
 
 export interface Tile {
@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
   title = 'SEPIN';
   opened = true;
   currentRouter: string;
-  isShowSubMenu = false;
+  showSubMenu = false;
 
   constructor(private router: Router) { }
 
@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
   goPage(route: string) {
     this.currentRouter = route;
     this.router.navigate([this.currentRouter]);
-    this.isShowSubMenu = true;
+    this.showSubMenu = false;
   }
 
   getCssActive(route: Array<string>): string {
@@ -67,7 +67,12 @@ export class AppComponent implements OnInit {
   }
 
   toggleShowSubMenu(menu: string): void {
-    this.isShowSubMenu = !this.isShowSubMenu;
+    this.showSubMenu = !this.showSubMenu;
+  }
+
+  setRoute(route: any): void {
+    // console.log(route);
+    this.currentRouter = route;
   }
 
 }

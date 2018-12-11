@@ -81,3 +81,11 @@
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease;
 }
+.active:hover {
+  color: rgb(255, 255, 255);;
+  background-color: #3f51b5;
+  -moz-transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
