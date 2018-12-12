@@ -3,11 +3,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { ProjetoRoutes } from './page/page/projeto/projeto-routing.module';
 import { FormacaoRoutes } from './page/page/formacao/formacao-routing.module';
 import { AreaAplicacaoRoutes } from './page/page/areaAplicacao/area.aplicacao-routing.module';
+import { ProjetoConveniadoRoutes } from './page/page/conveniado/conveniado-routing.module';
 
 const routes: Routes = [
   ...ProjetoRoutes,
   ...FormacaoRoutes,
   ...AreaAplicacaoRoutes,
+  ...ProjetoConveniadoRoutes,
 ];
 
 @NgModule({

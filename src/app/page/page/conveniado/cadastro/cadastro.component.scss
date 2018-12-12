@@ -1,0 +1,53 @@
+.containerProjeto {
+    max-width: 100%;
+    margin: 0.5em;
+}
+
+.cardProjeto{
+  margin-bottom: 10px;
+}
+
+.app-button-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.app-button-row button{  
+  margin-right: 8px;
+}
+
+.app-form {  
+  width: 100%;
+  // border: 1px solid black;
+}
+
+.app-full-width {
+  width: 20%;
+  padding-left: 0.5em;
+}
+
+table {
+  width: 100%;
+}
+
+.section-group {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  height: 30px;
+  // margin-top: 2%;
+}
+
+.radio-item {
+  margin: 0 10px;
+}
+
+.containerTotal {
+  height: 49px;
+  font-weight: bold;
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 5%;
+}

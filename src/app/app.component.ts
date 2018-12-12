@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLinkActive } from '@angular/router';
-import { clearLine } from 'readline';
 
 export interface Tile {
   color: string;
@@ -19,7 +18,6 @@ export interface Tile {
 export class AppComponent implements OnInit {
   title = 'SEPIN';
   currentRouter: string;
-  showSubMenu = false;
   menus: any[] = [
     {
       icon: 'business_center',
@@ -52,10 +50,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  toggleSidBar(): void {
-    this.opened = !this.opened;
-  }
-
   goPage(route: string, item: any) {
     this.currentRouter = route;
     this.router.navigate([this.currentRouter]);
@@ -79,7 +73,6 @@ export class AppComponent implements OnInit {
   }
 
   toggleShowSubMenu(item: any): void {
-    // this.showSubMenu = !this.showSubMenu;
     item.showChilds = !item.showChilds;
   }
 

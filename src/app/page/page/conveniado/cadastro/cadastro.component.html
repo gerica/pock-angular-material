@@ -1,0 +1,331 @@
+<mat-horizontal-stepper class="containerProjeto" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form class="app-form" #form1="ngForm">
+      <ng-template matStepLabel>Dados Básicos</ng-template>
+      <mat-card class="cardProjeto">
+        <mat-card-header>
+          <mat-card-title>Dados Básicos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-card class="cardProjeto">
+            <mat-form-field style="width: 20%; padding-left: 0.5em;">
+              <input matInput placeholder="Identificação" name="NRIdentificado" [(ngModel)]="entity.NRIdentificado"
+                #NRIdentificado="ngModel" required max="255" maxlength="255">
+              <mat-error *ngIf="NRIdentificado.invalid">Campo obrigatório</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 20%; padding-left: 0.5em;">
+              <input matInput placeholder="Sigla" name="NRSigla" [(ngModel)]="entity.NRSigla" #NRSigla="ngModel"
+                required max="10" maxlength="10">
+              <mat-error *ngIf="NRSigla.invalid">Campo obrigatório</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 60%; padding-left: 0.5em;">
+              <input matInput placeholder="Nome" name="NRNome" [(ngModel)]="entity.NRNome" #NRNome="ngModel" required
+                max="255" maxlength="255">
+              <mat-error *ngIf="NRNome.invalid">Campo obrigatório</mat-error>
+            </mat-form-field>
+            <!-- final da linha -->
+
+            <mat-form-field style="width: 50%; padding-left: 0.5em;">
+              <mat-select placeholder="Região" [(ngModel)]="entity.NRRegiao" name="NRRegiao" #NRRegiao="ngModel"
+                required>
+                <mat-option *ngFor="let obj of regioes" [value]="obj.value">
+                  {{obj.value}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="NRRegiao">Campo obrigatório</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 50%; padding-left: 0.5em;">
+              <mat-select placeholder="Instituição" [(ngModel)]="entity.IDTipoProjeto" name="IDTipoProjeto"
+                #IDTipoProjeto="ngModel" required (ngModelChange)="onChangeTipo($event)">
+                <mat-option *ngFor="let t of types | async" [value]="t.IDTipoProjeto">
+                  {{t.NRDescricao}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="IDTipoProjeto">Campo obrigatório</mat-error>
+            </mat-form-field>
+            <!-- final da linha -->
+
+            <mat-form-field style="width: 20%; padding-left: 0.5em;">
+              <input matInput [matDatepicker]="picker1" [(ngModel)]="entity.DTInicio" name="DTInicio" placeholder="Data de Inicio"
+                required #DTInicio="ngModel">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <mat-error *ngIf="DTInicio">Campo obrigatório</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 20%; padding-left: 0.5em;">
+              <input matInput [matDatepicker]="picker2" [(ngModel)]="entity.DTFim" name="DTFim" placeholder="Data de FIM"
+                required #DTFim="ngModel">
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+              <mat-error *ngIf="DTFim">Campo obrigatório</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 55%; padding-left: 0.5em;">
+              <mat-select placeholder="Tipo" [(ngModel)]="entity.IDTipoProjeto" name="IDTipoProjeto" #IDTipoProjeto="ngModel"
+                required (ngModelChange)="onChangeTipo($event)">
+                <mat-option *ngFor="let t of types | async" [value]="t.IDTipoProjeto">
+                  {{t.NRDescricao}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="IDTipoProjeto">Campo obrigatório</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 55%; padding-left: 0.5em;" *ngIf="entity.IDTipoProjeto === 8">
+              <input matInput placeholder="Especificador" name="NREspecificador" [(ngModel)]="entity.NREspecificador"
+                #NREspecificador="ngModel" required max="255" maxlength="255">
+              <mat-error *ngIf="NREspecificador.invalid">Campo obrigatório</mat-error>
+            </mat-form-field>
+            <section class="section-group" [ngStyle]="getStyleRadioCheck(form1, BLTrocaPPBparaPD)">
+              <label style="padding-right: 10px">Projeto para cumprir troca de PPB por P,D&I? *</label>
+              <mat-radio-group [(ngModel)]="entity.BLTrocaPPBparaPD" name="BLTrocaPPBparaPD" #BLTrocaPPBparaPD="ngModel"
+                required>
+                <mat-radio-button value="sim" style="padding-right: 10px;" required>Sim</mat-radio-button>
+                <mat-radio-button value="não">Não</mat-radio-button>
+              </mat-radio-group>
+            </section>
+            <div *ngIf="form1.invalid && form1.submitted && !BLTrocaPPBparaPD.value" class="mat-error" style="font-size: 75%;">
+              Campo obrigatório
+            </div>
+          </mat-card>
+          <mat-card class="cardProjeto">
+            <!-- <mat-divider style="margin-top: 1em;"></mat-divider> -->
+            <section class="section-group" [ngStyle]="getStyleRadioCheck(form1, NRAlcance)">
+              <label>Alcance: *</label>
+              <mat-radio-group [(ngModel)]="entity.NRAlcance" name="NRAlcance" #NRAlcance="ngModel" required>
+                <mat-radio-button class="radio-item" value="Na Instituição">Na Instituição</mat-radio-button>
+                <mat-radio-button class="radio-item" value="Na Empresa">Na Empresa</mat-radio-button>
+                <mat-radio-button class="radio-item" value="No Mercado Interno">No Mercado Interno</mat-radio-button>
+                <mat-radio-button class="radio-item" value="Exportação">Exportação</mat-radio-button>
+              </mat-radio-group>
+            </section>
+            <div *ngIf="form1.invalid && form1.submitted && !NRAlcance.value" class="mat-error" style="font-size: 75%;">
+              Campo obrigatório
+            </div>
+            <section class="section-group" style="margin-top: 1.5%;" [ngStyle]="getStyleRadioCheck(form1, NRGrauInovacaoG1)">
+              <label style="width: 120px;">Grau de Inovação:</label>
+              <mat-radio-group [(ngModel)]="entity.NRGrauInovacaoG1" name="NRGrauInovacaoG1" style="width: 450px;"
+                #NRGrauInovacaoG1="ngModel" required>
+                <mat-radio-button class="radio-item" value="Novo para a empresa, mas existente no mercado nacional">Novo
+                  para a empresa, mas existente no mercado nacional</mat-radio-button>
+                <mat-radio-button class="radio-item" value="Novo no mercado Nacional, mas já existente no mercado mundial">Novo
+                  no mercado Nacional, mas já existente no mercado mundial</mat-radio-button>
+                <mat-radio-button class="radio-item" value="Novo no mercado Mundial">Novo no mercado Mundial</mat-radio-button>
+              </mat-radio-group>
+              <mat-radio-group [(ngModel)]="entity.NRGrauInivacaoG2" name="NRGrauInivacaoG2" style="width: 350px;">
+                <mat-radio-button class="radio-item" value="Aprimoramentos a partir de algo existente">Aprimoramentos a
+                  partir de algo existente</mat-radio-button>
+                <mat-radio-button class="radio-item" value="before">Desenvolvimento de algo novo</mat-radio-button>
+              </mat-radio-group>
+            </section>
+            <div *ngIf="form1.invalid && form1.submitted && !NRGrauInovacaoG1.value" class="mat-error" style="font-size: 75%;">
+              Campo obrigatório
+            </div>
+            <mat-form-field style="width: 55%; padding-left: 0.5em; padding-top: 1.5em;">
+              <input matInput placeholder="Área de Aplicação" [matAutocomplete]="auto" name="IDAreaAplicacao"
+                #IDAreaAplicacao="ngModel" [(ngModel)]="currentAreaAplicacao" (ngModelChange)="doFilterAreaAplicacao()"
+                required>
+              <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                <mat-option *ngFor="let option of areaAplicacoes | async" [value]="option.CDCodigo+' - '+option.NRNome"
+                  (onSelectionChange)="entity.IDAreaAplicacao = option.IDAreaAplicacao">
+                  {{option.CDCodigo}} - {{option.NRNome}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="IDAreaAplicacao.invalid">Campo obrigatório</mat-error>
+            </mat-form-field>
+            <section class="section-group" [ngStyle]="getStyleRadioCheck(form1, BLPropriedadeIntelectual)">
+              <label style="padding-right: 10px;">Este projeto gerou Propriedade Intelectual?</label>
+              <mat-radio-group [(ngModel)]="entity.BLPropriedadeIntelectual" name="BLPropriedadeIntelectual"
+                #BLPropriedadeIntelectual="ngModel" required>
+                <mat-radio-button value="sim" style="padding-right: 10px;">Sim</mat-radio-button>
+                <mat-radio-button value="não">Não</mat-radio-button>
+              </mat-radio-group>
+            </section>
+            <div *ngIf="form1.invalid && form1.submitted && !BLPropriedadeIntelectual.value" class="mat-error" style="font-size: 75%;">
+              Campo obrigatório
+            </div>
+            <section class="section-group" [ngStyle]="getStyleRadioCheck(form1, BLPublicacao)">
+              <label style="padding-right: 74px;">Este projeto possui publicações?</label>
+              <mat-radio-group [(ngModel)]="entity.BLPublicacao" name="BLPublicacao" #BLPublicacao="ngModel" required>
+                <mat-radio-button value="sim" style="padding-right: 10px;">Sim</mat-radio-button>
+                <mat-radio-button value="não">Não</mat-radio-button>
+              </mat-radio-group>
+              <mat-form-field style="width: 20%; padding-left: 1.5em;" *ngIf="entity.BLPublicacao && entity.BLPublicacao === 'true'">
+                <input matInput placeholder="Quantidade" name="QDQuantidadePublicacao" [(ngModel)]="entity.QDQuantidadePublicacao"
+                  #QDQuantidadePublicacao="ngModel" required max="255" maxlength="255">
+                <mat-error *ngIf="QDQuantidadePublicacao.invalid">Campo obrigatório</mat-error>
+              </mat-form-field>
+            </section>
+            <div *ngIf="form1.invalid && form1.submitted && !BLPublicacao.value" class="mat-error" style="font-size: 75%;">
+              Campo obrigatório
+            </div>
+          </mat-card>
+          <mat-card class="cardProjeto" *ngIf="entity.IDTipoProjeto">
+            <section class="example-section" style="width: 40%; display:flex; justify-content: space-between;">
+              <label>Artigo 24</label>
+              <mat-checkbox *ngIf="entity.IDTipoProjeto !== 6" class="example-margin" [(ngModel)]="entity.CKArtigoI"
+                name="artigo24-I">I</mat-checkbox>
+              <mat-checkbox *ngIf="entity.IDTipoProjeto !== 6" class="example-margin" [(ngModel)]="entity.CKArtigoII"
+                name="artigo24-II">II</mat-checkbox>
+              <mat-checkbox *ngIf="entity.IDTipoProjeto !== 6" class="example-margin" [(ngModel)]="entity.CKArtigoIII"
+                name="artigo24-III">III</mat-checkbox>
+              <mat-checkbox *ngIf="entity.IDTipoProjeto === 6" class="example-margin" [(ngModel)]="entity.CKArtigoIV"
+                name="artigo24-IV">IV - A</mat-checkbox>
+              <mat-checkbox *ngIf="entity.IDTipoProjeto === 6" class="example-margin" [(ngModel)]="entity.CKArtigoIVA"
+                name="artigo24-IVA">IV - B</mat-checkbox>
+              <mat-checkbox *ngIf="entity.IDTipoProjeto === 6" class="example-margin" [(ngModel)]="entity.CKArtigoIVB"
+                name="artigo24-IVB">IV - C</mat-checkbox>
+              <mat-checkbox *ngIf="entity.IDTipoProjeto === 6" class="example-margin" [(ngModel)]="entity.CKArtigoIVC"
+                name="artigo24-IVC">IV - C</mat-checkbox>
+              <mat-checkbox *ngIf="entity.IDTipoProjeto === 6" class="example-margin" [(ngModel)]="entity.CKArtigoIV1"
+                name="artigo24-IV1">IV - §1</mat-checkbox>
+            </section>
+            <div *ngIf="entity.IDTipoProjeto !== 6">
+              I - trabalho teórico ou experimental realizado de forma sistemática para adquirir novos conhecimentos,
+              visando a atingir objetivo específico, descobrir novas aplicações ou obter ampla e precisa compreensão
+              dos fundamentos subjacentes aos fenômenos e fatos observados, sem prévia definição para o aproveitamento
+              prático dos resultados;
+            </div>
+            <div style="margin-top: 20px;" *ngIf="entity.IDTipoProjeto !== 6">
+              II - trabalho sistemático utilizando o conhecimento adquirido na pesquisa ou experiência prática, para
+              desenvolver novos materiais, produtos, dispositivos ou programas de computador, para implementar novos
+              processos, sistemas ou serviços ou, então, para aperfeiçoar os já produzidos ou implantados, incorporando
+              características inovadoras;
+            </div>
+            <div style="margin-top: 20px;" *ngIf="entity.IDTipoProjeto !== 6">
+              III - serviço científico e tecnológico de assessoria, consultoria, estudos, ensaios, metrologia,
+              normalização, gestão tecnológica, fomento à invenção e inovação, gestão e controle da propriedade
+              intelectual gerada dentro das atividades de pesquisa e desenvolvimento, bem como implantação e operação
+              de
+              incubadoras de base tecnológica em tecnologias da informação, desde que associadas a quaisquer das
+              atividades previstas nos incisos I e II deste artigo;
+            </div>
+            <div style="margin-top: 20px;" *ngIf="entity.IDTipoProjeto === 6">
+              IV - formação ou capacitação profissional de níveis médio e superior:
+            </div>
+            <div *ngIf="entity.IDTipoProjeto === 6">
+              a) para aperfeiçoamento e desenvolvimento de recursos humanos em tecnologias da informação;
+            </div>
+            <div *ngIf="entity.IDTipoProjeto === 6">
+              b) para aperfeiçoamento e desenvolvimento de recursos humanos envolvidos nas atividades de que tratam os
+              incisos de I a III deste artigo; e
+            </div>
+            <div *ngIf="entity.IDTipoProjeto === 6">
+              c) em cursos de formação profissional, de nível superior e de pós-graduação, observado o disposto no
+              inciso
+              III do art. 27.
+            </div>
+            <div *ngIf="entity.IDTipoProjeto === 6">
+              § 1o Admitir-se-á o intercâmbio científico e tecnológico, internacional e inter-regional, como atividade
+              complementar à execução de projeto de pesquisa e desenvolvimento, para fins do disposto no art. 8º.
+            </div>
+          </mat-card>
+        </mat-card-content>
+      </mat-card>
+      <div>
+        <button mat-button matStepperNext>Próximo</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <form>
+      <ng-template matStepLabel>Despêndio</ng-template>
+      <mat-card class="cardProjeto">
+        <mat-card-header>
+          <mat-card-title>Dispêncio {{entityStep2.DTAnoBase}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field style="width: 22%; padding-left: 0.5em;">
+            <input matInput placeholder="Recursos Humanos" name="VLRecursosHumanoa" [(ngModel)]="entityStep2.VLRecursosHumanoa"
+              #VLRecursosHumanoa="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
+          </mat-form-field>
+          <mat-form-field style="width: 22%; padding-left: 0.5em;">
+            <input matInput placeholder="Treinamento" name="VLTreinamento" [(ngModel)]="entityStep2.VLTreinamento"
+              #VLTreinamento="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
+          </mat-form-field>
+          <mat-form-field style="width: 22%; padding-left: 0.5em;">
+            <input matInput placeholder="Equipamento/Software" name="VLEquipamentoSoftware" [(ngModel)]="entityStep2.VLEquipamentoSoftware"
+              #VLEquipamentoSoftware="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
+          </mat-form-field>
+          <mat-form-field style="width: 22%; padding-left: 0.5em;">
+            <input matInput placeholder="Livros ou Periôdicos" name="VLLivroPeriodico" [(ngModel)]="entityStep2.VLLivroPeriodico"
+              #VLLivroPeriodico="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
+          </mat-form-field>
+          <mat-form-field style="width: 22%; padding-left: 0.5em;">
+            <input matInput placeholder="Obras Civis" name="VLObraCivil" [(ngModel)]="entityStep2.VLObraCivil"
+              #VLObraCivil="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
+          </mat-form-field>
+          <mat-form-field style="width: 22%; padding-left: 0.5em;">
+            <input matInput placeholder="Viagens" name="VLViagem" [(ngModel)]="entityStep2.VLViagem" #VLViagem="ngModel"
+              max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
+          </mat-form-field>
+          <mat-form-field style="width: 22%; padding-left: 0.5em;">
+            <input matInput placeholder="Material de Consumo" name="VLMaterialConsumo" [(ngModel)]="entityStep2.VLMaterialConsumo"
+              #VLMaterialConsumo="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
+          </mat-form-field>
+          <mat-form-field style="width: 22%; padding-left: 0.5em;">
+            <input matInput placeholder="Outros Correlatos" name="VLOuroCorrelato" [(ngModel)]="entityStep2.VLOuroCorrelato"
+              #VLOuroCorrelato="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
+          </mat-form-field>
+          <mat-form-field style="width: 22%; padding-left: 0.5em;">
+            <input matInput placeholder="Serviços Técnicos de Terceiros" name="VLServicoTerceiro" [(ngModel)]="entityStep2.VLServicoTerceiro"
+              #VLServicoTerceiro="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendio()">
+          </mat-form-field>
+          <mat-divider></mat-divider>
+          <section class="containerTotal">
+            <label>Total válido para cumprimento de obrigações: {{entityStep2.DTAnoBase}}: {{entityStep2.VLTotalValido
+              | currency:'BRL':'symbol':'0.0-2':'pt'}}</label>
+          </section>
+          <!-- <mat-form-field style="width: 22.3%; padding-left: 0.5em;">
+            <input matInput placeholder="Total válido para cumprimento de obrigações. {{entityStep2.DTAnoBase}}" name="VLTotalValido"
+              [(ngModel)]="entityStep2.VLTotalValido" #VLTotalValido="ngModel" max="255" maxlength="255" currencyMask
+              [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }" (ngModelChange)="calcularTotalDispendio()">
+          </mat-form-field> -->
+
+
+        </mat-card-content>
+      </mat-card>
+      <div>
+        <button mat-button matStepperPrevious>Voltar</button>
+        <button mat-button matStepperNext>Próximo</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <form class="app-form" #form2="ngForm" (submit)="gravar($event, form1, form2)">
+      <ng-template matStepLabel>Descricção</ng-template>
+      <mat-card class="cardProjeto">
+        <mat-card-header>
+          <mat-card-title>Dispêncio {{entityStep2.DTAnoBase}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field style="width: 99%; padding-left: 0.5em;">
+            <textarea matInput placeholder="Objetivo" name="DSObjetivo" [(ngModel)]="entity.DSObjetivo" #DSObjetivo="ngModel"
+              required></textarea>
+            <mat-error *ngIf="DSObjetivo.invalid">Campo obrigatório</mat-error>
+          </mat-form-field>
+          <mat-form-field style="width: 99%; padding-left: 0.5em;">
+            <textarea matInput placeholder="Descrição das Etapas" name="DSDescricaoEtapa" [(ngModel)]="entity.DSDescricaoEtapa"
+              #DSDescricaoEtapa="ngModel" required></textarea>
+            <mat-error *ngIf="DSDescricaoEtapa.invalid">Campo obrigatório</mat-error>
+          </mat-form-field>
+          <mat-form-field style="width: 99%; padding-left: 0.5em;">
+            <textarea matInput placeholder="Resultados Obtidos" name="DSResultadoObtido" [(ngModel)]="entity.DSResultadoObtido"
+              #DSResultadoObtido="ngModel" required></textarea>
+            <mat-error *ngIf="DSResultadoObtido.invalid">Campo obrigatório</mat-error>
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+      <div>
+        <button mat-button matStepperPrevious>Voltar</button>
+        <button mat-button (click)="stepper.reset()">Concluir</button>
+      </div>
+    </form>
+  </mat-step>
+</mat-horizontal-stepper>
