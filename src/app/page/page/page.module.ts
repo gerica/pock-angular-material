@@ -12,6 +12,7 @@ import { DeleteDialogComponent } from '../shared/utils/modal/delete/delete.dialo
 import { MatButtonModule } from '@angular/material/button';
 import { AreaAplicacaoModule } from './areaAplicacao/area.aplicacao.module';
 import { ProjetoConveniadoModule } from './conveniado/conveniado.module';
+import { InstituicaoModule } from './instituicao/instituicao.module';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { ProjetoConveniadoModule } from './conveniado/conveniado.module';
     FormacaoModule,
     AreaAplicacaoModule,
     ProjetoConveniadoModule,
+    InstituicaoModule,
   ],
   exports: [DeleteDialogComponent],
   providers: [],

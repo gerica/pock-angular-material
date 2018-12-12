@@ -40,6 +40,10 @@ export class AppComponent implements OnInit {
         {
           name: 'Área Aplicação',
           router: '/area_aplicacao',
+        },
+        {
+          name: 'Instutuição',
+          router: '/instituicao',
         }
       ],
     },

@@ -12,6 +12,7 @@ export const environment = {
   moduleProjetoDispendio: { name: 'ProjetoDispendio' },
   moduleFormacao: { name: 'Formacao' },
   moduleAreaAplicacao: { name: 'AreaAplicacao' },
+  moduleInstituicao: { name: 'Instituicao' },
   isDevelope: true,
 };
 
