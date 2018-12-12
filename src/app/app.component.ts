@@ -18,29 +18,36 @@ export interface Tile {
 
 export class AppComponent implements OnInit {
   title = 'SEPIN';
-  opened = true;
   currentRouter: string;
   showSubMenu = false;
-
-  constructor(private router: Router) { }
-
-
   menus: any[] = [
     {
       icon: 'business_center',
       name: 'Projeto Próprio',
       router: '/projeto',
-      subject: 'teste1',
-      content: 'conteudo',
-    },
-    {
+    }, {
+      icon: 'loyalty',
+      name: 'Projeto Conveniado',
+      router: '/conveniado',
+    }, {
       icon: 'account_balance',
-      name: 'Adminstrativo',
-      router: '/projeto2',
-      subject: 'teste12',
-      content: 'conteudo2',
+      name: 'Admnistrativo',
+      showChilds: false,
+      // router: '',
+      childs: [
+        {
+          name: 'Formação',
+          router: '/formacao',
+        },
+        {
+          name: 'Área Aplicação',
+          router: '/area_aplicacao',
+        }
+      ],
     },
   ];
+
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -49,25 +56,31 @@ export class AppComponent implements OnInit {
     this.opened = !this.opened;
   }
 
-  goPage(route: string) {
+  goPage(route: string, item: any) {
     this.currentRouter = route;
     this.router.navigate([this.currentRouter]);
-    this.showSubMenu = false;
+    if (item) {
+      item.showChilds = false;
+    }
   }
 
-  getCssActive(route: Array<string>): string {
-    // let cssClass = 'link-menu';
-    for (const r of route) {
-      if (this.currentRouter === r) {
-        return 'active';
+  getCssActive(route: string, childs: any): string {
+    if (route && route === this.currentRouter) {
+      return 'active';
+    } else if (childs) {
+      for (const c of childs) {
+        if (this.currentRouter === c.router) {
+          return 'active';
+        }
       }
     }
-    // console.log(cssClass);
+
     return '';
   }
 
-  toggleShowSubMenu(menu: string): void {
-    this.showSubMenu = !this.showSubMenu;
+  toggleShowSubMenu(item: any): void {
+    // this.showSubMenu = !this.showSubMenu;
+    item.showChilds = !item.showChilds;
   }
 
   setRoute(route: any): void {

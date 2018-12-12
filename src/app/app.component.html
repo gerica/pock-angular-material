@@ -10,55 +10,53 @@
 <mat-sidenav-container class="app-container">
   <mat-sidenav #sidenav mode="side" opened role="navigation">
     <mat-list>
-      <mat-list-item class="link-menu" [ngClass]="getCssActive(['/projeto'])">
-        <div class="menu-item" (click)="goPage('/projeto')">
-          <mat-icon matListIcon>business_center</mat-icon>
-          <h3 matLine>Projeto Próprio</h3>
-        </div>
-      </mat-list-item>
-      <mat-list-item class="link-menu" [ngClass]="getCssActive(['/conveniado'])">
-        <div class="menu-item" (click)="goPage('/conveniado')">
-          <mat-icon matListIcon>autorenew</mat-icon>
-          <h3 matLine>Projeto Conveniado</h3>
-        </div>
-      </mat-list-item>
-      <mat-list-item class="link-menu" [ngClass]="getCssActive(['/area_aplicacao', '/formacao'])">
-        <div class="menu-item" (click)="toggleShowSubMenu('adm')">
-          <mat-icon matListIcon>account_balance</mat-icon>
-          <h3 matLine>Administrativo</h3>
-          <mat-icon *ngIf="!showSubMenu">expand_less</mat-icon>
-          <mat-icon *ngIf="showSubMenu">expand_more</mat-icon>
-        </div>
-      </mat-list-item>
-      <mat-list *ngIf="showSubMenu" style="padding-top: 0px">
-        <mat-list-item class="link-menu">
-          <div class="submenu-item" (click)="goPage('/formacao')">
-            <h5 matLine>Formação</h5>
+      <span *ngFor="let item of menus;">
+        <mat-list-item class="link-menu" [ngClass]="getCssActive(item.router, item.childs)">
+          <div class="menu-item" (click)="goPage(item.router)" *ngIf="!item.childs">
+            <mat-icon matListIcon>{{item.icon}}</mat-icon>
+            <h3 matLine>{{item.name}}</h3>
+          </div>
+          <div class="menu-item" (click)="toggleShowSubMenu(item)" *ngIf="item.childs">
+            <mat-icon matListIcon>{{item.icon}}</mat-icon>
+            <h3 matLine>{{item.name}}</h3>
+            <mat-icon *ngIf="!item.showChilds">expand_less</mat-icon>
+            <mat-icon *ngIf="item.showChilds">expand_more</mat-icon>
           </div>
         </mat-list-item>
-        <mat-list-item class="link-menu">
-          <div class="submenu-item" (click)="goPage('/area_aplicacao')">
-            <h5 matLine>Área Aplicação</h5>
-          </div>
-        </mat-list-item>
-      </mat-list>
+        <span *ngFor="let child of item.childs;">
+          <mat-list *ngIf="item.showChilds" style="padding-top: 0px">
+            <mat-list-item class="link-menu">
+              <div class="submenu-item" (click)="goPage(child.router, item)">
+                <h5 matLine>{{child.name}}</h5>
+              </div>
+            </mat-list-item>
+          </mat-list>
+        </span>
+      </span>
     </mat-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-sidenav-container class="app-container-child">
-      <mat-sidenav #sidenav2 [opened]="!sidenav.opened" mode="side" opened style="width: 60px; margin-right: 100px">
-        <button mat-icon-button routerLink="/projeto" class="link-actions-icon" #rla1="routerLinkActive"
-          routerLinkActive="active" [color]="rla1.isActive ? 'primary' : ''" (click)="setRoute('/projeto')">
-          <mat-icon>business_center</mat-icon>
-        </button>
-        <button mat-icon-button routerLink="/conveniado" class="link-actions-icon" #rla1="routerLinkActive"
-          routerLinkActive="active" [color]="rla1.isActive ? 'primary' : ''" (click)="setRoute('/conveniado')">
-          <mat-icon>autorenew</mat-icon>
-        </button>
-        <button mat-icon-button class="link-actions-icon" routerLinkActive="active" [color]="rla3.isActive || rla2.isActive ? 'primary' : ''"
-          [matMenuTriggerFor]="menu" [ngClass]="getCssActive(['/area_aplicacao', '/formacao'])">
-          <mat-icon>account_balance</mat-icon>
-        </button>
+      <mat-sidenav [opened]="!sidenav.opened" mode="side" opened style="width: 60px; margin-right: 100px">
+        <span *ngFor="let item of menus; index as i;">
+          <button *ngIf="!item.childs" mat-icon-button routerLink="{{item.router}}" class="link-actions-icon" #rla="routerLinkActive"
+            routerLinkActive="active" [color]="rla.isActive ? 'primary' : ''" (click)="setRoute(item.router)">
+            <mat-icon>{{item.icon}}</mat-icon>
+          </button>
+          <span *ngIf="item.childs">
+            <button mat-icon-button class="link-actions-icon" [matMenuTriggerFor]="menu" [ngClass]="getCssActive(item.router, item.childs)">
+              <mat-icon>{{item.icon}}</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <span *ngFor="let child of item.childs;">
+                <button mat-menu-item routerLink="{{child.router}}" #rla2="routerLinkActive" routerLinkActive="active"
+                  (click)="setRoute(child.router)">
+                  {{child.name}}
+                </button>
+              </span>
+            </mat-menu>
+          </span>
+        </span>
       </mat-sidenav>
       <mat-sidenav-content>
         <router-outlet></router-outlet>
@@ -66,12 +64,3 @@
     </mat-sidenav-container>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
-<mat-menu #menu="matMenu">
-  <button mat-menu-item routerLink="/formacao" #rla2="routerLinkActive" routerLinkActive="active" (click)="setRoute('/formacao')">
-    Formação
-  </button>
-  <button mat-menu-item routerLink="/area_aplicacao" #rla3="routerLinkActive" routerLinkActive="active" (click)="setRoute('/area_aplicacao')">
-    Área Aplicação
-  </button>
-</mat-menu>
