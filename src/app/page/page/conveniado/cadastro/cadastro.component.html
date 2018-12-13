@@ -9,9 +9,9 @@
         <mat-card-content>
           <mat-card class="cardProjeto">
             <mat-form-field style="width: 20%; padding-left: 0.5em;">
-              <input matInput placeholder="Identificação" name="NRIdentificado" [(ngModel)]="entity.NRIdentificado"
-                #NRIdentificado="ngModel" required max="255" maxlength="255">
-              <mat-error *ngIf="NRIdentificado.invalid">Campo obrigatório</mat-error>
+              <input matInput placeholder="Identificação" name="IDProjetoConveniado" [(ngModel)]="entity.IDProjetoConveniado"
+                #IDProjetoConveniado="ngModel" max="255" maxlength="255" disabled>
+              <mat-error *ngIf="IDProjetoConveniado.invalid">Campo obrigatório</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 20%; padding-left: 0.5em;">
               <input matInput placeholder="Sigla" name="NRSigla" [(ngModel)]="entity.NRSigla" #NRSigla="ngModel"
@@ -35,31 +35,55 @@
               <mat-error *ngIf="NRRegiao">Campo obrigatório</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 50%; padding-left: 0.5em;">
-              <mat-select placeholder="Instituição" [(ngModel)]="entity.IDTipoProjeto" name="IDTipoProjeto"
-                #IDTipoProjeto="ngModel" required (ngModelChange)="onChangeTipo($event)">
-                <mat-option *ngFor="let t of types | async" [value]="t.IDTipoProjeto">
-                  {{t.NRDescricao}}
+              <mat-select placeholder="Instituição" [(ngModel)]="entity.IDInstituicao" name="IDInstituicao"
+                #IDInstituicao="ngModel" required (ngModelChange)="onChangeTipo($event)">
+                <mat-option *ngFor="let obj of instituincoes | async" [value]="obj.IDInstituicao">
+                  {{obj.NRNome}}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="IDTipoProjeto">Campo obrigatório</mat-error>
+              <mat-error *ngIf="IDInstituicao">Campo obrigatório</mat-error>
             </mat-form-field>
             <!-- final da linha -->
 
-            <mat-form-field style="width: 20%; padding-left: 0.5em;">
+            <span *ngIf="entity.IDInstituicao===15">
+              <mat-form-field style="width: 40%; padding-left: 0.5em;">
+                <input matInput placeholder="Empresa" name="NREmpresa" [(ngModel)]="entity.NREmpresa" #NREmpresa="ngModel"
+                  required max="100" maxlength="100">
+                <mat-error *ngIf="NREmpresa.invalid">Campo obrigatório</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width: 30%; padding-left: 0.5em;">
+                <input matInput placeholder="Responsável" name="NRResponsavel" [(ngModel)]="entity.NRResponsavel"
+                  #NRResponsavel="ngModel" required max="100" maxlength="100">
+                <mat-error *ngIf="NRResponsavel.invalid">Campo obrigatório</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width: 20%; padding-left: 0.5em;">
+                <input matInput placeholder="E-mail" name="NREmail" type="email" [(ngModel)]="entity.NREmail" #NREmail="ngModel"
+                  required max="255" maxlength="255">
+                <mat-error *ngIf="NREmail.invalid">Campo obrigatório</mat-error>
+              </mat-form-field>
+              <mat-form-field style="width: 10%; padding-left: 0.5em;">
+                <input matInput placeholder="Telefone" name="NRTelefone" [(ngModel)]="entity.NRTelefone" #NRTelefone="ngModel"
+                  required [textMask]="{mask: maskTelefone}">
+                <mat-error *ngIf="NRTelefone.invalid">Campo obrigatório</mat-error>
+              </mat-form-field>
+            </span>
+            <!-- final da linha -->
+
+            <mat-form-field style="width: 25%; padding-left: 0.5em;">
               <input matInput [matDatepicker]="picker1" [(ngModel)]="entity.DTInicio" name="DTInicio" placeholder="Data de Inicio"
                 required #DTInicio="ngModel">
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
               <mat-error *ngIf="DTInicio">Campo obrigatório</mat-error>
             </mat-form-field>
-            <mat-form-field style="width: 20%; padding-left: 0.5em;">
+            <mat-form-field style="width: 25%; padding-left: 0.5em;">
               <input matInput [matDatepicker]="picker2" [(ngModel)]="entity.DTFim" name="DTFim" placeholder="Data de FIM"
                 required #DTFim="ngModel">
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
               <mat-error *ngIf="DTFim">Campo obrigatório</mat-error>
             </mat-form-field>
-            <mat-form-field style="width: 55%; padding-left: 0.5em;">
+            <mat-form-field style="width: 50%; padding-left: 0.5em;">
               <mat-select placeholder="Tipo" [(ngModel)]="entity.IDTipoProjeto" name="IDTipoProjeto" #IDTipoProjeto="ngModel"
                 required (ngModelChange)="onChangeTipo($event)">
                 <mat-option *ngFor="let t of types | async" [value]="t.IDTipoProjeto">
@@ -226,68 +250,186 @@
   </mat-step>
   <mat-step [stepControl]="secondFormGroup">
     <form>
-      <ng-template matStepLabel>Despêndio</ng-template>
+      <ng-template matStepLabel>Despêndio Repassado</ng-template>
       <mat-card class="cardProjeto">
         <mat-card-header>
-          <mat-card-title>Dispêncio {{entityStep2.DTAnoBase}}</mat-card-title>
+          <mat-card-title>Dispêncio {{entity.DTRepassadoAnoBase}}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <mat-form-field style="width: 22%; padding-left: 0.5em;">
-            <input matInput placeholder="Recursos Humanos" name="VLRecursosHumanoa" [(ngModel)]="entityStep2.VLRecursosHumanoa"
-              #VLRecursosHumanoa="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
-              (ngModelChange)="calcularTotalDispendio()">
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Recursos Humanos" name="VLRepassadoRecursosHumanoa" [(ngModel)]="entity.VLRepassadoRecursosHumanoa"
+              #VLRepassadoRecursosHumanoa="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioRepassado()">
           </mat-form-field>
-          <mat-form-field style="width: 22%; padding-left: 0.5em;">
-            <input matInput placeholder="Treinamento" name="VLTreinamento" [(ngModel)]="entityStep2.VLTreinamento"
-              #VLTreinamento="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
-              (ngModelChange)="calcularTotalDispendio()">
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Treinamento" name="VLRepassadoTreinamento" [(ngModel)]="entity.VLRepassadoTreinamento"
+              #VLRepassadoTreinamento="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioRepassado()">
           </mat-form-field>
-          <mat-form-field style="width: 22%; padding-left: 0.5em;">
-            <input matInput placeholder="Equipamento/Software" name="VLEquipamentoSoftware" [(ngModel)]="entityStep2.VLEquipamentoSoftware"
-              #VLEquipamentoSoftware="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
-              (ngModelChange)="calcularTotalDispendio()">
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Equipamento/Software" name="VLRepassadoEquipamentoSoftware" [(ngModel)]="entity.VLRepassadoEquipamentoSoftware"
+              #VLRepassadoEquipamentoSoftware="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioRepassado()">
           </mat-form-field>
-          <mat-form-field style="width: 22%; padding-left: 0.5em;">
-            <input matInput placeholder="Livros ou Periôdicos" name="VLLivroPeriodico" [(ngModel)]="entityStep2.VLLivroPeriodico"
-              #VLLivroPeriodico="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
-              (ngModelChange)="calcularTotalDispendio()">
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Livros ou Periôdicos" name="VLRepassadoLivroPeriodico" [(ngModel)]="entity.VLRepassadoLivroPeriodico"
+              #VLRepassadoLivroPeriodico="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioRepassado()">
           </mat-form-field>
-          <mat-form-field style="width: 22%; padding-left: 0.5em;">
-            <input matInput placeholder="Obras Civis" name="VLObraCivil" [(ngModel)]="entityStep2.VLObraCivil"
-              #VLObraCivil="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
-              (ngModelChange)="calcularTotalDispendio()">
+          <!-- final da linha -->
+
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Obras Civis" name="VLRepassadoObraCivil" [(ngModel)]="entity.VLRepassadoObraCivil"
+              #VLRepassadoObraCivil="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioRepassado()">
           </mat-form-field>
-          <mat-form-field style="width: 22%; padding-left: 0.5em;">
-            <input matInput placeholder="Viagens" name="VLViagem" [(ngModel)]="entityStep2.VLViagem" #VLViagem="ngModel"
-              max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
-              (ngModelChange)="calcularTotalDispendio()">
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Viagens" name="VLRepassadoViagem" [(ngModel)]="entity.VLRepassadoViagem"
+              #VLRepassadoViagem="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioRepassado()">
           </mat-form-field>
-          <mat-form-field style="width: 22%; padding-left: 0.5em;">
-            <input matInput placeholder="Material de Consumo" name="VLMaterialConsumo" [(ngModel)]="entityStep2.VLMaterialConsumo"
-              #VLMaterialConsumo="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
-              (ngModelChange)="calcularTotalDispendio()">
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Material de Consumo" name="VLRepassadoMaterialConsumo" [(ngModel)]="entity.VLRepassadoMaterialConsumo"
+              #VLRepassadoMaterialConsumo="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioRepassado()">
           </mat-form-field>
-          <mat-form-field style="width: 22%; padding-left: 0.5em;">
-            <input matInput placeholder="Outros Correlatos" name="VLOuroCorrelato" [(ngModel)]="entityStep2.VLOuroCorrelato"
-              #VLOuroCorrelato="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
-              (ngModelChange)="calcularTotalDispendio()">
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Outros Correlatos" name="VLRepassadoOuroCorrelato" [(ngModel)]="entity.VLRepassadoOuroCorrelato"
+              #VLRepassadoOuroCorrelato="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioRepassado()">
           </mat-form-field>
-          <mat-form-field style="width: 22%; padding-left: 0.5em;">
-            <input matInput placeholder="Serviços Técnicos de Terceiros" name="VLServicoTerceiro" [(ngModel)]="entityStep2.VLServicoTerceiro"
-              #VLServicoTerceiro="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
-              (ngModelChange)="calcularTotalDispendio()">
+          <!-- final da linha -->
+
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Serviços Técnicos de Terceiros" name="VLRepassadoServicoTerceiro" [(ngModel)]="entity.VLRepassadoServicoTerceiro"
+              #VLRepassadoServicoTerceiro="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioRepassado()">
           </mat-form-field>
+          <!-- final da linha -->
+
           <mat-divider></mat-divider>
           <section class="containerTotal">
-            <label>Total válido para cumprimento de obrigações: {{entityStep2.DTAnoBase}}: {{entityStep2.VLTotalValido
+            <label>Total de dispêndios {{entity.VLRepassadoTotalDispendio
               | currency:'BRL':'symbol':'0.0-2':'pt'}}</label>
           </section>
-          <!-- <mat-form-field style="width: 22.3%; padding-left: 0.5em;">
-            <input matInput placeholder="Total válido para cumprimento de obrigações. {{entityStep2.DTAnoBase}}" name="VLTotalValido"
-              [(ngModel)]="entityStep2.VLTotalValido" #VLTotalValido="ngModel" max="255" maxlength="255" currencyMask
-              [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }" (ngModelChange)="calcularTotalDispendio()">
-          </mat-form-field> -->
 
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="cardProjeto">
+        <mat-card-header>
+          <mat-card-title>Informe demais custos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Custo incorrido pela Instiuição" name="VLRepassadoCustoInstituicao"
+              [(ngModel)]="entity.VLRepassadoCustoInstituicao" #VLRepassadoCustoInstituicao="ngModel" max="255"
+              maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDemaisCustosRepassado()" required>
+            <mat-error *ngIf="VLRepassadoCustoInstituicao.invalid">Campo obrigatório</mat-error>
+          </mat-form-field>
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Valor total repassado para a instituição" name="VLRepassadoTotalRepassadoInstituicao"
+              [(ngModel)]="entity.VLRepassadoTotalRepassadoInstituicao" #VLRepassadoTotalRepassadoInstituicao="ngModel"
+              max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDemaisCustosRepassado()" required>
+            <mat-error *ngIf="VLRepassadoTotalRepassadoInstituicao.invalid">Campo obrigatório</mat-error>
+          </mat-form-field>
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="VAlor antecipado para o próximo ano" name="VLRepassadoAntecipadoProximoAno"
+              [(ngModel)]="entity.VLRepassadoAntecipadoProximoAno" #VLRepassadoAntecipadoProximoAno="ngModel" max="255"
+              maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDemaisCustosRepassado()">
+          </mat-form-field>
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Valor antecipado do ano anterior" name="VLRepassadoAntecipadoAnoAnterior"
+              [(ngModel)]="entity.VLRepassadoAntecipadoAnoAnterior" #VLRepassadoAntecipadoAnoAnterior="ngModel" max="255"
+              maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDemaisCustosRepassado()">
+          </mat-form-field>
+          <!-- final da linha -->
+
+          <mat-divider></mat-divider>
+          <section class="containerTotal">
+            <label>Valor gasto: {{entity.DTAnoBase}}: {{entity.VLRepassadoTotalDemaisCustos
+              | currency:'BRL':'symbol':'0.0-2':'pt'}}</label>
+          </section>
+          <section class="containerTotal">
+            <label>Total válido para cumprimento de obrigações: {{entity.DTAnoBase}}: {{entity.VLRepassadoTotalValido
+              | currency:'BRL':'symbol':'0.0-2':'pt'}}</label>
+          </section>
+        </mat-card-content>
+      </mat-card>
+      <div>
+        <button mat-button matStepperPrevious>Voltar</button>
+        <button mat-button matStepperNext>Próximo</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="thirdFormGroup">
+    <form>
+      <ng-template matStepLabel>Despêndio Repassado</ng-template>
+      <mat-card class="cardProjeto">
+        <mat-card-header>
+          <mat-card-title>Dispêncio {{entity.DTRepassadoAnoBase}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Recursos Humanos" name="VLProprioRecursosHumanoa" [(ngModel)]="entity.VLProprioRecursosHumanoa"
+              #VLProprioRecursosHumanoa="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioProprio()">
+          </mat-form-field>
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Treinamento" name="VLProprioTreinamento" [(ngModel)]="entity.VLProprioTreinamento"
+              #VLProprioTreinamento="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioProprio()">
+          </mat-form-field>
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Equipamento/Software" name="VLProprioEquipamentoSoftware" [(ngModel)]="entity.VLProprioEquipamentoSoftware"
+              #VLProprioEquipamentoSoftware="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioProprio()">
+          </mat-form-field>
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Livros ou Periôdicos" name="VLProprioLivroPeriodico" [(ngModel)]="entity.VLProprioLivroPeriodico"
+              #VLProprioLivroPeriodico="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioProprio()">
+          </mat-form-field>
+          <!-- final da linha -->
+
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Obras Civis" name="VLProprioObraCivil" [(ngModel)]="entity.VLProprioObraCivil"
+              #VLProprioObraCivil="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioProprio()">
+          </mat-form-field>
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Viagens" name="VLProprioViagem" [(ngModel)]="entity.VLProprioViagem"
+              #VLProprioViagem="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioProprio()">
+          </mat-form-field>
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Material de Consumo" name="VLProprioMaterialConsumo" [(ngModel)]="entity.VLProprioMaterialConsumo"
+              #VLProprioMaterialConsumo="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioProprio()">
+          </mat-form-field>
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Outros Correlatos" name="VLProprioOuroCorrelato" [(ngModel)]="entity.VLProprioOuroCorrelato"
+              #VLProprioOuroCorrelato="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioProprio()">
+          </mat-form-field>
+          <!-- final da linha -->
+
+          <mat-form-field style="width: 25%; padding-left: 0.5em;">
+            <input matInput placeholder="Serviços Técnicos de Terceiros" name="VLProprioServicoTerceiro" [(ngModel)]="entity.VLProprioServicoTerceiro"
+              #VLProprioServicoTerceiro="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+              (ngModelChange)="calcularTotalDispendioProprio()">
+          </mat-form-field>
+          <!-- final da linha -->
+
+          <mat-divider></mat-divider>
+          <section class="containerTotal">
+            <label>Total válido para cumprimento de obrigações: {{entity.DTProprioAnoBase}}:
+              {{entity.VLProprioTotalValido
+              | currency:'BRL':'symbol':'0.0-2':'pt'}}</label>
+          </section>
 
         </mat-card-content>
       </mat-card>
@@ -302,22 +444,22 @@
       <ng-template matStepLabel>Descricção</ng-template>
       <mat-card class="cardProjeto">
         <mat-card-header>
-          <mat-card-title>Dispêncio {{entityStep2.DTAnoBase}}</mat-card-title>
+          <mat-card-title>Dispêncio {{entity.DTAnoBase}}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <mat-form-field style="width: 99%; padding-left: 0.5em;">
             <textarea matInput placeholder="Objetivo" name="DSObjetivo" [(ngModel)]="entity.DSObjetivo" #DSObjetivo="ngModel"
-              required></textarea>
+              required rows="10"></textarea>
             <mat-error *ngIf="DSObjetivo.invalid">Campo obrigatório</mat-error>
           </mat-form-field>
           <mat-form-field style="width: 99%; padding-left: 0.5em;">
             <textarea matInput placeholder="Descrição das Etapas" name="DSDescricaoEtapa" [(ngModel)]="entity.DSDescricaoEtapa"
-              #DSDescricaoEtapa="ngModel" required></textarea>
+              #DSDescricaoEtapa="ngModel" required rows="10"></textarea>
             <mat-error *ngIf="DSDescricaoEtapa.invalid">Campo obrigatório</mat-error>
           </mat-form-field>
           <mat-form-field style="width: 99%; padding-left: 0.5em;">
             <textarea matInput placeholder="Resultados Obtidos" name="DSResultadoObtido" [(ngModel)]="entity.DSResultadoObtido"
-              #DSResultadoObtido="ngModel" required></textarea>
+              #DSResultadoObtido="ngModel" required rows="10"></textarea>
             <mat-error *ngIf="DSResultadoObtido.invalid">Campo obrigatório</mat-error>
           </mat-form-field>
         </mat-card-content>

@@ -10,6 +10,7 @@ import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 
 const MODULE_PROJETO_CONVENIADO = environment.moduleProjetoConveniado;
+const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
 const URL_PROJETO_CADASTRO = 'conveniado/cadastro';
 @Component({
   selector: 'app-conveniado-lista',
@@ -19,9 +20,10 @@ const URL_PROJETO_CADASTRO = 'conveniado/cadastro';
 })
 export class ListaComponent extends BaseComponent implements OnInit {
   entity: any;
+  idEntity = `ID${MODULE_PROJETO_CONVENIADO.name}`;
   types: any[];
   entities: MatTableDataSource<any>;
-  displayedColumns: string[] = ['NREmpresa', 'NRIdentificado', 'NRNome', 'DTInicioDTFim', 'TipoProjeto', 'actions'];
+  displayedColumns: string[] = ['NREmpresa', 'IDProjetoConveniado', 'NRNome', 'DTInicioDTFim', 'TipoProjeto', 'actions'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() templateRef: TemplateRef<any>;
@@ -61,7 +63,7 @@ export class ListaComponent extends BaseComponent implements OnInit {
   }
 
   recuperarTodosTipoProjeto(): void {
-    this.sepinService.fetchAll(MODULE_PROJETO_CONVENIADO).subscribe(
+    this.sepinService.fetchAll(MODULE_TIPO_PROJETO).subscribe(
       onNext => {
         this.types = onNext;
       }, onError => {
@@ -81,18 +83,18 @@ export class ListaComponent extends BaseComponent implements OnInit {
   }
 
   preEdit(obj: any): void {
-    this.router.navigate([URL_PROJETO_CADASTRO, obj.IDProjeto]);
+    this.router.navigate([URL_PROJETO_CADASTRO, obj[this.idEntity]]);
   }
 
   deleteRow(row: any) {
-    const dataDialog: DeleteDialogData = { id: row.IDProjeto, title: 'Confirma a exclusão?', message: `Sigla: ${row.NRSigla}` };
+    const dataDialog: DeleteDialogData = { id: row[this.idEntity], title: 'Confirma a exclusão?', message: `Sigla: ${row.NRSigla}` };
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: dataDialog,
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.delete) {
-        this.sepinService.apagar(MODULE_PROJETO_CONVENIADO, row.IDProjetoConveniado).subscribe(
+        this.sepinService.apagar(MODULE_PROJETO_CONVENIADO, row[this.idEntity]).subscribe(
           onNext => { },
           onError => {
             if (onError.error) {

@@ -132,15 +132,6 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
 
   gravar(event: any, form1: any, form2: any): void {
     event.preventDefault();
-    // console.log(this.entity);
-    // const codAreaAplicacao = this.currentAreaAplicacao.split('-')[0].trim();
-    // // this.areaAplicacoes.subscribe(a => { console.log(a); });
-    // console.log(codAreaAplicacao);
-    // const entityArea = this.areaAplicacoes.pipe(filter(a => {
-    //   console.log(a);
-    //   return 'a.CDCodigo ' === codAreaAplicacao;
-    // }));
-    // console.log(entityArea);
     if (!form1.valid || !form2.valid) {
       this.addSnackBar(AppMessages.getObj(MSG001));
       return;

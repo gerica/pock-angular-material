@@ -18,7 +18,7 @@ const URL_CADASTRO = 'instituicao/cadastro';
   providers: [SepinService]
 })
 export class ListaComponent extends BaseComponent implements OnInit {
-  private nameID = 'IDInstituicao';
+  private idEntity = `ID${MODULE_INSTITUICAO.name}`;
 
   title = 'Instituição';
   entity: any;
@@ -67,18 +67,18 @@ export class ListaComponent extends BaseComponent implements OnInit {
   }
 
   preEdit(obj: any): void {
-    this.router.navigate([URL_CADASTRO, obj[this.nameID]]);
+    this.router.navigate([URL_CADASTRO, obj[this.idEntity]]);
   }
 
   deleteRow(row: any) {
-    const dataDialog: DeleteDialogData = { id: row[this.nameID], title: 'Confirma a exclusão?', message: `Valor: ${row.NRNome}` };
+    const dataDialog: DeleteDialogData = { id: row[this.idEntity], title: 'Confirma a exclusão?', message: `Valor: ${row.NRNome}` };
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: dataDialog,
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.delete) {
-        this.sepinService.apagar(MODULE_INSTITUICAO, row[this.nameID]).subscribe(
+        this.sepinService.apagar(MODULE_INSTITUICAO, row[this.idEntity]).subscribe(
           onNext => { },
           onError => {
             if (onError.error) {

@@ -22,6 +22,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NgxCurrencyModule } from 'ngx-currency';
+import { TextMaskModule } from 'angular2-text-mask';
 
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
@@ -57,6 +58,7 @@ registerLocaleData(localePt);
     MatCheckboxModule,
     MatAutocompleteModule,
     NgxCurrencyModule,
+    TextMaskModule,
   ],
   providers: [
     AppSnackBarService,

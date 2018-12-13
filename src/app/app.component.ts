@@ -81,7 +81,6 @@ export class AppComponent implements OnInit {
   }
 
   setRoute(route: any): void {
-    // console.log(route);
     this.currentRouter = route;
   }
 

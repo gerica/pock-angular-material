@@ -11,30 +11,29 @@ import * as moment from 'moment';
 import { FormControl, NgForm, NgModel } from '@angular/forms';
 import { map, find, tap, filter } from 'rxjs/operators';
 
-const MODULE_PROJETO = environment.moduleProjeto;
-const MODULE_PROJETO_DISPENDIO = environment.moduleProjetoDispendio;
+const MODULE_PROJETO_CONVENIADO = environment.moduleProjetoConveniado;
 const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
 const MODULE_AREA_APLICACAO = environment.moduleAreaAplicacao;
-const URL_PROJETO = 'projeto';
+const MODULE_INSTITUICOES = environment.moduleInstituicao;
+const URL_PROJETO = 'conveniado';
 @Component({
   selector: 'app-conveniado-cadastro',
   templateUrl: './cadastro.component.html',
   styleUrls: ['./cadastro.component.scss'],
-  providers: [ProjetoService, SepinService]
+  providers: [SepinService]
 })
 export class CadastroComponent extends BaseComponent implements OnInit, OnDestroy {
   activeForm = true;
   private subscription: Subscription;
   entity: any;
-  entityStep2: any;
-  entities: any[];
   areaAplicacoes: any;
+  instituincoes: any;
   types: any;
   currentAreaAplicacao: any;
   regioes: any;
+  maskTelefone = ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 
   constructor(
-    private projetoService: ProjetoService,
     private router: Router,
     private actionRoute: ActivatedRoute,
     private sepinService: SepinService,
@@ -44,8 +43,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   }
 
   ngOnInit() {
-    this.entity = {};
-    this.entityStep2 = {
+    this.entity = {
       DTAnoBase: moment().format('YYYY'),
       VLTotalValido: 0,
       VLEquipamentoSoftware: 0,
@@ -57,31 +55,41 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
       VLServicoTerceiro: 0,
       VLTreinamento: 0,
       VLViagem: 0,
+      VLCustoInstituicao: 0,
+      VLTotalRepassadoInstituicao: 0,
+      VLAntecipadoProximoAno: 0,
+      VLAntecipadoAnoAnterior: 0,
+      VLTotalDispendio: 0,
+      VLTotalDemaisCustos: 0,
     };
     this.recuperarTodosTipoProjeto();
     this.recuperarTodasAreasAplicacao();
     this.recuperarRegioes();
+    this.recuperarTodasInstituicoes();
     this.subscription = this.actionRoute.params.subscribe(params => {
       if (params && params['id']) {
         this.recuperarPorId(params['id']);
       } else {
-        this.calcularTotalDispendio();
+        this.calcularTotalDispendioProprio();
+        this.calcularTotalDispendioRepassado();
+        this.calcularTotalDemaisCustosRepassado();
       }
 
       if (environment.isDevelope) {
-        // this.initForDevelop();
+        this.initForDevelop();
+        this.calcularTotalDispendioProprio();
+        this.calcularTotalDispendioRepassado();
+        this.calcularTotalDemaisCustosRepassado();
+        console.log(this.entity);
       }
     });
   }
 
   recuperarPorId(id: any): any {
-    this.projetoService.recuperarPorId(id).subscribe(
+    this.sepinService.recuperarPorId(MODULE_PROJETO_CONVENIADO, id).subscribe(
       onNext => {
         if (onNext && onNext.value && onNext.value.length > 0) {
-          this.entity = onNext.value[0][0];
-          if (onNext.value[1]) {
-            this.entityStep2 = onNext.value[1][0];
-          }
+          this.entity = onNext.value[0];
         }
       }, onError => {
         if (onError.error) {
@@ -96,7 +104,9 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
             this.currentAreaAplicacao = `${areaAplicacao.CDCodigo} - ${areaAplicacao.NRNome}`;
           }
         });
-        this.calcularTotalDispendio();
+        this.calcularTotalDispendioProprio();
+        this.calcularTotalDispendioRepassado();
+        this.calcularTotalDemaisCustosRepassado();
         // console.log(this.entity);
         // const keys = Object.keys(this.entity);
         // console.log(keys);
@@ -110,18 +120,10 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
 
   recuperarTodasAreasAplicacao(): void {
     this.areaAplicacoes = this.sepinService.fetchAll(MODULE_AREA_APLICACAO);
-    // this.sepinService.fetchAll(MODULE_AREA_APLICACAO).subscribe(
-    //   onNext => {
-    //     this.areaAplicacoes = onNext;
-    //   }, onError => {
-    //     if (onError.error) {
-    //       this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
-    //     } else {
-    //       this.addSnackBar(AppMessages.getObj(MSG101));
-    //     }
-    //   }, () => {
-    //   }
-    // );
+  }
+
+  recuperarTodasInstituicoes(): void {
+    this.instituincoes = this.sepinService.fetchAll(MODULE_INSTITUICOES);
   }
 
   recuperarRegioes(): void {
@@ -143,21 +145,12 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
 
   gravar(event: any, form1: any, form2: any): void {
     event.preventDefault();
-    // console.log(this.entity);
-    // const codAreaAplicacao = this.currentAreaAplicacao.split('-')[0].trim();
-    // // this.areaAplicacoes.subscribe(a => { console.log(a); });
-    // console.log(codAreaAplicacao);
-    // const entityArea = this.areaAplicacoes.pipe(filter(a => {
-    //   console.log(a);
-    //   return 'a.CDCodigo ' === codAreaAplicacao;
-    // }));
-    // console.log(entityArea);
     if (!form1.valid || !form2.valid) {
       this.addSnackBar(AppMessages.getObj(MSG001));
       return;
     }
 
-    this.projetoService.salvar(this.entity, this.entityStep2).subscribe(
+    this.sepinService.salvar(MODULE_PROJETO_CONVENIADO, this.entity).subscribe(
       () => {
       }, onError => {
         if (onError.error) {
@@ -211,27 +204,71 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     return num;
   }
 
-  calcularTotalDispendio(): void {
+  calcularTotalDispendioRepassado(): void {
     const {
-      VLEquipamentoSoftware,
-      VLLivroPeriodico,
-      VLMaterialConsumo,
-      VLObraCivil,
-      VLOuroCorrelato,
-      VLRecursosHumanoa,
-      VLServicoTerceiro,
-      VLTreinamento,
-      VLViagem } = this.entityStep2;
+      VLRepassadoEquipamentoSoftware,
+      VLRepassadoLivroPeriodico,
+      VLRepassadoMaterialConsumo,
+      VLRepassadoObraCivil,
+      VLRepassadoOuroCorrelato,
+      VLRepassadoRecursosHumanoa,
+      VLRepassadoServicoTerceiro,
+      VLRepassadoTreinamento,
+      VLRepassadoViagem } = this.entity;
 
-    this.entityStep2.VLTotalValido = VLEquipamentoSoftware +
-      VLLivroPeriodico +
-      VLMaterialConsumo +
-      VLObraCivil +
-      VLOuroCorrelato +
-      VLRecursosHumanoa +
-      VLServicoTerceiro +
-      VLTreinamento +
-      VLViagem;
+    this.entity.VLRepassadoTotalDispendio = VLRepassadoEquipamentoSoftware +
+      VLRepassadoLivroPeriodico +
+      VLRepassadoMaterialConsumo +
+      VLRepassadoObraCivil +
+      VLRepassadoOuroCorrelato +
+      VLRepassadoRecursosHumanoa +
+      VLRepassadoServicoTerceiro +
+      VLRepassadoTreinamento +
+      VLRepassadoViagem;
+    this.calcularTotalValidoRepassado();
+  }
+
+  calcularTotalDispendioProprio(): void {
+    const {
+      VLProprioEquipamentoSoftware,
+      VLProprioLivroPeriodico,
+      VLProprioMaterialConsumo,
+      VLProprioObraCivil,
+      VLProprioOuroCorrelato,
+      VLProprioRecursosHumanoa,
+      VLProprioServicoTerceiro,
+      VLProprioTreinamento,
+      VLProprioViagem } = this.entity;
+
+    this.entity.VLProprioTotalValido = VLProprioEquipamentoSoftware +
+      VLProprioLivroPeriodico +
+      VLProprioMaterialConsumo +
+      VLProprioObraCivil +
+      VLProprioOuroCorrelato +
+      VLProprioRecursosHumanoa +
+      VLProprioServicoTerceiro +
+      VLProprioTreinamento +
+      VLProprioViagem;
+  }
+
+  calcularTotalDemaisCustosRepassado(): void {
+    const {
+      VLRepassadoCustoInstituicao,
+      VLRepassadoTotalRepassadoInstituicao,
+      VLRepassadoAntecipadoProximoAno,
+      VLRepassadoAntecipadoAnoAnterior
+    } = this.entity;
+
+    this.entity.VLRepassadoTotalDemaisCustos = VLRepassadoCustoInstituicao +
+      VLRepassadoTotalRepassadoInstituicao +
+      VLRepassadoAntecipadoProximoAno +
+      VLRepassadoAntecipadoAnoAnterior;
+    this.calcularTotalValidoRepassado();
+  }
+
+  calcularTotalValidoRepassado(): void {
+    const { VLRepassadoTotalDispendio, VLRepassadoTotalDemaisCustos } = this.entity;
+    this.entity.VLRepassadoTotalValido = VLRepassadoTotalDispendio + VLRepassadoTotalDemaisCustos;
   }
 
   private _filter(values) {
@@ -247,9 +284,9 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
 
   initForDevelop() {
     this.entity = {
-      module: MODULE_PROJETO.name,
+      // module: MODULE_PROJETO.name,
       IDTipoProjeto: 4,
-      NRIdentificado: 'IDE2',
+      // NRIdentificado: 'IDE2',
       NRSigla: 'test',
       NRNome: 'teste desenvolvimento',
       NREspecificador: 'específico',
@@ -271,6 +308,43 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
       CKArtigoIVB: false,
       CKArtigoIVC: false,
       CKArtigoIV1: false,
+      NRRegiao: 'SUDENE',
+      IDInstituicao: 7,
+      NREmpresa: 'Nestle',
+      NRResponsavel: 'Vedita',
+      NREmail: 'Vedita@dragonbal.bao',
+      NRTelefone: '(61) 998856-4685',
+
+      // abal dispencio repassado
+      DTRepassadoAnoBase: moment().format('YYYY'),
+      VLRepassadoRecursosHumanoa: 51,
+      VLRepassadoTreinamento: 51,
+      VLRepassadoEquipamentoSoftware: 51,
+      VLRepassadoLivroPeriodico: 51,
+      VLRepassadoObraCivil: 51,
+      VLRepassadoViagem: 51,
+      VLRepassadoMaterialConsumo: 51,
+      VLRepassadoOuroCorrelato: 51,
+      VLRepassadoServicoTerceiro: 51,
+      VLRepassadoCustoInstituicao: 25,
+      VLRepassadoTotalRepassadoInstituicao: 36,
+      VLRepassadoAntecipadoProximoAno: 158,
+      VLRepassadoAntecipadoAnoAnterior: 15,
+
+      // abal dispencio proprio
+      DTProprioAnoBase: moment().format('YYYY'),
+      VLProprioRecursosHumanoa: 51,
+      VLProprioTreinamento: 51,
+      VLProprioEquipamentoSoftware: 51,
+      VLProprioLivroPeriodico: 51,
+      VLProprioObraCivil: 51,
+      VLProprioViagem: 51,
+      VLProprioMaterialConsumo: 51,
+      VLProprioOuroCorrelato: 51,
+      VLProprioServicoTerceiro: 51,
+
+      // VLTotalDispendio: 0,
+      // VLTotalDemaisCustos: 0,
 
       // tslint:disable-next-line:max-line-length
       DSObjetivo: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex',
@@ -280,19 +354,5 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
       DSResultadoObtido: 'Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular. Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules. Omnicos directe al desirabilite de un nov lingua franca: On refusa continuar payar custosi traductores. At solmen va esser necessi far uniform grammatica, pronunciation e plu sommun paroles. Ma quande lingues coalesce, li grammatica del resultant lingue es plu simplic e regulari quam ti del coalescent lingues. Li nov lingua franca va esser plu simplic e regulari quam li existent Europan',
     };
 
-    this.entityStep2 = {
-      module: MODULE_PROJETO_DISPENDIO.name,
-      DTAnoBase: moment().format('YYYY'),
-      VLRecursosHumanoa: 51,
-      VLTreinamento: 51,
-      VLEquipamentoSoftware: 51,
-      VLLivroPeriodico: 51,
-      VLObraCivil: 51,
-      VLViagem: 51,
-      VLMaterialConsumo: 51,
-      VLOuroCorrelato: 51,
-      VLServicoTerceiro: 51,
-      // VLTotalValido: 51,
-    };
   }
 }
