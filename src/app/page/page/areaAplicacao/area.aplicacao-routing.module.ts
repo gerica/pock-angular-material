@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
-import { AreaAplicacaoListaComponent } from './lista/area.aplicacao.lista.component';
-import { AreaAplicacaoCadastroComponent } from './cadastro/area.aplicacao.cadastro.component';
+import { ListaComponent } from './lista/lista.component';
+import { CadastroComponent } from './cadastro/cadastro.component';
 
 export const AreaAplicacaoRoutes: Route[] = [
   {
@@ -8,16 +8,16 @@ export const AreaAplicacaoRoutes: Route[] = [
     children: [
       {
         path: '',
-        component: AreaAplicacaoListaComponent,
+        component: ListaComponent,
         pathMatch: 'full'
       },
       {
         path: 'cadastro',
-        component: AreaAplicacaoCadastroComponent,
+        component: CadastroComponent,
       },
       {
-        path: 'cadastro/:idAreaAplicacao',
-        component: AreaAplicacaoCadastroComponent,
+        path: 'cadastro/:id',
+        component: CadastroComponent,
       },
     ]
   },

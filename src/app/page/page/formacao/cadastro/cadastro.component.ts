@@ -13,11 +13,11 @@ const MODULE_FORMACAO = environment.moduleFormacao;
 const URL_FORMACAO = 'formacao';
 @Component({
   selector: 'app-formacao-cadastro',
-  templateUrl: './formacao.cadastro.component.html',
-  styleUrls: ['./formacao.cadastro.component.scss'],
+  templateUrl: './cadastro.component.html',
+  styleUrls: ['./cadastro.component.scss'],
   providers: [SepinService]
 })
-export class FormacaoCadastroComponent extends BaseComponent implements OnInit, OnDestroy {
+export class CadastroComponent extends BaseComponent implements OnInit, OnDestroy {
   activeForm = true;
   private subscription: Subscription;
   entity: any;

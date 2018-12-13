@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ProjetoListaComponent } from './lista/projeto.component';
-import { ProjetoCadastroComponent } from './cadastro/projeto.cadastro.component';
+import { ListaComponent } from './lista/lista.component';
+import { CadastroComponent } from './cadastro/cadastro.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -31,8 +31,8 @@ registerLocaleData(localePt);
 
 @NgModule({
   declarations: [
-    ProjetoListaComponent,
-    ProjetoCadastroComponent,
+    ListaComponent,
+    CadastroComponent,
   ],
   imports: [
     CommonModule,

@@ -15,13 +15,13 @@ import { AppSnackBarService } from '../../shared/utils/snackbar/app-snackbar.com
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
-import { AreaAplicacaoListaComponent } from './lista/area.aplicacao.lista.component';
-import { AreaAplicacaoCadastroComponent } from './cadastro/area.aplicacao.cadastro.component';
+import { ListaComponent } from './lista/lista.component';
+import { CadastroComponent } from './cadastro/cadastro.component';
 
 @NgModule({
   declarations: [
-    AreaAplicacaoListaComponent,
-    AreaAplicacaoCadastroComponent,
+    ListaComponent,
+    CadastroComponent,
   ],
   imports: [
     CommonModule,

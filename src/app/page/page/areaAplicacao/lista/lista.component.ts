@@ -8,19 +8,20 @@ import { AppMessages, MSG100, MSG002, MSG101, AppMessage } from 'src/app/page/sh
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 
-const MODULE_FORMACAO = environment.moduleFormacao;
+const MODULE_AREA_APLICACAO = environment.moduleAreaAplicacao;
+const URL_CADASTRO = 'area_aplicacao/cadastro';
 
-const URL_FORMACAO_CADASTRO = 'formacao/cadastro';
 @Component({
-  selector: 'app-formacao-lista',
-  templateUrl: './formacao.lista.component.html',
-  styleUrls: ['./formacao.lista.component.scss'],
+  selector: 'app-area.aplicacao-lista',
+  templateUrl: './lista.component.html',
+  styleUrls: ['./lista.component.scss'],
   providers: [SepinService]
 })
-export class FormacaoListaComponent extends BaseComponent implements OnInit {
+export class ListaComponent extends BaseComponent implements OnInit {
+  idEntity = `ID${MODULE_AREA_APLICACAO.name}`;
   entity: any;
   entities: MatTableDataSource<any>;
-  displayedColumns: string[] = ['NOFormacao', 'actions'];
+  displayedColumns: string[] = ['CDCodigo', 'NRNome', 'actions'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() templateRef: TemplateRef<any>;
@@ -49,7 +50,7 @@ export class FormacaoListaComponent extends BaseComponent implements OnInit {
   }
 
   consultar(): void {
-    this.sepinService.fetchAll(MODULE_FORMACAO).subscribe(
+    this.sepinService.fetchAll(MODULE_AREA_APLICACAO).subscribe(
       onNext => {
         this.montarEntities(onNext);
       }, onError => {
@@ -60,22 +61,22 @@ export class FormacaoListaComponent extends BaseComponent implements OnInit {
   }
 
   incluir(): void {
-    this.router.navigate([URL_FORMACAO_CADASTRO]);
+    this.router.navigate([URL_CADASTRO]);
   }
 
   preEdit(obj: any): void {
-    this.router.navigate([URL_FORMACAO_CADASTRO, obj.IDFormacao]);
+    this.router.navigate([URL_CADASTRO, obj[this.idEntity]]);
   }
 
   deleteRow(row: any) {
-    const dataDialog: DeleteDialogData = { id: row.IDFormacao, title: 'Confirma a exclusão?', message: `Valor: ${row.NOFormacao}` };
+    const dataDialog: DeleteDialogData = { id: row[this.idEntity], title: 'Confirma a exclusão?', message: `Valor: ${row.NRNome}` };
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: dataDialog,
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.delete) {
-        this.sepinService.apagar(MODULE_FORMACAO, row.IDFormacao).subscribe(
+        this.sepinService.apagar(MODULE_AREA_APLICACAO, row[this.idEntity]).subscribe(
           onNext => { },
           onError => {
             if (onError.error) {

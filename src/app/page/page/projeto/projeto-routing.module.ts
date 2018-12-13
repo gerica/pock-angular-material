@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
-import { ProjetoListaComponent } from './lista/projeto.component';
-import { ProjetoCadastroComponent } from './cadastro/projeto.cadastro.component';
+import { ListaComponent } from './lista/lista.component';
+import { CadastroComponent } from './cadastro/cadastro.component';
 
 export const ProjetoRoutes: Route[] = [
   {
@@ -8,15 +8,15 @@ export const ProjetoRoutes: Route[] = [
     children: [
       {
         path: '',
-        component: ProjetoListaComponent,
+        component: ListaComponent,
         pathMatch: 'full',
       },
       {
         path: 'cadastro',
-        component: ProjetoCadastroComponent,
+        component: CadastroComponent,
       }, {
-        path: 'cadastro/:idProjeto',
-        component: ProjetoCadastroComponent,
+        path: 'cadastro/:id',
+        component: CadastroComponent,
       },
     ]
   },

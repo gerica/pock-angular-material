@@ -18,11 +18,11 @@ const MODULE_AREA_APLICACAO = environment.moduleAreaAplicacao;
 const URL_PROJETO = 'projeto';
 @Component({
   selector: 'app-projeto-cadastro',
-  templateUrl: './projeto.cadastro.component.html',
-  styleUrls: ['./projeto.cadastro.component.scss'],
+  templateUrl: './cadastro.component.html',
+  styleUrls: ['./cadastro.component.scss'],
   providers: [ProjetoService, SepinService]
 })
-export class ProjetoCadastroComponent extends BaseComponent implements OnInit, OnDestroy {
+export class CadastroComponent extends BaseComponent implements OnInit, OnDestroy {
   activeForm = true;
   private subscription: Subscription;
   entity: any;
@@ -60,8 +60,8 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
     this.recuperarTodosTipoProjeto();
     this.recuperarTodasAreasAplicacao();
     this.subscription = this.actionRoute.params.subscribe(params => {
-      if (params && params['idProjeto']) {
-        this.recuperarPorId(params['idProjeto']);
+      if (params && params['id']) {
+        this.recuperarPorId(params['id']);
       } else {
         this.calcularTotalDispendio();
       }
@@ -229,7 +229,7 @@ export class ProjetoCadastroComponent extends BaseComponent implements OnInit, O
     this.entity = {
       module: MODULE_PROJETO.name,
       IDTipoProjeto: 4,
-      NRIdentificado: 'IDE2',
+      // NRIdentificado: 'IDE2',
       NRSigla: 'test',
       NRNome: 'teste desenvolvimento',
       NREspecificador: 'específico',

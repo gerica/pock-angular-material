@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef, Input } from '@angular/core';
+import { ProjetoService } from '../service/projeto.service';
 import { Router } from '@angular/router';
 import { MatPaginator, MatTableDataSource, MatSort, Sort, MatDialog } from '@angular/material';
 import { DeleteDialogComponent, DeleteDialogData } from 'src/app/page/shared/utils/modal/delete/delete.dialog.component';
@@ -8,24 +9,25 @@ import { AppMessages, MSG100, MSG002, MSG101, AppMessage } from 'src/app/page/sh
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 
-const MODULE_AREA_APLICACAO = environment.moduleAreaAplicacao;
-const URL_CADASTRO = 'area_aplicacao/cadastro';
-
+const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
+const URL_PROJETO_CADASTRO = 'projeto/cadastro';
 @Component({
-  selector: 'app-area.aplicacao-lista',
-  templateUrl: './area.aplicacao.lista.component.html',
-  styleUrls: ['./area.aplicacao.lista.component.scss'],
-  providers: [SepinService]
+  selector: 'app-projeto-lista',
+  templateUrl: './lista.component.html',
+  styleUrls: ['./lista.component.scss'],
+  providers: [ProjetoService, SepinService]
 })
-export class AreaAplicacaoListaComponent extends BaseComponent implements OnInit {
+export class ListaComponent extends BaseComponent implements OnInit {
   entity: any;
+  types: any[];
   entities: MatTableDataSource<any>;
-  displayedColumns: string[] = ['CDCodigo', 'NRNome', 'actions'];
+  displayedColumns: string[] = ['IDProjeto', 'NRNome', 'DTInicioDTFim', 'TipoProjeto', 'actions'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() templateRef: TemplateRef<any>;
 
   constructor(
+    private projetoService: ProjetoService,
     private router: Router,
     public dialog: MatDialog,
     public appSnackBarService: AppSnackBarService,
@@ -36,12 +38,12 @@ export class AreaAplicacaoListaComponent extends BaseComponent implements OnInit
 
   ngOnInit() {
     this.entity = {};
+    this.recuperarTodosTipoProjeto();
     this.paginator._intl.itemsPerPageLabel = 'Registros por página';
     this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.previousPageLabel = 'Anterior';
     this.paginator._intl.firstPageLabel = 'Primeira Página';
     this.paginator._intl.lastPageLabel = 'Última Página';
-    this.consultar();
   }
 
   applyFilter(filterValue: string) {
@@ -49,7 +51,7 @@ export class AreaAplicacaoListaComponent extends BaseComponent implements OnInit
   }
 
   consultar(): void {
-    this.sepinService.fetchAll(MODULE_AREA_APLICACAO).subscribe(
+    this.projetoService.fetchAll().subscribe(
       onNext => {
         this.montarEntities(onNext);
       }, onError => {
@@ -59,23 +61,39 @@ export class AreaAplicacaoListaComponent extends BaseComponent implements OnInit
     );
   }
 
+  recuperarTodosTipoProjeto(): void {
+    this.sepinService.fetchAll(MODULE_TIPO_PROJETO).subscribe(
+      onNext => {
+        this.types = onNext;
+      }, onError => {
+        if (onError.error) {
+          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
+        } else {
+          this.addSnackBar(AppMessages.getObj(MSG101));
+        }
+      }, () => {
+        this.consultar();
+      }
+    );
+  }
+
   incluir(): void {
-    this.router.navigate([URL_CADASTRO]);
+    this.router.navigate([URL_PROJETO_CADASTRO]);
   }
 
   preEdit(obj: any): void {
-    this.router.navigate([URL_CADASTRO, obj.IDAreaAplicacao]);
+    this.router.navigate([URL_PROJETO_CADASTRO, obj.IDProjeto]);
   }
 
   deleteRow(row: any) {
-    const dataDialog: DeleteDialogData = { id: row.IDAreaAplicacao, title: 'Confirma a exclusão?', message: `Valor: ${row.NRNome}` };
+    const dataDialog: DeleteDialogData = { id: row.IDProjeto, title: 'Confirma a exclusão?', message: `Sigla: ${row.NRSigla}` };
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: dataDialog,
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.delete) {
-        this.sepinService.apagar(MODULE_AREA_APLICACAO, row.IDAreaAplicacao).subscribe(
+        this.projetoService.apagar(row.IDProjeto).subscribe(
           onNext => { },
           onError => {
             if (onError.error) {
@@ -91,6 +109,17 @@ export class AreaAplicacaoListaComponent extends BaseComponent implements OnInit
         );
       }
     });
+  }
+
+  getTipoDescricao(element: any): String {
+    if (!this.types || this.types.length === 0) {
+      return '';
+    }
+    const type = this.types.find(t => t.IDTipoProjeto === element.IDTipoProjeto);
+    if (type) {
+      return type.NRDescricao;
+    }
+    return '';
   }
 
   private montarEntities(onNext: any) {

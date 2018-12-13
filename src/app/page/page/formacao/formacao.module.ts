@@ -18,13 +18,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
-import { FormacaoListaComponent } from './lista/formacao.lista.component';
-import { FormacaoCadastroComponent } from './cadastro/formacao.cadastro.component';
+import { ListaComponent } from './lista/lista.component';
+import { CadastroComponent } from './cadastro/cadastro.component';
 
 @NgModule({
   declarations: [
-    FormacaoListaComponent,
-    FormacaoCadastroComponent,
+    ListaComponent,
+    CadastroComponent,
   ],
   imports: [
     CommonModule,

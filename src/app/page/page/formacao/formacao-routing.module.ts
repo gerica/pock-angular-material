@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
-import { FormacaoListaComponent } from './lista/formacao.lista.component';
-import { FormacaoCadastroComponent } from './cadastro/formacao.cadastro.component';
+import { ListaComponent } from './lista/lista.component';
+import { CadastroComponent } from './cadastro/cadastro.component';
 
 export const FormacaoRoutes: Route[] = [
   {
@@ -8,15 +8,15 @@ export const FormacaoRoutes: Route[] = [
     children: [
       {
         path: '',
-        component: FormacaoListaComponent,
+        component: ListaComponent,
         pathMatch: 'full'
       },
       {
         path: 'cadastro',
-        component: FormacaoCadastroComponent,
+        component: CadastroComponent,
       }, {
-        path: 'cadastro/:idFormacao',
-        component: FormacaoCadastroComponent,
+        path: 'cadastro/:id',
+        component: CadastroComponent,
       },
     ]
   },

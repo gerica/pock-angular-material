@@ -13,11 +13,11 @@ const MODULE_AREA_APLICACAO = environment.moduleAreaAplicacao;
 const URL_AREA_APLICACAO = 'area_aplicacao';
 @Component({
   selector: 'app-area.aplicacao-cadastro',
-  templateUrl: './area.aplicacao.cadastro.component.html',
-  styleUrls: ['./area.aplicacao.cadastro.component.scss'],
+  templateUrl: './cadastro.component.html',
+  styleUrls: ['./cadastro.component.scss'],
   providers: [SepinService]
 })
-export class AreaAplicacaoCadastroComponent extends BaseComponent implements OnInit, OnDestroy {
+export class CadastroComponent extends BaseComponent implements OnInit, OnDestroy {
   activeForm = true;
   private subscription: Subscription;
   entity: any;
@@ -33,8 +33,8 @@ export class AreaAplicacaoCadastroComponent extends BaseComponent implements OnI
   ngOnInit() {
     this.entity = {};
     this.subscription = this.actionRoute.params.subscribe(params => {
-      if (params && params['idAreaAplicacao']) {
-        this.recuperarPorId(params['idAreaAplicacao']);
+      if (params && params['id']) {
+        this.recuperarPorId(params['id']);
       }
     });
   }
