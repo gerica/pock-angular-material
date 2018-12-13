@@ -13,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 // import { MatDialogModule } from '@angular/material/dialog';
-import { AppSnackBarService } from '../../shared/utils/snackbar/app-snackbar.component';
+import { AppSnackBarService } from '../shared/utils/snackbar/app-snackbar.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';

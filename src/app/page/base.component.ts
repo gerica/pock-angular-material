@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AppSnackBarService } from '../shared/utils/snackbar/app-snackbar.component';
-import { AppMessage } from '../shared/utils/app.messages';
+import { AppSnackBarService } from './shared/utils/snackbar/app-snackbar.component';
+import { AppMessage } from './shared/utils/app.messages';
 
 @Component({
     selector: 'app-base',
