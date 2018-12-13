@@ -32,6 +32,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   currentAreaAplicacao: any;
   regioes: any;
   maskTelefone = ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  msgObrigatorio = AppMessages.getObj(MSG001);
 
   constructor(
     private router: Router,
@@ -80,7 +81,6 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
         this.calcularTotalDispendioProprio();
         this.calcularTotalDispendioRepassado();
         this.calcularTotalDemaisCustosRepassado();
-        console.log(this.entity);
       }
     });
   }

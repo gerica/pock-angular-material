@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AreaAplicacaoModule } from './areaAplicacao/area.aplicacao.module';
 import { ProjetoConveniadoModule } from './conveniado/conveniado.module';
 import { InstituicaoModule } from './instituicao/instituicao.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { InstituicaoModule } from './instituicao/instituicao.module';
     AreaAplicacaoModule,
     ProjetoConveniadoModule,
     InstituicaoModule,
+    DashboardModule,
   ],
   exports: [DeleteDialogComponent],
   providers: [],

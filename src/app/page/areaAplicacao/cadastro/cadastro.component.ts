@@ -21,6 +21,8 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   activeForm = true;
   private subscription: Subscription;
   entity: any;
+  msgObrigatorio = AppMessages.getObj(MSG001);
+
   constructor(
     private router: Router,
     private actionRoute: ActivatedRoute,

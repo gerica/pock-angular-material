@@ -8,12 +8,12 @@
         <mat-form-field style="width: 99%; padding-left: 0.5em;">
           <input matInput placeholder="Código" name="CDCodigo" [(ngModel)]="entity.CDCodigo" #CDCodigo="ngModel"
             required max="255" maxlength="255" type="number">
-          <mat-error *ngIf="CDCodigo.invalid">Campo obrigatório</mat-error>
+          <mat-error *ngIf="CDCodigo.invalid">{{msgObrigatorio.msg}}</mat-error>
         </mat-form-field>
         <mat-form-field style="width: 99%; padding-left: 0.5em;">
           <input matInput placeholder="Nome" name="NRNome" [(ngModel)]="entity.NRNome" #NRNome="ngModel" required max="255"
             maxlength="255">
-          <mat-error *ngIf="NRNome.invalid">Campo obrigatório</mat-error>
+          <mat-error *ngIf="NRNome.invalid">{{msgObrigatorio.msg}}</mat-error>
         </mat-form-field>
       </mat-card-content>
     </mat-card>

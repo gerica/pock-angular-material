@@ -11,31 +11,31 @@
             <mat-form-field style="width: 20%; padding-left: 0.5em;">
               <input matInput placeholder="Identificação" name="IDProjeto" [(ngModel)]="entity.IDProjeto" #IDProjeto="ngModel"
                 disabled>
-              <mat-error *ngIf="IDProjeto.invalid">Campo obrigatório</mat-error>
+              <mat-error *ngIf="IDProjeto.invalid">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 20%; padding-left: 0.5em;">
               <input matInput placeholder="Sigla" name="NRSigla" [(ngModel)]="entity.NRSigla" #NRSigla="ngModel"
                 required max="10" maxlength="10">
-              <mat-error *ngIf="NRSigla.invalid">Campo obrigatório</mat-error>
+              <mat-error *ngIf="NRSigla.invalid">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 55%; padding-left: 0.5em;">
               <input matInput placeholder="Nome" name="NRNome" [(ngModel)]="entity.NRNome" #NRNome="ngModel" required
                 max="255" maxlength="255">
-              <mat-error *ngIf="NRNome.invalid">Campo obrigatório</mat-error>
+              <mat-error *ngIf="NRNome.invalid">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 20%; padding-left: 0.5em;">
               <input matInput [matDatepicker]="picker1" [(ngModel)]="entity.DTInicio" name="DTInicio" placeholder="Data de Inicio"
                 required #DTInicio="ngModel">
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
-              <mat-error *ngIf="DTInicio">Campo obrigatório</mat-error>
+              <mat-error *ngIf="DTInicio">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 20%; padding-left: 0.5em;">
               <input matInput [matDatepicker]="picker2" [(ngModel)]="entity.DTFim" name="DTFim" placeholder="Data de FIM"
                 required #DTFim="ngModel">
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
-              <mat-error *ngIf="DTFim">Campo obrigatório</mat-error>
+              <mat-error *ngIf="DTFim">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 55%; padding-left: 0.5em;">
               <mat-select placeholder="Tipo" [(ngModel)]="entity.IDTipoProjeto" name="IDTipoProjeto" #IDTipoProjeto="ngModel"
@@ -44,12 +44,12 @@
                   {{t.NRDescricao}}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="IDTipoProjeto">Campo obrigatório</mat-error>
+              <mat-error *ngIf="IDTipoProjeto">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 55%; padding-left: 0.5em;" *ngIf="entity.IDTipoProjeto === 8">
               <input matInput placeholder="Especificador" name="NREspecificador" [(ngModel)]="entity.NREspecificador"
                 #NREspecificador="ngModel" required max="255" maxlength="255">
-              <mat-error *ngIf="NREspecificador.invalid">Campo obrigatório</mat-error>
+              <mat-error *ngIf="NREspecificador.invalid">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <section class="section-group" [ngStyle]="getStyleRadioCheck(form1, BLTrocaPPBparaPD)">
               <label style="padding-right: 10px">Projeto para cumprir troca de PPB por P,D&I? *</label>
@@ -60,7 +60,7 @@
               </mat-radio-group>
             </section>
             <div *ngIf="form1.invalid && form1.submitted && !BLTrocaPPBparaPD.value" class="mat-error" style="font-size: 75%;">
-              Campo obrigatório
+              {{msgObrigatorio.msg}}
             </div>
           </mat-card>
           <mat-card class="cardProjeto">
@@ -75,7 +75,7 @@
               </mat-radio-group>
             </section>
             <div *ngIf="form1.invalid && form1.submitted && !NRAlcance.value" class="mat-error" style="font-size: 75%;">
-              Campo obrigatório
+              {{msgObrigatorio.msg}}
             </div>
             <section class="section-group" style="margin-top: 1.5%;" [ngStyle]="getStyleRadioCheck(form1, NRGrauInovacaoG1)">
               <label style="width: 120px;">Grau de Inovação:</label>
@@ -94,7 +94,7 @@
               </mat-radio-group>
             </section>
             <div *ngIf="form1.invalid && form1.submitted && !NRGrauInovacaoG1.value" class="mat-error" style="font-size: 75%;">
-              Campo obrigatório
+              {{msgObrigatorio.msg}}
             </div>
             <mat-form-field style="width: 55%; padding-left: 0.5em; padding-top: 1.5em;">
               <input matInput placeholder="Área de Aplicação" [matAutocomplete]="auto" name="IDAreaAplicacao"
@@ -106,7 +106,7 @@
                   {{option.CDCodigo}} - {{option.NRNome}}
                 </mat-option>
               </mat-autocomplete>
-              <mat-error *ngIf="IDAreaAplicacao.invalid">Campo obrigatório</mat-error>
+              <mat-error *ngIf="IDAreaAplicacao.invalid">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <section class="section-group" [ngStyle]="getStyleRadioCheck(form1, BLPropriedadeIntelectual)">
               <label style="padding-right: 10px;">Este projeto gerou Propriedade Intelectual?</label>
@@ -117,7 +117,7 @@
               </mat-radio-group>
             </section>
             <div *ngIf="form1.invalid && form1.submitted && !BLPropriedadeIntelectual.value" class="mat-error" style="font-size: 75%;">
-              Campo obrigatório
+              {{msgObrigatorio.msg}}
             </div>
             <section class="section-group" [ngStyle]="getStyleRadioCheck(form1, BLPublicacao)">
               <label style="padding-right: 74px;">Este projeto possui publicações?</label>
@@ -128,11 +128,11 @@
               <mat-form-field style="width: 20%; padding-left: 1.5em;" *ngIf="entity.BLPublicacao && entity.BLPublicacao === 'true'">
                 <input matInput placeholder="Quantidade" name="QDQuantidadePublicacao" [(ngModel)]="entity.QDQuantidadePublicacao"
                   #QDQuantidadePublicacao="ngModel" required max="255" maxlength="255">
-                <mat-error *ngIf="QDQuantidadePublicacao.invalid">Campo obrigatório</mat-error>
+                <mat-error *ngIf="QDQuantidadePublicacao.invalid">{{msgObrigatorio.msg}}</mat-error>
               </mat-form-field>
             </section>
             <div *ngIf="form1.invalid && form1.submitted && !BLPublicacao.value" class="mat-error" style="font-size: 75%;">
-              Campo obrigatório
+              {{msgObrigatorio.msg}}
             </div>
           </mat-card>
           <mat-card class="cardProjeto" *ngIf="entity.IDTipoProjeto">
@@ -286,17 +286,17 @@
           <mat-form-field style="width: 99%; padding-left: 0.5em;">
             <textarea matInput placeholder="Objetivo" name="DSObjetivo" [(ngModel)]="entity.DSObjetivo" #DSObjetivo="ngModel"
               required rows="10"></textarea>
-            <mat-error *ngIf="DSObjetivo.invalid">Campo obrigatório</mat-error>
+            <mat-error *ngIf="DSObjetivo.invalid">{{msgObrigatorio.msg}}</mat-error>
           </mat-form-field>
           <mat-form-field style="width: 99%; padding-left: 0.5em;">
             <textarea matInput placeholder="Descrição das Etapas" name="DSDescricaoEtapa" [(ngModel)]="entity.DSDescricaoEtapa"
               #DSDescricaoEtapa="ngModel" required rows="10"></textarea>
-            <mat-error *ngIf="DSDescricaoEtapa.invalid">Campo obrigatório</mat-error>
+            <mat-error *ngIf="DSDescricaoEtapa.invalid">{{msgObrigatorio.msg}}</mat-error>
           </mat-form-field>
           <mat-form-field style="width: 99%; padding-left: 0.5em;">
             <textarea matInput placeholder="Resultados Obtidos" name="DSResultadoObtido" [(ngModel)]="entity.DSResultadoObtido"
               #DSResultadoObtido="ngModel" required rows="10"></textarea>
-            <mat-error *ngIf="DSResultadoObtido.invalid">Campo obrigatório</mat-error>
+            <mat-error *ngIf="DSResultadoObtido.invalid">{{msgObrigatorio.msg}}</mat-error>
           </mat-form-field>
         </mat-card-content>
       </mat-card>

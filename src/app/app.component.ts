@@ -20,6 +20,10 @@ export class AppComponent implements OnInit {
   currentRouter: string;
   menus: any[] = [
     {
+      icon: 'dashboard',
+      name: 'Painel de Instrumentos',
+      router: '/dashboard',
+    }, {
       icon: 'business_center',
       name: 'Projeto Próprio',
       router: '/projeto',

@@ -13,7 +13,7 @@ export const environment = {
   moduleFormacao: { name: 'Formacao' },
   moduleAreaAplicacao: { name: 'AreaAplicacao' },
   moduleInstituicao: { name: 'Instituicao' },
-  isDevelope: true,
+  isDevelope: false,
 };
 
 /*

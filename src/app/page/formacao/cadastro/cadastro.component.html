@@ -7,7 +7,7 @@
       <mat-form-field style="width: 99%; padding-left: 0.5em;">
         <input matInput placeholder="Descricao" name="NOFormacao" [(ngModel)]="entity.NOFormacao" #NOFormacao="ngModel"
           required max="255" maxlength="255">
-        <mat-error *ngIf="NOFormacao.invalid">Campo obrigatório</mat-error>
+        <mat-error *ngIf="NOFormacao.invalid">{{msgObrigatorio.msg}}</mat-error>
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions>

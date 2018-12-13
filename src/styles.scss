@@ -1,45 +1,84 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 // @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
-a:link {
-    color: #a72ac6;
-    text-decoration: none;
-}
-a:visited {
-    color: #7f11e7;
-}
-a:hover {
-    color: #0159f0;
+
+.app-card {
+  max-width: 100%;
+  margin: 0.5em;
 }
 
-.snackbar-default{
-    background-color: #3f51b5;
+.app-button-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
-.snackbar-success{
-    background-color: #088c0c;
+
+.app-button-row button {
+  margin-right: 8px;
 }
-.snackbar-warning{
-    background-color: #cfc21d;
+
+.app-form {
+  width: 100%;
+  // border: 1px solid black;
 }
-.snackbar-error{
-    background-color: #f4928a;
+
+.app-full-width {
+  width: 20%;
+  padding-left: 0.5em;
+}
+
+table {
+  width: 100%;
+}
+
+// a:link {
+//     color: #a72ac6;
+//     text-decoration: none;
+// }
+// a:visited {
+//     color: #7f11e7;
+// }
+// a:hover {
+//     color: #0159f0;
+// }
+
+.snackbar-default {
+  background-color: #3f51b5;
+}
+.snackbar-success {
+  background-color: #088c0c;
+}
+.snackbar-warning {
+  background-color: #cfc21d;
+}
+.snackbar-error {
+  background-color: #f4928a;
 }
 
 .mat-simple-snackbar-action {
-     color: #ffffff; 
+  color: #ffffff;
 }
 
 /* regra para o box-sizing */
-*, *:before, *:after {
-    -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 /* regra para o clear float */
 .cf:before,
-.cf:after {content: " ";display: table;}
-.cf:after {clear: both;}
-.cf {*zoom: 1;}
-body {	
-	font:  62.5%/1.2 Verdana, Helvetica, Arial, sans-serif;
-	}
+.cf:after {
+  content: " ";
+  display: table;
+}
+.cf:after {
+  clear: both;
+}
+.cf {
+  *zoom: 1;
+}
+body {
+  font: 62.5%/1.2 Verdana, Helvetica, Arial, sans-serif;
+}

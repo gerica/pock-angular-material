@@ -31,6 +31,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   areaAplicacoes: any;
   types: any;
   currentAreaAplicacao: any;
+  msgObrigatorio = AppMessages.getObj(MSG001);
 
   constructor(
     private projetoService: ProjetoService,
