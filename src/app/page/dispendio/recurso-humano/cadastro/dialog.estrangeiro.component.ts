@@ -79,8 +79,9 @@ export class DialogEstrangeiroComponent extends BaseComponent implements OnInit 
             return;
         }
 
-        this.sepinService.salvar(MODULE_ESTRANGEIRO, this.entity).subscribe(
-            () => {
+        this.sepinService.salvarAndReturnId(MODULE_ESTRANGEIRO, this.entity).subscribe(
+            onNext => {
+                this.entity.IDEstrangeiro = onNext.value;
             }, onError => {
                 if (onError.error) {
                     this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
@@ -88,17 +89,16 @@ export class DialogEstrangeiroComponent extends BaseComponent implements OnInit 
                     this.addSnackBar(AppMessages.getObj(MSG101));
                 }
             }, () => {
-                this.dialogRef.close({ name: this.entity.NRNome });
+                this.dialogRef.close({ id: this.entity.IDEstrangeiro, name: this.entity.NRNome });
             }
         );
     }
 
     usar(row: any): void {
-        this.dialogRef.close({ name: row.NRNome });
+        this.dialogRef.close({ id: row.IDEstrangeiro, name: row.NRNome });
     }
 
     detalhar(row: any): void {
-        console.log(row);
         this.adicionarNovo = true;
         this.entity = row;
     }

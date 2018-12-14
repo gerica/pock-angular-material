@@ -36,6 +36,66 @@
             </section>
             <!-- final da linha -->
 
+            <mat-form-field style="width: 50%; padding-left: 0.5em;">
+              <mat-select placeholder="Nível de escolaridade" [(ngModel)]="entity.NREscolaridade" name="NREscolaridade"
+                #NREscolaridade="ngModel" required>
+                <mat-option *ngFor="let obj of escolaridades" [value]="obj.value">
+                  {{obj.value}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="NREscolaridade">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 50%; padding-left: 0.5em;">
+              <mat-select placeholder="Formação" [(ngModel)]="entity.NRFormacao" name="NRFormacao" #NRFormacao="ngModel"
+                required>
+                <mat-option *ngFor="let obj of formacoes" [value]="obj.value">
+                  {{obj.value}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="NRFormacao">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <!-- final da linha -->
+
+            <mat-form-field style="width: 100%; padding-left: 0.5em;" *ngIf="entity.NRFormacao === 'Outra'">
+              <input matInput placeholder="Especificar formação" name="NRFormacaoEspecifica" [(ngModel)]="entity.NRFormacaoEspecifica"
+                #NRFormacaoEspecifica="ngModel" required max="50" maxlength="50">
+              <mat-error *ngIf="NRFormacaoEspecifica.invalid">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <!-- final da linha -->
+
+            <mat-form-field style="width: 20%; padding-left: 0.5em;">
+              <input matInput placeholder="Horas trabalhadas" name="NRHoraTrabalhada" [(ngModel)]="entity.NRHoraTrabalhada"
+                #NRHoraTrabalhada="ngModel" required max="8" maxlength="8">
+              <mat-error *ngIf="NRHoraTrabalhada.invalid">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 30%; padding-left: 0.5em;">
+              <input matInput [matDatepicker]="picker1" [(ngModel)]="entity.DTInicio" name="DTInicio" placeholder="Período de atuação inicial"
+                required #DTInicio="ngModel">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <mat-error *ngIf="DTInicio">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 30%; padding-left: 0.5em;">
+              <input matInput [matDatepicker]="picker2" [(ngModel)]="entity.DTFim" name="DTFim" placeholder="Período de atuação final"
+                required #DTFim="ngModel">
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+              <mat-error *ngIf="DTFim">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 20%; padding-left: 0.5em;">
+              <input matInput placeholder="Valor" name="NRValor" [(ngModel)]="entity.NRValor" #NRValor="ngModel"
+                required max="20" maxlength="20">
+              <mat-error *ngIf="NRValor.invalid">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <!-- final da linha -->
+
+            <mat-form-field style="width: 100%; padding-left: 0.5em;">
+              <textarea matInput placeholder="Atuação no projeto" name="DSAtuacao" [(ngModel)]="entity.DSAtuacao"
+                #DSAtuacao="ngModel" required rows="5"></textarea>
+              <mat-error *ngIf="DSAtuacao.invalid">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <!-- final da linha -->
+
           </mat-card-content>
         </mat-card>
         <mat-card-actions style="width: 100%; margin-left: 0px;">

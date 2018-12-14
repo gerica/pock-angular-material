@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 
 
 const URL_BASE = environment.urlBase;
+const SAVE_RETURN_ID = `${URL_BASE}/saveAndReturnId`;
 @Injectable()
 export class SepinService {
 
@@ -20,7 +21,13 @@ export class SepinService {
         const body = {
             ...entity
         };
-        return this.http.post(`${URL_BASE}`, body, this.getHeader(objModule));
+        return this.http.post(URL_BASE, body, this.getHeader(objModule));
+    }
+    salvarAndReturnId(objModule: any, entity: any): Observable<any> {
+        const body = {
+            ...entity
+        };
+        return this.http.post(SAVE_RETURN_ID, body, this.getHeader(objModule));
     }
 
     apagar(objModule: any, id: any): Observable<any> {
