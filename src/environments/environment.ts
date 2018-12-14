@@ -10,12 +10,12 @@ export const environment = {
   moduleProjetoConveniado: { name: 'ProjetoConveniado' },
   moduleTipoProjeto: { name: 'TipoProjeto' },
   moduleProjetoDispendio: { name: 'ProjetoDispendio' },
-  moduleFormacao: { name: 'Formacao' },
+  moduleFormacao: { name: 'Formacao', id: 'CDFormacao' },
   moduleAreaAplicacao: { name: 'AreaAplicacao' },
   moduleInstituicao: { name: 'Instituicao' },
   moduleRecursoHumano: { name: 'DispendioRecursoHumano' },
   moduleEstrangeiro: { name: 'Estrangeiro' },
-  isDevelope: false,
+  isDevelope: true,
 };
 
 /*

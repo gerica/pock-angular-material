@@ -8,8 +8,10 @@ import { Subscription, Observable } from 'rxjs';
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
-import { FormControl, NgForm, NgModel } from '@angular/forms';
+import { FormControl, NgForm, NgModel, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, find, tap, filter } from 'rxjs/operators';
+import { MatDialog, MatStepper } from '@angular/material';
+import { DialogRecursoHumanoComponent } from '../../dispendio/recurso-humano/dialog.recurso.humano.component';
 
 const MODULE_PROJETO = environment.moduleProjeto;
 const MODULE_PROJETO_DISPENDIO = environment.moduleProjetoDispendio;
@@ -39,6 +41,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     private actionRoute: ActivatedRoute,
     private sepinService: SepinService,
     public appSnackBarService: AppSnackBarService,
+    public dialog: MatDialog,
   ) {
     super(appSnackBarService);
   }
@@ -213,6 +216,40 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
       VLServicoTerceiro +
       VLTreinamento +
       VLViagem;
+  }
+
+  openDialogRecursoHumano(): void {
+    const dialogRef = this.dialog.open(DialogRecursoHumanoComponent, { width: '80%' });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      // if (result && result.name) {
+      //   this.entity.IDEstrangeiro = result.id;
+      //   this.entity.NRNomeColaborador = result.name;
+      // }
+    });
+  }
+
+  voltar(stepper: MatStepper) {
+    stepper.previous();
+  }
+
+  irPaginaDispendio(stepper: MatStepper, form: NgForm) {
+    event.preventDefault();
+    if (!form.valid) {
+      this.addSnackBar(AppMessages.getObj(MSG001));
+      return;
+    }
+    stepper.next();
+  }
+
+  irPaginaDescricao(stepper: MatStepper, form: NgForm) {
+    event.preventDefault();
+    // if (!form.valid) {
+    //   this.addSnackBar(AppMessages.getObj(MSG001));
+    //   return;
+    // }
+    stepper.next();
   }
 
   private _filter(values) {

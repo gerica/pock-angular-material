@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppSnackBarService } from 'src/app/page/shared/utils/snackbar/app-snackbar.component';
 import { AppMessages, MSG001, MSG101 } from 'src/app/page/shared/utils/app.messages';
@@ -9,19 +9,19 @@ import * as moment from 'moment';
 import { NgForm, NgModel } from '@angular/forms';
 import { map } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/page/base.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { DialogEstrangeiroComponent } from './dialog.estrangeiro.component';
 
 const MODULE_RECURSO_HUMANO = environment.moduleRecursoHumano;
 const URL_PROJETO = 'recurso-humano';
 
 @Component({
-  selector: 'app-recurso-humano-cadastro',
-  templateUrl: './cadastro.component.html',
-  styleUrls: ['./cadastro.component.scss'],
+  selector: 'app-recurso-humano-dialog',
+  templateUrl: './dialog.recurso.humano.component.html',
+  styleUrls: ['./dialog.recurso.humano.component.scss'],
   providers: [SepinService]
 })
-export class CadastroComponent extends BaseComponent implements OnInit, OnDestroy {
+export class DialogRecursoHumanoComponent extends BaseComponent implements OnInit, OnDestroy {
   title = 'Cadastro';
   dispendios: any;
   naoPossuiCPF = false;
@@ -36,8 +36,13 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   formacoes: any[];
   maskCPF = [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/];
   msgObrigatorio = AppMessages.getObj(MSG001);
+  entities: MatTableDataSource<any>;
+  displayedColumns: string[] = ['NREmpresa', 'IDProjetoConveniado', 'NRNome', 'DTInicioDTFim', 'TipoProjeto', 'actions'];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
+    public dialogRef: MatDialogRef<DialogEstrangeiroComponent>,
     private router: Router,
     private actionRoute: ActivatedRoute,
     private sepinService: SepinService,
@@ -62,6 +67,12 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
         this.initForDevelop();
       }
     });
+
+    this.paginator._intl.itemsPerPageLabel = 'Registros por página';
+    this.paginator._intl.nextPageLabel = 'Siguiente';
+    this.paginator._intl.previousPageLabel = 'Anterior';
+    this.paginator._intl.firstPageLabel = 'Primeira Página';
+    this.paginator._intl.lastPageLabel = 'Última Página';
   }
 
   recuperarPorId(id: any): any {
@@ -169,6 +180,16 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
         this.entity.NRNomeColaborador = result.name;
       }
     });
+  }
+
+  fechar(): void {
+    this.dialogRef.close();
+  }
+
+  private montarEntities(onNext: any) {
+    this.entities = new MatTableDataSource<any>(onNext);
+    this.entities.paginator = this.paginator;
+    this.entities.sort = this.sort;
   }
 
   initForDevelop() {

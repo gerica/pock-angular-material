@@ -18,7 +18,7 @@ const URL_FORMACAO_CADASTRO = 'formacao/cadastro';
   providers: [SepinService]
 })
 export class ListaComponent extends BaseComponent implements OnInit {
-  idEntity = `ID${MODULE_FORMACAO.name}`;
+  idEntity = MODULE_FORMACAO.id;
   entity: any;
   entities: MatTableDataSource<any>;
   displayedColumns: string[] = ['NOFormacao', 'actions'];

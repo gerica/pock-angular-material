@@ -38,7 +38,6 @@ export class ListaComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.entity = {};
-    console.log(this.paginator);
     this.paginator._intl.itemsPerPageLabel = 'Registros por página';
     this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.previousPageLabel = 'Anterior';

@@ -100,12 +100,65 @@
         </mat-card>
         <mat-card-actions style="width: 100%; margin-left: 0px;">
           <div class="app-button-row">
-            <button mat-raised-button type="submit" color="primary">Salvar</button>
-            <button mat-raised-button (click)="routerConsulta()">Voltar</button>
+            <button mat-raised-button type="submit" color="primary">Incluir</button>
           </div>
         </mat-card-actions>
       </form>
+      <mat-divider></mat-divider>
+      <div class="mat-elevation-z8" style="margin-top: 3%">
+        <table mat-table [dataSource]="entities" matSort>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Ações </th>
+            <td mat-cell *matCellDef="let row; let i=index;">
+              <button mat-icon-button color="primary" (click)="preEdit(row)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteRow(row)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="NREmpresa">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Empresa </th>
+            <td mat-cell *matCellDef="let element"> {{element.NREmpresa}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="IDProjetoConveniado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Identificação </th>
+            <td mat-cell *matCellDef="let element"> {{element.IDProjetoConveniado}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="NRNome">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+            <td mat-cell *matCellDef="let element"> {{element.NRNome}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="TipoProjeto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+            <td mat-cell *matCellDef="let element"> {{getTipoDescricao(element)}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="DTInicioDTFim">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Período de Vigência </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.DTInicio | date:'dd/MM/yyyy'}} até {{element.DTFim | date:'dd/MM/yyyy'}}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div>
     </mat-tab>
     <mat-tab label="Importar"> Content 2 </mat-tab>
   </mat-tab-group>
 </mat-card>
+
+<div class="app-button-row">
+  <button mat-raised-button type="button" (click)="fechar()" color="primary">Concluir</button>
+  <button mat-raised-button type="button" (click)="fechar()">Fechar</button>
+</div>

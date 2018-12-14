@@ -14,7 +14,6 @@ import { AreaAplicacaoModule } from './areaAplicacao/area.aplicacao.module';
 import { ProjetoConveniadoModule } from './conveniado/conveniado.module';
 import { InstituicaoModule } from './instituicao/instituicao.module';
 import { DashboardModule } from './dashboard/dashboard.module';
-import { RecursoHumanoModule } from './dispendio/recurso-humano/rh.module';
 
 @NgModule({
   declarations: [
@@ -38,7 +37,6 @@ import { RecursoHumanoModule } from './dispendio/recurso-humano/rh.module';
     ProjetoConveniadoModule,
     InstituicaoModule,
     DashboardModule,
-    RecursoHumanoModule,
   ],
   exports: [DeleteDialogComponent],
   providers: [],

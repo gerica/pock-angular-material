@@ -44,7 +44,7 @@ export class SepinService {
         headers = headers.set('Accept', 'application/json');
         if (config) {
             // headers = headers.set('NameTable', config.name || '');
-            // headers = headers.set('NamePrimaryKey', config.nameId || '');
+            headers = headers.set('NamePrimaryKey', config.id || '');
             headers = headers.set('NameModule', config.name || '');
         }
         return {

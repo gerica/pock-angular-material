@@ -35,8 +35,8 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   ngOnInit() {
     this.entity = {};
     this.subscription = this.actionRoute.params.subscribe(params => {
-      if (params && params['idFormacao']) {
-        this.recuperarPorId(params['idFormacao']);
+      if (params && params['id']) {
+        this.recuperarPorId(params['id']);
       }
     });
   }

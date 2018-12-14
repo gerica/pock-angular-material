@@ -24,15 +24,26 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NgxCurrencyModule } from 'ngx-currency';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTabsModule } from '@angular/material/tabs';
+import { TextMaskModule } from 'angular2-text-mask';
 
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
+import { DialogRecursoHumanoComponent } from '../dispendio/recurso-humano/dialog.recurso.humano.component';
+import { DialogEstrangeiroComponent } from '../dispendio/recurso-humano/dialog.estrangeiro.component';
 registerLocaleData(localePt);
 
 @NgModule({
   declarations: [
     ListaComponent,
     CadastroComponent,
+    DialogRecursoHumanoComponent,
+    DialogEstrangeiroComponent,
+  ],
+  entryComponents: [
+    DialogRecursoHumanoComponent,
+    DialogEstrangeiroComponent,
   ],
   imports: [
     CommonModule,
@@ -57,6 +68,9 @@ registerLocaleData(localePt);
     MatCheckboxModule,
     MatAutocompleteModule,
     NgxCurrencyModule,
+    MatTooltipModule,
+    MatTabsModule,
+    TextMaskModule,
   ],
   providers: [
     AppSnackBarService,

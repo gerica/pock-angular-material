@@ -12,7 +12,7 @@ const MODULE_ESTRANGEIRO = environment.moduleEstrangeiro;
 @Component({
     selector: 'app-dialog-estrangeiro',
     templateUrl: './dialog.estrangeiro.component.html',
-    styleUrls: ['./cadastro.component.scss'],
+    styleUrls: ['./dialog.recurso.humano.component.scss'],
     providers: [SepinService],
 })
 export class DialogEstrangeiroComponent extends BaseComponent implements OnInit {
