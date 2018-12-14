@@ -2,12 +2,12 @@
   <mat-step [stepControl]="firstFormGroup">
     <form class="app-form" #form1="ngForm">
       <ng-template matStepLabel>Dados Básicos</ng-template>
-      <mat-card class="cardProjeto">
+      <mat-card class="app-card">
         <mat-card-header>
           <mat-card-title>Dados Básicos</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <mat-card class="cardProjeto">
+          <mat-card class="app-card">
             <mat-form-field style="width: 20%; padding-left: 0.5em;">
               <input matInput placeholder="Identificação" name="IDProjeto" [(ngModel)]="entity.IDProjeto" #IDProjeto="ngModel"
                 disabled>
@@ -63,7 +63,7 @@
               {{msgObrigatorio.msg}}
             </div>
           </mat-card>
-          <mat-card class="cardProjeto">
+          <mat-card class="app-card">
             <!-- <mat-divider style="margin-top: 1em;"></mat-divider> -->
             <section class="section-group" [ngStyle]="getStyleRadioCheck(form1, NRAlcance)">
               <label>Alcance: *</label>
@@ -135,7 +135,7 @@
               {{msgObrigatorio.msg}}
             </div>
           </mat-card>
-          <mat-card class="cardProjeto" *ngIf="entity.IDTipoProjeto">
+          <mat-card class="app-card" *ngIf="entity.IDTipoProjeto">
             <section class="example-section" style="width: 40%; display:flex; justify-content: space-between;">
               <label>Artigo 24</label>
               <mat-checkbox *ngIf="entity.IDTipoProjeto !== 6" class="example-margin" [(ngModel)]="entity.CKArtigoI"
@@ -205,7 +205,7 @@
   <mat-step [stepControl]="secondFormGroup">
     <form>
       <ng-template matStepLabel>Despêndio</ng-template>
-      <mat-card class="cardProjeto">
+      <mat-card class="app-card">
         <mat-card-header>
           <mat-card-title>Dispêncio {{entityStep2.DTAnoBase}}</mat-card-title>
         </mat-card-header>
@@ -278,7 +278,7 @@
   <mat-step>
     <form class="app-form" #form2="ngForm" (submit)="gravar($event, form1, form2)">
       <ng-template matStepLabel>Descricção</ng-template>
-      <mat-card class="cardProjeto">
+      <mat-card class="app-card">
         <mat-card-header>
           <mat-card-title>Dispêncio {{entityStep2.DTAnoBase}}</mat-card-title>
         </mat-card-header>

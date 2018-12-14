@@ -6,6 +6,7 @@ import { AreaAplicacaoRoutes } from './page/areaAplicacao/area.aplicacao-routing
 import { ProjetoConveniadoRoutes } from './page/conveniado/conveniado-routing.module';
 import { InstituicaoRoutes } from './page/instituicao/instituicao-routing.module';
 import { DashboardRoutes } from './page/dashboard/dashboard-routing.module';
+import { RecursoHumanoRoutes } from './page/dispendio/recurso-humano/rh-routing.module';
 
 const routes: Routes = [
   ...ProjetoRoutes,
@@ -14,6 +15,7 @@ const routes: Routes = [
   ...ProjetoConveniadoRoutes,
   ...InstituicaoRoutes,
   ...DashboardRoutes,
+  ...RecursoHumanoRoutes,
 ];
 
 @NgModule({

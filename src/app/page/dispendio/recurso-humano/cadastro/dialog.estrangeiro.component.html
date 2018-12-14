@@ -1,0 +1,108 @@
+<div *ngIf="!adicionarNovo">
+    <mat-card class="app-card">
+        <mat-card-header>
+            <mat-card-title>Pesquisar Estrangeiro</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field style="width: 100%; padding-left: 0.5em;">
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtro">
+            </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions>
+            <div class="app-button-row">
+                <button mat-raised-button type="button" (click)="pesquisar()" color="primary">Pesquisar</button>
+                <button mat-raised-button type="button" (click)="novo()">Novo</button>
+                <button mat-raised-button type="button" (click)="fechar()">Fechar</button>
+            </div>
+        </mat-card-actions>
+    </mat-card>
+    <div class="mat-elevation-z8" style="margin-top: 3%">
+        <table mat-table [dataSource]="entities" matSort>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Ações </th>
+                <td mat-cell *matCellDef="let row; let i=index;">
+                    <button mat-icon-button color="primary" (click)="usar(row)" matTooltip="Selecionar">
+                        <mat-icon>person</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" (click)="detalhar(row)" matTooltip="Detalhar">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="NRNome">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+                <td mat-cell *matCellDef="let element"> {{element.NRNome}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="NRNumero">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Passaporte </th>
+                <td mat-cell *matCellDef="let element"> {{element.NRNumero}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>
+<form class="app-form" #form="ngForm" (submit)="gravar($event, form)" *ngIf="adicionarNovo">
+    <mat-card class="app-card">
+        <mat-card-header>
+            <mat-card-title>Cadastrar Estrangeiro</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field style="width: 100%; padding-left: 0.5em;">
+                <input matInput placeholder="Nome" name="NRNome" [(ngModel)]="entity.NRNome" #NRNome="ngModel" required
+                    max="255" maxlength="255">
+                <mat-error *ngIf="NRNome.invalid">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 100%; padding-left: 0.5em;">
+                <input matInput placeholder="Passaporte" name="NRNumero" [(ngModel)]="entity.NRNumero" #NRNumero="ngModel"
+                    required max="10" maxlength="10">
+                <mat-error *ngIf="NRNumero.invalid">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 100%; padding-left: 0.5em;">
+                <mat-select placeholder="País emissor do passaporte" [(ngModel)]="entity.NRPais" name="NRPais" #NRPais="ngModel"
+                    required>
+                    <mat-option *ngFor="let obj of paises" [value]="obj.value">
+                        {{obj.value}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="NRPais">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 100%; padding-left: 0.5em;">
+                <input matInput [matDatepicker]="picker1" [(ngModel)]="entity.DTVencimento" name="DTVencimento"
+                    placeholder="Data de vencimento do passaporte" required #DTVencimento="ngModel">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error *ngIf="DTVencimento">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 100%; padding-left: 0.5em;">
+                <input matInput [matDatepicker]="picker2" [(ngModel)]="entity.DTNascimento" name="DTNascimento"
+                    placeholder="Data de nascimento" required #DTNascimento="ngModel">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <mat-error *ngIf="DTNascimento">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 100%; padding-left: 0.5em;">
+                <mat-select placeholder="Sexo" [(ngModel)]="entity.NRSexo" name="NRSexo" #NRSexo="ngModel" required>
+                    <mat-option *ngFor="let obj of sexo" [value]="obj.value">
+                        {{obj.value}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="NRSexo">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions>
+            <div class="app-button-row">
+                <button mat-raised-button *ngIf="!entity.IDEstrangeiro" type="submit" color="primary">Salvar</button>
+                <button mat-raised-button *ngIf="entity.IDEstrangeiro" type="button" (click)="usar(entity)" color="primary">Usar</button>
+                <button mat-raised-button type="button" (click)="novo()">Voltar</button>
+                <button mat-raised-button type="button" (click)="fechar()">Fechar</button>
+            </div>
+        </mat-card-actions>
+    </mat-card>
+</form>

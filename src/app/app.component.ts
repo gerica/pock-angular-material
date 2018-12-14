@@ -32,10 +32,19 @@ export class AppComponent implements OnInit {
       name: 'Projeto Conveniado',
       router: '/conveniado',
     }, {
+      icon: 'attach_money',
+      name: 'Dispêndio',
+      showChilds: false,
+      childs: [
+        {
+          name: 'Recursos Humano',
+          router: '/recurso-humano',
+        }
+      ],
+    }, {
       icon: 'account_balance',
       name: 'Admnistrativo',
       showChilds: false,
-      // router: '',
       childs: [
         {
           name: 'Formação',
