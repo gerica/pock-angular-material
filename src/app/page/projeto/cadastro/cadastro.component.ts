@@ -28,7 +28,8 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   activeForm = true;
   private subscription: Subscription;
   entity: any;
-  entityStep2: any;
+  idEntity = `ID${MODULE_PROJETO.name}`;
+  // entityStep2: any;
   entities: any[];
   areaAplicacoes: any;
   types: any;
@@ -47,8 +48,8 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   }
 
   ngOnInit() {
-    this.entity = {};
-    this.entityStep2 = {
+    // this.entity = {};
+    this.entity = {
       DTAnoBase: moment().format('YYYY'),
       VLTotalValido: 0,
       VLEquipamentoSoftware: 0,
@@ -77,13 +78,10 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   }
 
   recuperarPorId(id: any): any {
-    this.projetoService.recuperarPorId(id).subscribe(
+    this.sepinService.recuperarPorId(MODULE_PROJETO, id).subscribe(
       onNext => {
         if (onNext && onNext.value && onNext.value.length > 0) {
-          this.entity = onNext.value[0][0];
-          if (onNext.value[1]) {
-            this.entityStep2 = onNext.value[1][0];
-          }
+          this.entity = onNext.value[0];
         }
       }, onError => {
         if (onError.error) {
@@ -141,18 +139,18 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
       return;
     }
 
-    this.projetoService.salvar(this.entity, this.entityStep2).subscribe(
-      () => {
-      }, onError => {
-        if (onError.error) {
-          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
-        } else {
-          this.addSnackBar(AppMessages.getObj(MSG101));
-        }
-      }, () => {
-        this.routerConsulta();
-      }
-    );
+    // this.projetoService.salvar(this.entity, this.entityStep2).subscribe(
+    //   () => {
+    //   }, onError => {
+    //     if (onError.error) {
+    //       this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
+    //     } else {
+    //       this.addSnackBar(AppMessages.getObj(MSG101));
+    //     }
+    //   }, () => {
+    //     this.routerConsulta();
+    //   }
+    // );
   }
 
   doFilterAreaAplicacao() {
@@ -205,9 +203,9 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
       VLRecursosHumanoa,
       VLServicoTerceiro,
       VLTreinamento,
-      VLViagem } = this.entityStep2;
+      VLViagem } = this.entity;
 
-    this.entityStep2.VLTotalValido = VLEquipamentoSoftware +
+    this.entity.VLTotalValido = VLEquipamentoSoftware +
       VLLivroPeriodico +
       VLMaterialConsumo +
       VLObraCivil +
@@ -219,14 +217,19 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   }
 
   openDialogRecursoHumano(): void {
-    const dialogRef = this.dialog.open(DialogRecursoHumanoComponent, { width: '80%' });
+    const data = { name: 'IDProjeto', id: this.entity.IDProjeto };
+    const dialogRef = this.dialog.open(DialogRecursoHumanoComponent, { width: '90%', height: '90%', data });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
-      // if (result && result.name) {
-      //   this.entity.IDEstrangeiro = result.id;
-      //   this.entity.NRNomeColaborador = result.name;
-      // }
+      if (result && result.dados) {
+        this.entity.VLRecursosHumanoa = 0;
+        result.dados.forEach(e => {
+          this.entity.VLRecursosHumanoa += e.VLRecurso;
+        });
+        //   this.entity.IDEstrangeiro = result.id;
+        //   this.entity.NRNomeColaborador = result.name;
+      }
     });
   }
 
@@ -240,7 +243,19 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
       this.addSnackBar(AppMessages.getObj(MSG001));
       return;
     }
-    stepper.next();
+    this.sepinService.salvarAndReturnId(MODULE_PROJETO, this.entity).subscribe(
+      onNext => {
+        this.entity[this.idEntity] = onNext.value;
+      }, onError => {
+        if (onError.error) {
+          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
+        } else {
+          this.addSnackBar(AppMessages.getObj(MSG101));
+        }
+      }, () => {
+        stepper.next();
+      }
+    );
   }
 
   irPaginaDescricao(stepper: MatStepper, form: NgForm) {
@@ -265,7 +280,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
 
   initForDevelop() {
     this.entity = {
-      module: MODULE_PROJETO.name,
+      // module: MODULE_PROJETO.name,
       IDTipoProjeto: 4,
       // NRIdentificado: 'IDE2',
       NRSigla: 'test',
@@ -298,19 +313,19 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
       DSResultadoObtido: 'Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular. Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules. Omnicos directe al desirabilite de un nov lingua franca: On refusa continuar payar custosi traductores. At solmen va esser necessi far uniform grammatica, pronunciation e plu sommun paroles. Ma quande lingues coalesce, li grammatica del resultant lingue es plu simplic e regulari quam ti del coalescent lingues. Li nov lingua franca va esser plu simplic e regulari quam li existent Europan',
     };
 
-    this.entityStep2 = {
-      module: MODULE_PROJETO_DISPENDIO.name,
-      DTAnoBase: moment().format('YYYY'),
-      VLRecursosHumanoa: 51,
-      VLTreinamento: 51,
-      VLEquipamentoSoftware: 51,
-      VLLivroPeriodico: 51,
-      VLObraCivil: 51,
-      VLViagem: 51,
-      VLMaterialConsumo: 51,
-      VLOuroCorrelato: 51,
-      VLServicoTerceiro: 51,
-      // VLTotalValido: 51,
-    };
+    // this.entityStep2 = {
+    //   module: MODULE_PROJETO_DISPENDIO.name,
+    //   DTAnoBase: moment().format('YYYY'),
+    //   VLRecursosHumanoa: 51,
+    //   VLTreinamento: 51,
+    //   VLEquipamentoSoftware: 51,
+    //   VLLivroPeriodico: 51,
+    //   VLObraCivil: 51,
+    //   VLViagem: 51,
+    //   VLMaterialConsumo: 51,
+    //   VLOuroCorrelato: 51,
+    //   VLServicoTerceiro: 51,
+    //   // VLTotalValido: 51,
+    // };
   }
 }

@@ -61,7 +61,7 @@
             </mat-form-field>
             <mat-form-field style="width: 100%; padding-left: 0.5em;">
                 <input matInput placeholder="Passaporte" name="NRNumero" [(ngModel)]="entity.NRNumero" #NRNumero="ngModel"
-                    required max="10" maxlength="10">
+                    required max="9" maxlength="9">
                 <mat-error *ngIf="NRNumero.invalid">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 100%; padding-left: 0.5em;">

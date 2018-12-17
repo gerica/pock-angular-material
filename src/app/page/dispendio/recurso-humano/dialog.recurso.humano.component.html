@@ -1,23 +1,23 @@
 <mat-card class="app-card">
   <mat-tab-group>
     <mat-tab label="{{title}}">
-      <form class="app-form" #form="ngForm" (submit)="gravar($event, form)">
+      <form class="app-form" #form="ngForm" (submit)="gravar($event, form)" *ngIf="activeForm">
         <mat-card class="app-card">
           <mat-card-content>
 
             <mat-form-field style="width: 50%; padding-left: 0.5em;">
-              <mat-select placeholder="Dispêndio" [(ngModel)]="entity.NRDispendio" name="NRDispendio" #NRDispendio="ngModel"
-                required>
-                <mat-option *ngFor="let obj of dispendios" [value]="obj.value">
-                  {{obj.value}}
+              <mat-select placeholder="Dispêndio" [(ngModel)]="entity.CDTipoDispendio" name="CDTipoDispendio"
+                #CDTipoDispendio="ngModel" required>
+                <mat-option *ngFor="let obj of dispendios | async" [value]="obj.CDTipoDispendio">
+                  {{obj.NOTipoDispendio}}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="NRDispendio">{{msgObrigatorio.msg}}</mat-error>
+              <mat-error *ngIf="CDTipoDispendio">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
-            <mat-form-field style="width: 30%; padding-left: 0.5em;" [hideRequiredMarker]="naoPossuiCPF">
+            <mat-form-field style="width: 30%; padding-left: 0.5em;" *ngIf="!naoPossuiCPF">
               <input matInput placeholder="CPF do Colaborador" name="NRCPFColaborador" [(ngModel)]="entity.NRCPFColaborador"
                 #NRCPFColaborador="ngModel" required max="255" maxlength="255" [textMask]="{mask: maskCPF}">
-              <mat-error *ngIf="NRCPFColaborador.invalid && !naoPossuiCPF">{{msgObrigatorio.msg}}</mat-error>
+              <mat-error *ngIf="NRCPFColaborador.invalid">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <mat-checkbox style="width: 20%; padding-left: 0.5em;" [(ngModel)]="naoPossuiCPF" name="naoPossuiCPF"
               (click)="limparCPF()">Não
@@ -26,9 +26,9 @@
 
             <section *ngIf="naoPossuiCPF">
               <mat-form-field style="width: 100%; padding-left: 0.5em;">
-                <input matInput placeholder="Nome da Pessoa" name="NRNomeColaborador" [(ngModel)]="entity.NRNomeColaborador"
-                  #NRNomeColaborador="ngModel" required max="255" maxlength="255" disabled>
-                <mat-error *ngIf="NRNomeColaborador.invalid">{{msgObrigatorio.msg}}</mat-error>
+                <input matInput placeholder="Nome da Pessoa" name="NRNomeColaboradorLocal" [(ngModel)]="NRNomeColaborador"
+                  #NRNomeColaboradorLocal="ngModel" required max="255" maxlength="255" disabled>
+                <mat-error *ngIf="NRNomeColaboradorLocal.invalid">{{msgObrigatorio.msg}}</mat-error>
               </mat-form-field>
               <div class="app-button-row">
                 <button mat-raised-button color="primary" type="button" (click)="openDialog()">Adicionar Estrangeiro</button>
@@ -37,22 +37,22 @@
             <!-- final da linha -->
 
             <mat-form-field style="width: 50%; padding-left: 0.5em;">
-              <mat-select placeholder="Nível de escolaridade" [(ngModel)]="entity.NREscolaridade" name="NREscolaridade"
-                #NREscolaridade="ngModel" required>
-                <mat-option *ngFor="let obj of escolaridades" [value]="obj.value">
-                  {{obj.value}}
+              <mat-select placeholder="Nível de escolaridade" [(ngModel)]="entity.CDEscolaridade" name="CDEscolaridade"
+                #CDEscolaridade="ngModel" required>
+                <mat-option *ngFor="let obj of escolaridades | async" [value]="obj.CDEscolaridade">
+                  {{obj.NOEscolaridade}}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="NREscolaridade">{{msgObrigatorio.msg}}</mat-error>
+              <mat-error *ngIf="CDEscolaridade">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 50%; padding-left: 0.5em;">
-              <mat-select placeholder="Formação" [(ngModel)]="entity.NRFormacao" name="NRFormacao" #NRFormacao="ngModel"
+              <mat-select placeholder="Formação" [(ngModel)]="entity.CDFormacao" name="CDFormacao" #CDFormacao="ngModel"
                 required>
-                <mat-option *ngFor="let obj of formacoes" [value]="obj.value">
-                  {{obj.value}}
+                <mat-option *ngFor="let obj of formacoes | async" [value]="obj.CDFormacao">
+                  {{obj.NOFormacao}}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="NRFormacao">{{msgObrigatorio.msg}}</mat-error>
+              <mat-error *ngIf="CDFormacao">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <!-- final da linha -->
 
@@ -64,35 +64,35 @@
             <!-- final da linha -->
 
             <mat-form-field style="width: 20%; padding-left: 0.5em;">
-              <input matInput placeholder="Horas trabalhadas" name="NRHoraTrabalhada" [(ngModel)]="entity.NRHoraTrabalhada"
-                #NRHoraTrabalhada="ngModel" required max="8" maxlength="8">
-              <mat-error *ngIf="NRHoraTrabalhada.invalid">{{msgObrigatorio.msg}}</mat-error>
+              <input matInput placeholder="Horas trabalhadas" name="NRHorasTrabalhadas" [(ngModel)]="entity.NRHorasTrabalhadas"
+                #NRHorasTrabalhadas="ngModel" required max="8" maxlength="8">
+              <mat-error *ngIf="NRHorasTrabalhadas.invalid">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 30%; padding-left: 0.5em;">
-              <input matInput [matDatepicker]="picker1" [(ngModel)]="entity.DTInicio" name="DTInicio" placeholder="Período de atuação inicial"
-                required #DTInicio="ngModel">
+              <input matInput [matDatepicker]="picker1" [(ngModel)]="entity.DTInicioAtuacao" name="DTInicioAtuacao"
+                placeholder="Período de atuação inicial" required #DTInicioAtuacao="ngModel">
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
-              <mat-error *ngIf="DTInicio">{{msgObrigatorio.msg}}</mat-error>
+              <mat-error *ngIf="DTInicioAtuacao">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 30%; padding-left: 0.5em;">
-              <input matInput [matDatepicker]="picker2" [(ngModel)]="entity.DTFim" name="DTFim" placeholder="Período de atuação final"
-                required #DTFim="ngModel">
+              <input matInput [matDatepicker]="picker2" [(ngModel)]="entity.DTFinalAtuacao" name="DTFinalAtuacao"
+                placeholder="Período de atuação final" required #DTFinalAtuacao="ngModel">
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
-              <mat-error *ngIf="DTFim">{{msgObrigatorio.msg}}</mat-error>
+              <mat-error *ngIf="DTFinalAtuacao">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 20%; padding-left: 0.5em;">
-              <input matInput placeholder="Valor" name="NRValor" [(ngModel)]="entity.NRValor" #NRValor="ngModel"
-                required max="20" maxlength="20">
-              <mat-error *ngIf="NRValor.invalid">{{msgObrigatorio.msg}}</mat-error>
+              <input matInput placeholder="Valor" name="VLRecurso" [(ngModel)]="entity.VLRecurso" #VLRecurso="ngModel"
+                required max="20" maxlength="20" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }">
+              <mat-error *ngIf="VLRecurso.invalid">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <!-- final da linha -->
 
             <mat-form-field style="width: 100%; padding-left: 0.5em;">
-              <textarea matInput placeholder="Atuação no projeto" name="DSAtuacao" [(ngModel)]="entity.DSAtuacao"
-                #DSAtuacao="ngModel" required rows="5"></textarea>
-              <mat-error *ngIf="DSAtuacao.invalid">{{msgObrigatorio.msg}}</mat-error>
+              <textarea matInput placeholder="Atuação no projeto" name="DSAtuacaoProjeto" [(ngModel)]="entity.DSAtuacaoProjeto"
+                #DSAtuacaoProjeto="ngModel" required rows="1"></textarea>
+              <mat-error *ngIf="DSAtuacaoProjeto.invalid">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <!-- final da linha -->
 
@@ -100,7 +100,8 @@
         </mat-card>
         <mat-card-actions style="width: 100%; margin-left: 0px;">
           <div class="app-button-row">
-            <button mat-raised-button type="submit" color="primary">Incluir</button>
+            <button mat-raised-button type="button" *ngIf="entity.IDDispendioRecursosHumano" (click)="novo()">Novo</button>
+            <button mat-raised-button type="submit" color="primary">Salvar</button>
           </div>
         </mat-card-actions>
       </form>
@@ -120,31 +121,41 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="NREmpresa">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Empresa </th>
-            <td mat-cell *matCellDef="let element"> {{element.NREmpresa}} </td>
+          <ng-container matColumnDef="NOTipoDispendio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo Dispendio </th>
+            <td mat-cell *matCellDef="let element"> {{element.NOTipoDispendio}} </td>
           </ng-container>
 
-          <ng-container matColumnDef="IDProjetoConveniado">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Identificação </th>
-            <td mat-cell *matCellDef="let element"> {{element.IDProjetoConveniado}} </td>
+          <ng-container matColumnDef="NREstrangeiro">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Colaborador </th>
+            <td mat-cell *matCellDef="let element"> {{element.NREstrangeiro}} </td>
           </ng-container>
 
-          <ng-container matColumnDef="NRNome">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
-            <td mat-cell *matCellDef="let element"> {{element.NRNome}} </td>
+          <ng-container matColumnDef="NOEscolaridade">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Escolaridade </th>
+            <td mat-cell *matCellDef="let element"> {{element.NOEscolaridade}} </td>
           </ng-container>
 
-          <ng-container matColumnDef="TipoProjeto">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
-            <td mat-cell *matCellDef="let element"> {{getTipoDescricao(element)}} </td>
+          <ng-container matColumnDef="NOFormacao">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Formação </th>
+            <td mat-cell *matCellDef="let element"> {{element.NOFormacao}} </td>
           </ng-container>
 
           <ng-container matColumnDef="DTInicioDTFim">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Período de Vigência </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Período de Atuação </th>
             <td mat-cell *matCellDef="let element">
-              {{element.DTInicio | date:'dd/MM/yyyy'}} até {{element.DTFim | date:'dd/MM/yyyy'}}
+              {{element.DTInicioAtuacao | date:'dd/MM/yyyy'}} até {{element.DTFinalAtuacao | date:'dd/MM/yyyy'}}
             </td>
+          </ng-container>
+
+          <ng-container matColumnDef="NRHorasTrabalhadas">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Hora Trabalhada </th>
+            <td mat-cell *matCellDef="let element"> {{element.NRHorasTrabalhadas}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="VLRecurso">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+            <td mat-cell *matCellDef="let element"> {{element.VLRecurso | currency:'BRL':true}} </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -159,6 +170,6 @@
 </mat-card>
 
 <div class="app-button-row">
-  <button mat-raised-button type="button" (click)="fechar()" color="primary">Concluir</button>
+  <button mat-raised-button type="button" (click)="concluir()" color="primary">Concluir</button>
   <button mat-raised-button type="button" (click)="fechar()">Fechar</button>
 </div>

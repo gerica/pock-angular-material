@@ -10,6 +10,7 @@ import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 
 const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
+const MODULE_PROJETO = environment.moduleProjeto;
 const URL_PROJETO_CADASTRO = 'projeto/cadastro';
 @Component({
   selector: 'app-projeto-lista',
@@ -19,6 +20,7 @@ const URL_PROJETO_CADASTRO = 'projeto/cadastro';
 })
 export class ListaComponent extends BaseComponent implements OnInit {
   entity: any;
+  idEntity = `ID${MODULE_PROJETO.name}`;
   types: any[];
   entities: MatTableDataSource<any>;
   displayedColumns: string[] = ['IDProjeto', 'NRNome', 'DTInicioDTFim', 'TipoProjeto', 'actions'];
@@ -82,19 +84,19 @@ export class ListaComponent extends BaseComponent implements OnInit {
   }
 
   preEdit(obj: any): void {
-    this.router.navigate([URL_PROJETO_CADASTRO, obj.IDProjeto]);
+    this.router.navigate([URL_PROJETO_CADASTRO, obj[this.idEntity]]);
   }
 
   deleteRow(row: any) {
-    const dataDialog: DeleteDialogData = { id: row.IDProjeto, title: 'Confirma a exclusão?', message: `Sigla: ${row.NRSigla}` };
+    const dataDialog: DeleteDialogData = { id: row[this.idEntity], title: 'Confirma a exclusão?', message: `Sigla: ${row.NRSigla}` };
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: dataDialog,
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.delete) {
-        this.projetoService.apagar(row.IDProjeto).subscribe(
-          onNext => { },
+        this.sepinService.apagar(MODULE_PROJETO, row[this.idEntity]).subscribe(
+          () => { },
           onError => {
             if (onError.error) {
               this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));

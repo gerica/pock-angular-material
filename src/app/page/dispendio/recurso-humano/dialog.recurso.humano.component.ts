@@ -1,19 +1,26 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppSnackBarService } from 'src/app/page/shared/utils/snackbar/app-snackbar.component';
-import { AppMessages, MSG001, MSG101 } from 'src/app/page/shared/utils/app.messages';
-import { Subscription, Observable } from 'rxjs';
+import { AppMessages, MSG001, MSG101, MSG002 } from 'src/app/page/shared/utils/app.messages';
+import { Observable } from 'rxjs';
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
 import { NgForm, NgModel } from '@angular/forms';
-import { map } from 'rxjs/operators';
+import { map, switchMap, } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/page/base.component';
-import { MatDialog, MatDialogRef, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatDialog, MatDialogRef, MatTableDataSource, MatPaginator, MatSort, MAT_DIALOG_DATA } from '@angular/material';
 import { DialogEstrangeiroComponent } from './dialog.estrangeiro.component';
+import { forkJoin } from 'rxjs';
+import { DeleteDialogData, DeleteDialogComponent } from '../../shared/utils/modal/delete/delete.dialog.component';
 
 const MODULE_RECURSO_HUMANO = environment.moduleRecursoHumano;
+const MODULE_TIPO_DISPENDIO = environment.moduleTipoDispendio;
+const MODULE_ESCOLARIDADE = environment.moduleEscolaridade;
+const MODULE_FORMACAO = environment.moduleFormacao;
 const URL_PROJETO = 'recurso-humano';
+const MODULE_HIBRIDO_RH_PROJETO = { name: MODULE_RECURSO_HUMANO.name, id: 'IDProjeto' };
+const MODULE_ESTRANGEIRO = environment.moduleEstrangeiro;
 
 @Component({
   selector: 'app-recurso-humano-dialog',
@@ -21,23 +28,34 @@ const URL_PROJETO = 'recurso-humano';
   styleUrls: ['./dialog.recurso.humano.component.scss'],
   providers: [SepinService]
 })
-export class DialogRecursoHumanoComponent extends BaseComponent implements OnInit, OnDestroy {
+export class DialogRecursoHumanoComponent extends BaseComponent implements OnInit {
   title = 'Cadastro';
-  dispendios: any;
+  dispendios: Observable<any>;
   naoPossuiCPF = false;
-
-  private subscription: Subscription;
+  activeForm = true;
+  idEntity = `ID${MODULE_RECURSO_HUMANO.name}`;
   entity: any;
   areaAplicacoes: any;
   instituincoes: any;
   types: any;
   currentAreaAplicacao: any;
-  escolaridades: any[];
-  formacoes: any[];
+  NRNomeColaborador: any;
+  escolaridades: Observable<any>;
+  formacoes: Observable<any>;
+  estrangeiros: Observable<any>;
   maskCPF = [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/];
   msgObrigatorio = AppMessages.getObj(MSG001);
   entities: MatTableDataSource<any>;
-  displayedColumns: string[] = ['NREmpresa', 'IDProjetoConveniado', 'NRNome', 'DTInicioDTFim', 'TipoProjeto', 'actions'];
+  displayedColumns: string[] = [
+    'NOTipoDispendio',
+    'NREstrangeiro',
+    'NOEscolaridade',
+    'NOFormacao',
+    'DTInicioDTFim',
+    'NRHorasTrabalhadas',
+    'VLRecurso',
+    'actions'
+  ];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -47,7 +65,8 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
     private actionRoute: ActivatedRoute,
     private sepinService: SepinService,
     public appSnackBarService: AppSnackBarService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     super(appSnackBarService);
   }
@@ -57,16 +76,17 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
     this.montarDispendios();
     this.montarEscolaridades();
     this.montarFormacoes();
-    this.subscription = this.actionRoute.params.subscribe(params => {
-      if (params && params['id']) {
-        this.recuperarPorId(params['id']);
-      } else {
-      }
+    this.montarEstrangeiros();
+    this.recuperaTodosPorProjeto();
+    // this.subscription = this.actionRoute.params.subscribe(params => {
+    //   if (params && params['id']) {
+    //     this.recuperarPorId(params['id']);
+    //   }
 
-      if (environment.isDevelope) {
-        this.initForDevelop();
-      }
-    });
+    // });
+    if (environment.isDevelope) {
+      this.initForDevelop();
+    }
 
     this.paginator._intl.itemsPerPageLabel = 'Registros por página';
     this.paginator._intl.nextPageLabel = 'Siguiente';
@@ -75,11 +95,43 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
     this.paginator._intl.lastPageLabel = 'Última Página';
   }
 
-  recuperarPorId(id: any): any {
-    this.sepinService.recuperarPorId(MODULE_RECURSO_HUMANO, id).subscribe(
+  recuperaTodosPorProjeto(): any {
+
+    forkJoin(
+      this.sepinService.recuperarPorId(MODULE_HIBRIDO_RH_PROJETO, this.data.id),
+      this.dispendios,
+      this.estrangeiros,
+      this.escolaridades,
+      this.formacoes,
+    ).subscribe(
+      onNext => {
+        const list = onNext[0].value;
+        const dispendios = onNext[1];
+        const estrangeiros = onNext[2];
+        const escolaridades = onNext[3];
+        const formacoes = onNext[4];
+
+        const result = [];
+
+        list.forEach(element => {
+          element.NOTipoDispendio = dispendios.find(d => d.CDTipoDispendio === element.CDTipoDispendio).NOTipoDispendio;
+          element.NREstrangeiro = estrangeiros.find(e => e.IDEstrangeiro === element.IDEstrangeiro).NRNome;
+          element.NOEscolaridade = escolaridades.find(e => e.CDEscolaridade === element.CDEscolaridade).NOEscolaridade;
+          element.NOFormacao = formacoes.find(e => e.CDFormacao === element.CDFormacao).NOFormacao;
+          result.push(element);
+        });
+        this.montarEntities(result);
+      },
+      onError => this.addSnackBar(AppMessages.getObj(MSG101))
+    );
+
+  }
+
+  recuperarPorId(): any {
+    this.sepinService.recuperarPorId(MODULE_HIBRIDO_RH_PROJETO, this.data.id).subscribe(
       onNext => {
         if (onNext && onNext.value && onNext.value.length > 0) {
-          this.entity = onNext.value[0];
+          this.entities = onNext.value[0];
         }
       }, onError => {
         if (onError.error) {
@@ -92,65 +144,43 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
     );
   }
 
+
   montarDispendios(): void {
-    this.dispendios = [
-      { value: 'RH Direto' },
-      { value: 'RH Indireto' },
-    ];
+    this.dispendios = this.sepinService.fetchAll(MODULE_TIPO_DISPENDIO);
   }
 
   montarEscolaridades(): void {
-    this.escolaridades = [
-      { value: 'Ensino Médio' },
-      { value: 'Ensino Superior' },
-      { value: 'Especialização' },
-      { value: 'Mestrado' },
-      { value: 'Doutorado' },
-      { value: 'Pós Doutorado' },
-    ];
+    this.escolaridades = this.sepinService.fetchAll(MODULE_ESCOLARIDADE);
   }
 
   montarFormacoes(): void {
-    this.formacoes = [
-      { value: 'Administração' },
-      { value: 'Ciências da computação' },
-      { value: 'Computação' },
-      { value: 'Engenharia aeroespacial' },
-      { value: 'Engenharia Automotiva' },
-      { value: 'Engenharia De automação e controle' },
-      { value: 'Engenharia De computação' },
-      { value: 'Engenharia De energia' },
-      { value: 'Engenharia De produção' },
-      { value: 'Engenharia De redes de comunicações' },
-      { value: 'Engenharia De software' },
-      { value: 'Engenharia De telecomunicações' },
-      { value: 'Engenharia Elétrica' },
-      { value: 'Engenharia Eletrônica' },
-      { value: 'Engenharia Mecânica' },
-      { value: 'Engenharia Mecatrônica' },
-      { value: 'Engenharia Química' },
-      { value: 'Estatística' },
-      { value: 'Física' },
-      { value: 'Matemática' },
-      { value: 'Química' },
-      { value: 'Outra' },
-    ];
+    this.formacoes = this.sepinService.fetchAll(MODULE_FORMACAO);
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  montarEstrangeiros(): void {
+    this.estrangeiros = this.sepinService.fetchAll(MODULE_ESTRANGEIRO);
   }
 
   routerConsulta(): void {
     this.router.navigate([URL_PROJETO]);
   }
 
-  gravar(event: any, form1: any, form2: any): void {
+  gravar(event: any, form1: any): void {
     event.preventDefault();
-    if (!form1.valid || !form2.valid) {
+    if (!form1.valid) {
       this.addSnackBar(AppMessages.getObj(MSG001));
       return;
     }
+
+    this.entity[this.data.name] = this.data.id;
+
+    delete this.entity.NOEscolaridade;
+    delete this.entity.NOFormacao;
+    delete this.entity.NOTipoDispendio;
+    delete this.entity.NREstrangeiro;
+
+    this.entity.DTInicioAtuacao = moment(this.entity.DTInicioAtuacao).toDate();
+    this.entity.DTFinalAtuacao = moment(this.entity.DTFinalAtuacao).toDate();
 
     this.sepinService.salvar(MODULE_RECURSO_HUMANO, this.entity).subscribe(
       () => {
@@ -161,23 +191,34 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
           this.addSnackBar(AppMessages.getObj(MSG101));
         }
       }, () => {
-        this.routerConsulta();
+        this.addSnackBar(AppMessages.getObj(MSG002));
+        this.novo();
+        this.recuperaTodosPorProjeto();
+        // this.routerConsulta();
       }
     );
   }
 
+  novo(): void {
+    this.entity = {};
+    this.NRNomeColaborador = undefined;
+    this.naoPossuiCPF = false;
+    this.activeForm = false;
+    setTimeout(() => this.activeForm = true, 0);
+  }
+
   limparCPF(): void {
     delete this.entity.NRCPFColaborador;
-    delete this.entity.NRNomeColaborador;
+    delete this.NRNomeColaborador;
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(DialogEstrangeiroComponent, { width: '40%' });
+    const dialogRef = this.dialog.open(DialogEstrangeiroComponent, { width: '40%', });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.name) {
         this.entity.IDEstrangeiro = result.id;
-        this.entity.NRNomeColaborador = result.name;
+        this.NRNomeColaborador = result.name;
       }
     });
   }
@@ -186,14 +227,65 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
     this.dialogRef.close();
   }
 
+  preEdit(row: any): void {
+    this.estrangeiros.subscribe(
+      onNext => {
+        const objEstrangeiro = onNext.find(e => e.IDEstrangeiro === row.IDEstrangeiro);
+        if (objEstrangeiro) {
+          this.NRNomeColaborador = objEstrangeiro.NRNome;
+        }
+      },
+      onError => {
+        if (onError.error) {
+          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
+        } else {
+          this.addSnackBar(AppMessages.getObj(MSG101));
+        }
+      }, () => {
+        this.entity = row;
+        this.naoPossuiCPF = row.IDEstrangeiro ? true : false;
+      }
+    );
+
+  }
+
+  deleteRow(row: any) {
+    const dataDialog: DeleteDialogData = { id: row[this.idEntity], title: 'Confirma a exclusão?', message: `Sigla: ${row.NRSigla}` };
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      data: dataDialog,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.delete) {
+        this.sepinService.apagar(MODULE_RECURSO_HUMANO, row[this.idEntity]).subscribe(
+          () => { },
+          onError => {
+            if (onError.error) {
+              this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
+            } else {
+              this.addSnackBar(AppMessages.getObj(MSG101));
+            }
+          },
+          () => {
+            this.addSnackBar(AppMessages.getObj(MSG002));
+            this.recuperaTodosPorProjeto();
+          }
+        );
+      }
+    });
+  }
+
   private montarEntities(onNext: any) {
     this.entities = new MatTableDataSource<any>(onNext);
     this.entities.paginator = this.paginator;
     this.entities.sort = this.sort;
   }
 
+  concluir(): void {
+    this.dialogRef.close({ dados: this.entities.data });
+  }
+
   initForDevelop() {
     this.entity = {};
-
   }
 }

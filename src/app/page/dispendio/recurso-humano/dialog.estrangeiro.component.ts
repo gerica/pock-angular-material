@@ -8,7 +8,6 @@ import { BaseComponent } from 'src/app/page/base.component';
 import { AppSnackBarService } from 'src/app/page/shared/utils/snackbar/app-snackbar.component';
 
 const MODULE_ESTRANGEIRO = environment.moduleEstrangeiro;
-
 @Component({
     selector: 'app-dialog-estrangeiro',
     templateUrl: './dialog.estrangeiro.component.html',
