@@ -17,6 +17,7 @@ import { DialogRHVisualizarComponent } from './dialog.rh.visualizar.component';
 
 const MODULE_RECURSO_HUMANO = environment.moduleRecursoHumano;
 const MODULE_TIPO_DISPENDIO = environment.moduleTipoDispendio;
+const MODULE_TIPO_DISPENDIO_RH = { name: environment.moduleTipoDispendio.name, id: 'TPDispendio' };
 const MODULE_ESCOLARIDADE = environment.moduleEscolaridade;
 const MODULE_FORMACAO = environment.moduleFormacao;
 const URL_PROJETO = 'recurso-humano';
@@ -61,7 +62,7 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    public dialogRef: MatDialogRef<DialogEstrangeiroComponent>,
+    public dialogRef: MatDialogRef<DialogRecursoHumanoComponent>,
     private router: Router,
     private actionRoute: ActivatedRoute,
     private sepinService: SepinService,
@@ -79,12 +80,6 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
     this.montarFormacoes();
     this.montarEstrangeiros();
     this.recuperaTodosPorProjeto();
-    // this.subscription = this.actionRoute.params.subscribe(params => {
-    //   if (params && params['id']) {
-    //     this.recuperarPorId(params['id']);
-    //   }
-
-    // });
     if (environment.isDevelope) {
       this.initForDevelop();
     }
@@ -99,14 +94,14 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
   recuperaTodosPorProjeto(): any {
 
     forkJoin(
-      this.sepinService.recuperarPorId(MODULE_HIBRIDO_RH_PROJETO, this.data.id),
+      this.sepinService.fetchById(MODULE_HIBRIDO_RH_PROJETO, this.data.id),
       this.dispendios,
       this.estrangeiros,
       this.escolaridades,
       this.formacoes,
     ).subscribe(
       onNext => {
-        const list = onNext[0].value;
+        const list = onNext[0];
         const dispendios = onNext[1];
         const estrangeiros = onNext[2];
         const escolaridades = onNext[3];
@@ -128,11 +123,11 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
 
   }
 
-  recuperarPorId(): any {
-    this.sepinService.recuperarPorId(MODULE_HIBRIDO_RH_PROJETO, this.data.id).subscribe(
+  fetchById(): any {
+    this.sepinService.fetchById(MODULE_HIBRIDO_RH_PROJETO, this.data.id).subscribe(
       onNext => {
-        if (onNext && onNext.value && onNext.value.length > 0) {
-          this.entities = onNext.value[0];
+        if (onNext && onNext.length > 0) {
+          this.entities = onNext[0];
         }
       }, onError => {
         if (onError.error) {
@@ -146,7 +141,7 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
   }
 
   montarDispendios(): void {
-    this.dispendios = this.sepinService.fetchAll(MODULE_TIPO_DISPENDIO);
+    this.dispendios = this.sepinService.fetchById(MODULE_TIPO_DISPENDIO_RH, 1);
   }
 
   montarEscolaridades(): void {

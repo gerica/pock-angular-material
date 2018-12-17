@@ -158,7 +158,7 @@
 
           <ng-container matColumnDef="VLRecurso">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
-            <td mat-cell *matCellDef="let element"> {{element.VLRecurso | currency:'BRL'}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.VLRecurso | currency:'BRL':'symbol':'0.0-2':'pt'}} </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

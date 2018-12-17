@@ -36,16 +36,16 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     this.entity = {};
     this.subscription = this.actionRoute.params.subscribe(params => {
       if (params && params['id']) {
-        this.recuperarPorId(params['id']);
+        this.fetchById(params['id']);
       }
     });
   }
 
-  recuperarPorId(id: any): any {
-    this.sepinService.recuperarPorId(MODULE_INSTITUICAO, id).subscribe(
+  fetchById(id: any): any {
+    this.sepinService.fetchById(MODULE_INSTITUICAO, id).subscribe(
       onNext => {
-        if (onNext && onNext.value && onNext.value.length > 0) {
-          this.entity = onNext.value[0];
+        if (onNext && onNext.length > 0) {
+          this.entity = onNext[0];
         }
       }, onError => {
         if (onError.error) {

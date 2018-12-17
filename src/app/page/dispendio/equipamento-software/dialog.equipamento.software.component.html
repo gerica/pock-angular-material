@@ -1,0 +1,140 @@
+<mat-card class="app-card">
+  <mat-card-header>
+    <mat-card-title>Equipamento de software</mat-card-title>
+  </mat-card-header>
+  <mat-tab-group>
+    <mat-tab label="{{title}}">
+      <form class="app-form" #form="ngForm" (submit)="gravar($event, form)" *ngIf="activeForm">
+        <mat-card class="app-card">
+          <mat-card-content>
+
+            <mat-form-field style="width: 30%; padding-left: 0.5em;">
+              <mat-select placeholder="Dispêndio" [(ngModel)]="entity.CDTipoDispendio" name="CDTipoDispendio"
+                #CDTipoDispendio="ngModel" required>
+                <mat-option *ngFor="let obj of dispendios | async" [value]="obj.CDTipoDispendio">
+                  {{obj.NOTipoDispendio}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="CDTipoDispendio">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 40%; padding-left: 0.5em;">
+              <input matInput placeholder="Descrição" name="DSTipoDispendio" [(ngModel)]="entity.DSTipoDispendio"
+                #DSTipoDispendio="ngModel" required max="10" maxlength="10">
+              <mat-error *ngIf="DSTipoDispendio.invalid">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 30%; padding-left: 0.5em;">
+              <mat-select placeholder="Tipo Apropriação" [(ngModel)]="entity.CDTipoApropriacao" name="CDTipoApropriacao"
+                #CDTipoApropriacao="ngModel" required>
+                <mat-option *ngFor="let obj of apropriacoes | async" [value]="obj.CDTipoApropriacao">
+                  {{obj.NOTipoApropriacao}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="CDTipoApropriacao">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <!-- final da linha -->
+
+            <mat-form-field style="width: 100%; padding-left: 0.5em;" *ngIf="entity.CDTipoApropriacao ===7">
+              <input matInput placeholder="Outros" name="DSOutrosTipoApropriacao" [(ngModel)]="entity.DSOutrosTipoApropriacao"
+                #DSOutrosTipoApropriacao="ngModel" required max="50" maxlength="50">
+              <mat-error *ngIf="DSOutrosTipoApropriacao.invalid">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <!-- final da linha -->
+
+            <mat-form-field style="width: 35%; padding-left: 0.5em;">
+              <input matInput placeholder="Valor" name="VLDispendio" [(ngModel)]="entity.VLDispendio" #VLDispendio="ngModel"
+                required max="20" maxlength="20" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }">
+              <mat-error *ngIf="VLDispendio.invalid">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 35%; padding-left: 0.5em;">
+              <input matInput placeholder="Valor de depreciação" name="VLDepreciacao" [(ngModel)]="entity.VLDepreciacao"
+                #VLDepreciacao="ngModel" required max="20" maxlength="20" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }">
+              <mat-error *ngIf="VLDepreciacao.invalid">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 30%; padding-left: 0.5em;">
+              <input matInput [matDatepicker]="picker1" [(ngModel)]="entity.DTAquisicao" name="DTAquisicao" placeholder="Período da aquisição"
+                required #DTAquisicao="ngModel">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <mat-error *ngIf="DTAquisicao">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <!-- final da linha -->
+
+
+            <mat-form-field style="width: 100%; padding-left: 0.5em;">
+              <textarea matInput placeholder="Atuação no projeto" name="DSJustificativa" [(ngModel)]="entity.DSJustificativa"
+                #DSJustificativa="ngModel" required rows="1"></textarea>
+              <mat-error *ngIf="DSJustificativa.invalid">{{msgObrigatorio.msg}}</mat-error>
+            </mat-form-field>
+            <!-- final da linha -->
+
+          </mat-card-content>
+        </mat-card>
+        <mat-card-actions style="width: 100%; margin-left: 0px;">
+          <div class="app-button-row">
+            <button mat-raised-button type="button" *ngIf="entity.IDDispendioEquipamentoSoftware" (click)="novo()">Novo</button>
+            <button mat-raised-button type="submit" color="primary">Salvar</button>
+          </div>
+        </mat-card-actions>
+      </form>
+      <mat-divider></mat-divider>
+      <div class="mat-elevation-z8" style="margin-top: 3%">
+        <table mat-table [dataSource]="entities" matSort>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Ações </th>
+            <td mat-cell *matCellDef="let row; let i=index;">
+              <button mat-icon-button color="primary" (click)="preEdit(row)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="accent" (click)="visualizar(row)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteRow(row)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="NOTipoDispendio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo Dispendio </th>
+            <td mat-cell *matCellDef="let element"> {{element.NOTipoDispendio}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="NOTipoApropriacao">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Apropriação </th>
+            <td mat-cell *matCellDef="let element"> {{element.NOTipoApropriacao}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="VLDispendio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+            <td mat-cell *matCellDef="let element"> {{element.VLDispendio | currency:'BRL':'symbol':'0.0-2':'pt'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="VLDepreciacao">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor de Aquisição </th>
+            <td mat-cell *matCellDef="let element"> {{element.VLDepreciacao | currency:'BRL':'symbol':'0.0-2':'pt'}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="DTAquisicao">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Período de Aquisição </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.DTAquisicao | date:'dd/MM/yyyy'}}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div>
+    </mat-tab>
+    <mat-tab label="Importar"> Content 2 </mat-tab>
+  </mat-tab-group>
+</mat-card>
+
+<div class="app-button-row">
+  <button mat-raised-button type="button" (click)="concluir()" color="primary">Concluir</button>
+  <button mat-raised-button type="button" (click)="fechar()">Fechar</button>
+</div>

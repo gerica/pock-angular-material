@@ -8,14 +8,18 @@ import { Subscription, Observable } from 'rxjs';
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
-import { FormControl, NgForm, NgModel, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgForm, NgModel } from '@angular/forms';
 import { map, find, tap, filter } from 'rxjs/operators';
 import { MatDialog, MatStepper } from '@angular/material';
 import { DialogRecursoHumanoComponent } from '../../dispendio/recurso-humano/dialog.recurso.humano.component';
+import { DialogEquipamentoSoftwareComponent } from '../../dispendio/equipamento-software/dialog.equipamento.software.component';
+import { forkJoin } from 'rxjs';
 
 const MODULE_PROJETO = environment.moduleProjeto;
 const MODULE_RECURSO_HUMANO = environment.moduleRecursoHumano;
+const MODULE_EQUIPAMENTO_SOFTWARE = environment.moduleEquipamentoSoftware;
 const MODULE_HIBRIDO_RH_PROJETO = { name: MODULE_RECURSO_HUMANO.name, id: 'IDProjeto' };
+const MODULE_HIBRIDO_ES_PROJETO = { name: MODULE_EQUIPAMENTO_SOFTWARE.name, id: 'IDProjeto' };
 const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
 const MODULE_AREA_APLICACAO = environment.moduleAreaAplicacao;
 const URL_PROJETO = 'projeto';
@@ -67,7 +71,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     this.recuperarTodasAreasAplicacao();
     this.subscription = this.actionRoute.params.subscribe(params => {
       if (params && params['id']) {
-        this.recuperarPorId(params['id']);
+        this.fetchById(params['id']);
       } else {
         this.calcularTotalDispendio();
       }
@@ -78,11 +82,11 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     });
   }
 
-  recuperarPorId(id: any): any {
-    this.sepinService.recuperarPorId(MODULE_PROJETO, id).subscribe(
+  fetchById(id: any): any {
+    this.sepinService.fetchById(MODULE_PROJETO, id).subscribe(
       onNext => {
-        if (onNext && onNext.value && onNext.value.length > 0) {
-          this.entity = onNext.value[0];
+        if (onNext && onNext.length > 0) {
+          this.entity = onNext[0];
         }
       }, onError => {
         if (onError.error) {
@@ -97,7 +101,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
             this.currentAreaAplicacao = `${areaAplicacao.CDCodigo} - ${areaAplicacao.NRNome}`;
           }
         });
-        this.recuperarVLRecursosHumanos();
+        this.recuperarValoresDispendios();
       }
     );
   }
@@ -122,26 +126,30 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     // );
   }
 
-  recuperarVLRecursosHumanos(): void {
-    if (this.entity.IDProjeto) {
-      this.sepinService.recuperarPorId(MODULE_HIBRIDO_RH_PROJETO, this.entity.IDProjeto).subscribe(
-        onNext => {
-          if (onNext && onNext.value) {
-            onNext.value.forEach(e => {
-              this.entity.VLRecursosHumanoa += e.VLRecurso;
-            });
-          }
-        }, onError => {
-          if (onError.error) {
-            this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
-          } else {
-            this.addSnackBar(AppMessages.getObj(MSG101));
-          }
-        }, () => {
-          this.calcularTotalDispendio();
+  recuperarValoresDispendios(): void {
+    forkJoin(
+      this.sepinService.fetchById(MODULE_HIBRIDO_RH_PROJETO, this.entity.IDProjeto),
+      this.sepinService.fetchById(MODULE_HIBRIDO_ES_PROJETO, this.entity.IDProjeto),
+    ).subscribe(
+      onNext => {
+        const rh = onNext[0];
+        const es = onNext[1];
+        const result = [];
+
+        for (const r of rh) {
+          this.entity.VLRecursosHumanoa += r.VLRecurso;
         }
-      );
-    }
+
+        for (const e of es) {
+          this.entity.VLEquipamentoSoftware += (e.VLDispendio + e.VLDepreciacao);
+        }
+
+      },
+      onError => this.addSnackBar(AppMessages.getObj(MSG101)),
+      () => {
+        this.calcularTotalDispendio();
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -246,6 +254,24 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
         this.entity.VLRecursosHumanoa = 0;
         for (const e of result.dados) {
           this.entity.VLRecursosHumanoa += e.VLRecurso;
+        }
+        this.calcularTotalDispendio();
+        //   this.entity.IDEstrangeiro = result.id;
+        //   this.entity.NRNomeColaborador = result.name;
+      }
+    });
+  }
+
+  openDialogEquipamentoSoftware(): void {
+    const data = { name: 'IDProjeto', id: this.entity.IDProjeto, idTipoProjeto: this.entity.IDTipoProjeto };
+    const dialogRef = this.dialog.open(DialogEquipamentoSoftwareComponent, { width: '90%', height: '90%', data });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      if (result && result.dados) {
+        this.entity.VLEquipamentoSoftware = 0;
+        for (const e of result.dados) {
+          this.entity.VLEquipamentoSoftware += (e.VLDispendio + e.VLDepreciacao);
         }
         this.calcularTotalDispendio();
         //   this.entity.IDEstrangeiro = result.id;

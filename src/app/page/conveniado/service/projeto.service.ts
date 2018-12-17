@@ -38,7 +38,7 @@ export class ProjetoService extends SepinService {
     return this.http.delete(`${URL_PROJETO}/${id}`, this.getHeader(MODULE_PROJETO));
   }
 
-  recuperarPorId(id: any): Observable<any> {
+  fetchById(id: any): Observable<any> {
     return this.http.get(`${URL_PROJETO}/${id}`, this.getHeader(MODULE_PROJETO));
   }
 

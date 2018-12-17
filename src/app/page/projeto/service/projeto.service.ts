@@ -40,7 +40,7 @@ export class ProjetoService extends SepinService {
   }
 
   recuperarPorId(id: any): Observable<any> {
-    return this.http.get(`${URL_PROJETO}/${id}`, this.getHeader(MODULE_PROJETO));
+    return this.http.get(`${URL_PROJETO}/customFindById/${id}`, this.getHeader(MODULE_PROJETO));
   }
 
 

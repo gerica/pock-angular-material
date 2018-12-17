@@ -34,6 +34,7 @@ import { registerLocaleData } from '@angular/common';
 import { DialogRecursoHumanoComponent } from '../dispendio/recurso-humano/dialog.recurso.humano.component';
 import { DialogEstrangeiroComponent } from '../dispendio/recurso-humano/dialog.estrangeiro.component';
 import { DialogRHVisualizarComponent } from '../dispendio/recurso-humano/dialog.rh.visualizar.component';
+import { DialogEquipamentoSoftwareComponent } from '../dispendio/equipamento-software/dialog.equipamento.software.component';
 registerLocaleData(localePt);
 
 @NgModule({
@@ -43,11 +44,13 @@ registerLocaleData(localePt);
     DialogRecursoHumanoComponent,
     DialogEstrangeiroComponent,
     DialogRHVisualizarComponent,
+    DialogEquipamentoSoftwareComponent,
   ],
   entryComponents: [
     DialogRecursoHumanoComponent,
     DialogEstrangeiroComponent,
     DialogRHVisualizarComponent,
+    DialogEquipamentoSoftwareComponent,
   ],
   imports: [
     CommonModule,

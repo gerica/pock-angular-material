@@ -34,7 +34,7 @@ export class SepinService {
         return this.http.delete(`${URL_BASE}/${id}`, this.getHeader(objModule));
     }
 
-    recuperarPorId(objModule: any, id: any): Observable<any> {
+    fetchById(objModule: any, id: any): Observable<any> {
         return this.http.get(`${URL_BASE}/${id}`, this.getHeader(objModule));
     }
 

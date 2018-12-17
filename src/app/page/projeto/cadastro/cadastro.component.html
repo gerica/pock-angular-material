@@ -223,7 +223,7 @@
               #VLTreinamento="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
               (ngModelChange)="calcularTotalDispendio()" disabled>
           </mat-form-field>
-          <button mat-icon-button *ngIf="entity.IDProjeto">
+          <button mat-icon-button *ngIf="entity.IDProjeto" type="button">
             <mat-icon matTooltip="Selecionar">add_circle</mat-icon>
           </button>
           <mat-form-field style="width: 22%; padding-left: 0.5em;">
@@ -231,7 +231,7 @@
               #VLEquipamentoSoftware="ngModel" max="255" maxlength="255" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
               (ngModelChange)="calcularTotalDispendio()" disabled>
           </mat-form-field>
-          <button mat-icon-button *ngIf="entity.IDProjeto">
+          <button mat-icon-button *ngIf="entity.IDProjeto" type="button" (click)="openDialogEquipamentoSoftware()">
             <mat-icon matTooltip="Selecionar">add_circle</mat-icon>
           </button>
           <br>

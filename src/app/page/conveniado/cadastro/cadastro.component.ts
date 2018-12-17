@@ -69,7 +69,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     this.recuperarTodasInstituicoes();
     this.subscription = this.actionRoute.params.subscribe(params => {
       if (params && params['id']) {
-        this.recuperarPorId(params['id']);
+        this.fetchById(params['id']);
       } else {
         this.calcularTotalDispendioProprio();
         this.calcularTotalDispendioRepassado();
@@ -85,11 +85,11 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     });
   }
 
-  recuperarPorId(id: any): any {
-    this.sepinService.recuperarPorId(MODULE_PROJETO_CONVENIADO, id).subscribe(
+  fetchById(id: any): any {
+    this.sepinService.fetchById(MODULE_PROJETO_CONVENIADO, id).subscribe(
       onNext => {
-        if (onNext && onNext.value && onNext.value.length > 0) {
-          this.entity = onNext.value[0];
+        if (onNext && onNext.length > 0) {
+          this.entity = onNext[0];
         }
       }, onError => {
         if (onError.error) {
