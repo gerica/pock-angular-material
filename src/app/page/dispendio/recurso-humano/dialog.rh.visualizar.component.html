@@ -1,0 +1,76 @@
+<mat-card class="app-card">
+    <mat-card-header>
+        <mat-card-title>Visualização de Dispêndio de Recursos Humanos</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="containerDetais">
+            <div class="detaisTitle">
+                Dispêndio:
+            </div>
+            <div class="detailsContent">
+                {{entity.NOTipoDispendio}}
+            </div>
+        </div>
+        <div class="containerDetais">
+            <div class="detaisTitle">
+                Colaborador:
+            </div>
+            <div class="detailsContent">
+                {{entity.NREstrangeiro}}
+            </div>
+        </div>
+        <div class="containerDetais">
+            <div class="detaisTitle">
+                Escolaridade:
+            </div>
+            <div class="detailsContent">
+                {{entity.NOEscolaridade}}
+            </div>
+        </div>
+        <div class="containerDetais">
+            <div class="detaisTitle">
+                Formação:
+            </div>
+            <div class="detailsContent">
+                {{entity.NOFormacao}}
+            </div>
+        </div>
+        <div class="containerDetais">
+            <div class="detaisTitle">
+                Hora Trabalhada:
+            </div>
+            <div class="detailsContent">
+                {{entity.NRHorasTrabalhadas}}
+            </div>
+        </div>
+        <div class="containerDetais">
+            <div class="detaisTitle">
+                Período de Atuação:
+            </div>
+            <div class="detailsContent">
+                {{entity.DTInicioAtuacao | date:'dd/MM/yyyy'}} até {{entity.DTFinalAtuacao | date:'dd/MM/yyyy'}}
+            </div>
+        </div>
+        <div class="containerDetais">
+            <div class="detaisTitle">
+                Valor:
+            </div>
+            <div class="detailsContent">
+                {{entity.VLRecurso | currency:'BRL'}}
+            </div>
+        </div>
+        <div class="containerDetais" style="height: 100px;">
+            <div class="detaisTitle">
+                Atuação no Projeto:
+            </div>
+            <div class="detailsContent bigData">
+                {{entity.DSAtuacaoProjeto}}
+            </div>
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <div class="app-button-row">
+            <button mat-raised-button type="button" (click)="fechar()">Fechar</button>
+        </div>
+    </mat-card-actions>
+</mat-card>

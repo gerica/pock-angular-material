@@ -14,7 +14,8 @@ import { MatDialog, MatStepper } from '@angular/material';
 import { DialogRecursoHumanoComponent } from '../../dispendio/recurso-humano/dialog.recurso.humano.component';
 
 const MODULE_PROJETO = environment.moduleProjeto;
-const MODULE_PROJETO_DISPENDIO = environment.moduleProjetoDispendio;
+const MODULE_RECURSO_HUMANO = environment.moduleRecursoHumano;
+const MODULE_HIBRIDO_RH_PROJETO = { name: MODULE_RECURSO_HUMANO.name, id: 'IDProjeto' };
 const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
 const MODULE_AREA_APLICACAO = environment.moduleAreaAplicacao;
 const URL_PROJETO = 'projeto';
@@ -96,10 +97,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
             this.currentAreaAplicacao = `${areaAplicacao.CDCodigo} - ${areaAplicacao.NRNome}`;
           }
         });
-        this.calcularTotalDispendio();
-        // console.log(this.entity);
-        // const keys = Object.keys(this.entity);
-        // console.log(keys);
+        this.recuperarVLRecursosHumanos();
       }
     );
   }
@@ -124,6 +122,28 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     // );
   }
 
+  recuperarVLRecursosHumanos(): void {
+    if (this.entity.IDProjeto) {
+      this.sepinService.recuperarPorId(MODULE_HIBRIDO_RH_PROJETO, this.entity.IDProjeto).subscribe(
+        onNext => {
+          if (onNext && onNext.value) {
+            onNext.value.forEach(e => {
+              this.entity.VLRecursosHumanoa += e.VLRecurso;
+            });
+          }
+        }, onError => {
+          if (onError.error) {
+            this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
+          } else {
+            this.addSnackBar(AppMessages.getObj(MSG101));
+          }
+        }, () => {
+          this.calcularTotalDispendio();
+        }
+      );
+    }
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
@@ -132,25 +152,26 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     this.router.navigate([URL_PROJETO]);
   }
 
-  gravar(event: any, form1: any, form2: any): void {
+  gravar(event: any, form1: any): void {
     event.preventDefault();
-    if (!form1.valid || !form2.valid) {
+    if (!form1.valid) {
       this.addSnackBar(AppMessages.getObj(MSG001));
       return;
     }
 
-    // this.projetoService.salvar(this.entity, this.entityStep2).subscribe(
-    //   () => {
-    //   }, onError => {
-    //     if (onError.error) {
-    //       this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
-    //     } else {
-    //       this.addSnackBar(AppMessages.getObj(MSG101));
-    //     }
-    //   }, () => {
-    //     this.routerConsulta();
-    //   }
-    // );
+    this.sepinService.salvarAndReturnId(MODULE_PROJETO, this.entity).subscribe(
+      onNext => {
+        this.entity[this.idEntity] = onNext.value;
+      }, onError => {
+        if (onError.error) {
+          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
+        } else {
+          this.addSnackBar(AppMessages.getObj(MSG101));
+        }
+      }, () => {
+        this.routerConsulta();
+      }
+    );
   }
 
   doFilterAreaAplicacao() {
@@ -221,12 +242,12 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     const dialogRef = this.dialog.open(DialogRecursoHumanoComponent, { width: '90%', height: '90%', data });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
       if (result && result.dados) {
         this.entity.VLRecursosHumanoa = 0;
-        result.dados.forEach(e => {
+        for (const e of result.dados) {
           this.entity.VLRecursosHumanoa += e.VLRecurso;
-        });
+        }
+        this.calcularTotalDispendio();
         //   this.entity.IDEstrangeiro = result.id;
         //   this.entity.NRNomeColaborador = result.name;
       }

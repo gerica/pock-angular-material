@@ -13,6 +13,7 @@ import { MatDialog, MatDialogRef, MatTableDataSource, MatPaginator, MatSort, MAT
 import { DialogEstrangeiroComponent } from './dialog.estrangeiro.component';
 import { forkJoin } from 'rxjs';
 import { DeleteDialogData, DeleteDialogComponent } from '../../shared/utils/modal/delete/delete.dialog.component';
+import { DialogRHVisualizarComponent } from './dialog.rh.visualizar.component';
 
 const MODULE_RECURSO_HUMANO = environment.moduleRecursoHumano;
 const MODULE_TIPO_DISPENDIO = environment.moduleTipoDispendio;
@@ -144,7 +145,6 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
     );
   }
 
-
   montarDispendios(): void {
     this.dispendios = this.sepinService.fetchAll(MODULE_TIPO_DISPENDIO);
   }
@@ -242,7 +242,7 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
           this.addSnackBar(AppMessages.getObj(MSG101));
         }
       }, () => {
-        this.entity = row;
+        this.entity = Object.assign({}, row);
         this.naoPossuiCPF = row.IDEstrangeiro ? true : false;
       }
     );
@@ -272,6 +272,14 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
           }
         );
       }
+    });
+  }
+
+  visualizar(row: any): void {
+    this.dialog.open(DialogRHVisualizarComponent, {
+      height: '50%',
+      width: '50%',
+      data: row,
     });
   }
 

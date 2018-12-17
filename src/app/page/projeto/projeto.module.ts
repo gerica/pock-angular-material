@@ -26,12 +26,14 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NgxCurrencyModule } from 'ngx-currency';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { TextMaskModule } from 'angular2-text-mask';
 
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
 import { DialogRecursoHumanoComponent } from '../dispendio/recurso-humano/dialog.recurso.humano.component';
 import { DialogEstrangeiroComponent } from '../dispendio/recurso-humano/dialog.estrangeiro.component';
+import { DialogRHVisualizarComponent } from '../dispendio/recurso-humano/dialog.rh.visualizar.component';
 registerLocaleData(localePt);
 
 @NgModule({
@@ -40,10 +42,12 @@ registerLocaleData(localePt);
     CadastroComponent,
     DialogRecursoHumanoComponent,
     DialogEstrangeiroComponent,
+    DialogRHVisualizarComponent,
   ],
   entryComponents: [
     DialogRecursoHumanoComponent,
     DialogEstrangeiroComponent,
+    DialogRHVisualizarComponent,
   ],
   imports: [
     CommonModule,
@@ -70,6 +74,7 @@ registerLocaleData(localePt);
     NgxCurrencyModule,
     MatTooltipModule,
     MatTabsModule,
+    MatGridListModule,
     TextMaskModule,
   ],
   providers: [
