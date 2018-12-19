@@ -8,6 +8,7 @@ import { BaseComponent } from '../../base.component';
 import { AppMessages, MSG100, MSG002, MSG101, AppMessage } from 'src/app/page/shared/utils/app.messages';
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
+import { forkJoin } from 'rxjs';
 
 const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
 const MODULE_PROJETO = environment.moduleProjeto;
@@ -21,9 +22,8 @@ const URL_PROJETO_CADASTRO = 'projeto/cadastro';
 export class ListaComponent extends BaseComponent implements OnInit {
   entity: any;
   idEntity = `ID${MODULE_PROJETO.name}`;
-  types: any[];
   entities: MatTableDataSource<any>;
-  displayedColumns: string[] = ['IDProjeto', 'NRNome', 'DTInicioDTFim', 'TipoProjeto', 'actions'];
+  displayedColumns: string[] = ['IDProjeto', 'NRNome', 'DTInicioDTFim', 'NOTipoProjeto', 'actions'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() templateRef: TemplateRef<any>;
@@ -40,7 +40,7 @@ export class ListaComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.entity = {};
-    this.recuperarTodosTipoProjeto();
+    this.recuperarLista();
     this.paginator._intl.itemsPerPageLabel = 'Registros por página';
     this.paginator._intl.nextPageLabel = 'Siguiente';
     this.paginator._intl.previousPageLabel = 'Anterior';
@@ -52,30 +52,23 @@ export class ListaComponent extends BaseComponent implements OnInit {
     this.entities.filter = filterValue.trim().toLowerCase();
   }
 
-  consultar(): void {
-    this.projetoService.fetchAll().subscribe(
+  recuperarLista(): void {
+    forkJoin(
+      this.projetoService.fetchAll(),
+      this.sepinService.fetchAll(MODULE_TIPO_PROJETO)
+    ).subscribe(
       onNext => {
-        this.montarEntities(onNext);
-      }, onError => {
-        this.addSnackBar(AppMessages.getObj(MSG100));
-      }, () => {
-      }
-    );
-  }
+        const list = onNext[0];
+        const types = onNext[1];
+        const result = [];
 
-  recuperarTodosTipoProjeto(): void {
-    this.sepinService.fetchAll(MODULE_TIPO_PROJETO).subscribe(
-      onNext => {
-        this.types = onNext;
-      }, onError => {
-        if (onError.error) {
-          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
-        } else {
-          this.addSnackBar(AppMessages.getObj(MSG101));
+        for (const element of list) {
+          element.NOTipoProjeto = types.find(t => t.IDTipoProjeto === element.IDTipoProjeto).NRDescricao;
+          result.push(element);
         }
-      }, () => {
-        this.consultar();
-      }
+        this.montarEntities(result);
+      },
+      onError => this.addSnackBar(AppMessages.getObj(MSG101))
     );
   }
 
@@ -106,22 +99,11 @@ export class ListaComponent extends BaseComponent implements OnInit {
           },
           () => {
             this.addSnackBar(AppMessages.getObj(MSG002));
-            this.consultar();
+            this.recuperarLista();
           }
         );
       }
     });
-  }
-
-  getTipoDescricao(element: any): String {
-    if (!this.types || this.types.length === 0) {
-      return '';
-    }
-    const type = this.types.find(t => t.IDTipoProjeto === element.IDTipoProjeto);
-    if (type) {
-      return type.NRDescricao;
-    }
-    return '';
   }
 
   private montarEntities(onNext: any) {
