@@ -175,9 +175,8 @@ export class DialogEquipamentoSoftwareComponent extends BaseComponent implements
       return;
     }
     this.entity = {};
+
     const fr = new FileReader();
-    const that = this;
-    // fr.onload = this.onFileLoad(e, that);
     fr.onload = this.onFileLoad;
     fr.readAsText(this.fileToImport, 'UTF-8');
   }
@@ -197,6 +196,7 @@ export class DialogEquipamentoSoftwareComponent extends BaseComponent implements
   }
 
   onFileLoad = (fileLoadedEvent): void => {
+    const arquivo_invalido = { id: MSG001, msg: 'O formato do arquivo não é valido..', type: 'Alerta' };
     const csvSeparator = ';';
     const lineSeparator = ':';
     const textFromFileLoaded = fileLoadedEvent.target.result;
@@ -226,7 +226,6 @@ export class DialogEquipamentoSoftwareComponent extends BaseComponent implements
         this.entity.DTAquisicao = moment(linesRow[5], 'DD/MM/YYYY').toDate();
         this.entity.DSJustificativa = linesRow[6];
 
-
         count++;
         let fnSuccess = () => { };
         if (count >= csv.length) {
@@ -239,7 +238,9 @@ export class DialogEquipamentoSoftwareComponent extends BaseComponent implements
           };
         }
         this.saveEntity(fnSuccess);
-
+      } else {
+        this.addSnackBar(arquivo_invalido);
+        return;
       }
     }
 
@@ -291,5 +292,26 @@ export class DialogEquipamentoSoftwareComponent extends BaseComponent implements
     this.entities = new MatTableDataSource<any>(onNext);
     this.entities.paginator = this.paginator;
     this.entities.sort = this.sort;
+  }
+
+  guessDelimiters(text, possibleDelimiters) {
+    return possibleDelimiters.filter(weedOut);
+
+    function weedOut(delimiter) {
+      let cache = -1;
+      return text.split('\n').every(checkLength);
+
+      function checkLength(line) {
+        if (!line) {
+          return true;
+        }
+
+        const length = line.split(delimiter).length;
+        if (cache < 0) {
+          cache = length;
+        }
+        return cache === length && length > 1;
+      }
+    }
   }
 }
