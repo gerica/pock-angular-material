@@ -202,7 +202,7 @@
       </div>
     </form>
   </mat-step>
-  <mat-step >
+  <mat-step>
     <form class="app-form" (submit)="irPaginaDescricao(stepper)">
       <ng-template matStepLabel>Despêndio</ng-template>
       <mat-card class="app-card">
@@ -314,7 +314,7 @@
     </form>
   </mat-step>
   <mat-step>
-    <form class="app-form" #form3="ngForm" (submit)="gravar($event, form1, form3)">
+    <form class="app-form" #form3="ngForm" (submit)="concluir($event, form3)">
       <ng-template matStepLabel>Descricção</ng-template>
       <mat-card class="app-card">
         <mat-card-header>

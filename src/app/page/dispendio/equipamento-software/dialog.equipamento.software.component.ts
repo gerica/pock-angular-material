@@ -27,8 +27,8 @@ const TYPE_FILE = 'text/csv';
 })
 export class DialogEquipamentoSoftwareComponent extends BaseComponent implements OnInit {
   title = 'Cadastro';
-  dispendios: Observable<any>;
-  apropriacoes: Observable<any>;
+  dispendios: any;
+  apropriacoes: any;
   activeForm = true;
 
   idEntity = `ID${MODULE_EQUIPAMENTO_SOFTWARE.name}`;
@@ -65,9 +65,9 @@ export class DialogEquipamentoSoftwareComponent extends BaseComponent implements
 
   ngOnInit() {
     this.entity = {};
-    this.montarDispendios();
+    // this.montarDispendios();
+    // this.montarApropriacoes();
     this.recuperaTodosPorProjeto();
-    this.montarApropriacoes();
     if (environment.isDevelope) {
       this.initForDevelop();
     }
@@ -83,30 +83,25 @@ export class DialogEquipamentoSoftwareComponent extends BaseComponent implements
 
     forkJoin(
       this.sepinService.fetchById(MODULE_HIBRIDO_ES_PROJETO, this.data.id),
-      this.dispendios,
+      this.sepinService.fetchById(MODULE_TIPO_DISPENDIO_RH, 2),
+      this.sepinService.fetchAll(MODULE_TIPO_APROPRIACAO),
     ).subscribe(
       onNext => {
         const list = onNext[0];
-        const dispendios = onNext[1];
+        this.dispendios = onNext[1];
+        this.apropriacoes = onNext[2];
         const result = [];
 
-        list.forEach(element => {
-          element.NOTipoDispendio = dispendios.find(d => d.CDTipoDispendio === element.CDTipoDispendio).NOTipoDispendio;
+        for (const element of list) {
+          element.NOTipoDispendio = this.dispendios.find(d => d.CDTipoDispendio === element.CDTipoDispendio).NOTipoDispendio;
+          element.NOTipoApropriacao = this.apropriacoes.find(d => d.CDTipoApropriacao === element.CDTipoApropriacao).NOTipoApropriacao;
           result.push(element);
-        });
+        }
         this.montarEntities(result);
       },
       onError => this.addSnackBar(AppMessages.getObj(MSG101))
     );
 
-  }
-
-  montarDispendios(): void {
-    this.dispendios = this.sepinService.fetchById(MODULE_TIPO_DISPENDIO_RH, 2);
-  }
-
-  montarApropriacoes(): void {
-    this.apropriacoes = this.sepinService.fetchAll(MODULE_TIPO_APROPRIACAO);
   }
 
   gravar(event: any, form1: any): void {
@@ -115,34 +110,12 @@ export class DialogEquipamentoSoftwareComponent extends BaseComponent implements
       this.addSnackBar(AppMessages.getObj(MSG001));
       return;
     }
-
-    this.entity[this.data.name] = this.data.id;
-
-    delete this.entity.NOTipoDispendio;
-
-    this.entity.DTAquisicao = moment(this.entity.DTAquisicao).toDate();
-
-    this.sepinService.salvar(MODULE_EQUIPAMENTO_SOFTWARE, this.entity).subscribe(
-      () => {
-      }, onError => {
-        if (onError.error) {
-          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
-        } else {
-          this.addSnackBar(AppMessages.getObj(MSG101));
-        }
-      }, () => {
-        this.addSnackBar(AppMessages.getObj(MSG002));
-        this.novo();
-        this.recuperaTodosPorProjeto();
-        // this.routerConsulta();
-      }
-    );
-  }
-
-  novo(): void {
-    this.entity = {};
-    this.activeForm = false;
-    setTimeout(() => this.activeForm = true, 0);
+    const fnSuccess = () => {
+      this.addSnackBar(AppMessages.getObj(MSG002));
+      this.novo();
+      this.recuperaTodosPorProjeto();
+    };
+    this.saveEntity(fnSuccess);
   }
 
   preEdit(row: any): void {
@@ -201,16 +174,12 @@ export class DialogEquipamentoSoftwareComponent extends BaseComponent implements
       this.addSnackBar(AppMessages.getObj(MSG001));
       return;
     }
-    console.log('importar');
-
-
-    if (this.fileToImport) {
-      const reader = new FileReader();
-      reader.readAsDataURL(this.fileToImport);
-      reader.onload = () => {
-
-      };
-    }
+    this.entity = {};
+    const fr = new FileReader();
+    const that = this;
+    // fr.onload = this.onFileLoad(e, that);
+    fr.onload = this.onFileLoad;
+    fr.readAsText(this.fileToImport, 'UTF-8');
   }
 
   onFileChange(event) {
@@ -220,12 +189,98 @@ export class DialogEquipamentoSoftwareComponent extends BaseComponent implements
       const temp = event.target.files[0];
       if (temp.type === TYPE_FILE) {
         this.fileToImport = event.target.files[0];
-        console.log(this.fileToImport);
         this.fileName = this.fileToImport.name;
       } else {
         this.addSnackBar({ id: MSG001, msg: 'Selecione um arquivo do tipo CSV.', type: 'Alerta' });
       }
     }
+  }
+
+  onFileLoad = (fileLoadedEvent): void => {
+    const csvSeparator = ';';
+    const lineSeparator = ':';
+    const textFromFileLoaded = fileLoadedEvent.target.result;
+
+    const txt = textFromFileLoaded;
+    const csv = [];
+    const lines = txt.split('\n');
+    lines.forEach(element => {
+      const cols: string[] = element.split(csvSeparator);
+      csv.push(cols);
+    });
+    let count = 2;
+    for (let index = 1; index < csv.length; index++) {
+      const csvObj = csv[index];
+      const linesRow: string[] = csvObj[0].split(lineSeparator);
+      if (linesRow && linesRow.length > 1) {
+
+        const changeDotComma: (substring: string, ...args: any[]) => string = (m) => {
+          return m === '.' ? '' : '.';
+        };
+
+        this.findTipoDispendio(linesRow[0]);
+        this.entity.DSTipoDispendio = linesRow[1];
+        this.findTipoApropriacao(linesRow[2]);
+        this.entity.VLDispendio = parseFloat(linesRow[3].replace(/\w[$][" "]/g, '').replace(/[\.,]/g, changeDotComma));
+        this.entity.VLDepreciacao = parseFloat(linesRow[4].replace(/\w[$][" "]/g, '').replace(/[\.,]/g, changeDotComma));
+        this.entity.DTAquisicao = moment(linesRow[5], 'DD/MM/YYYY').toDate();
+        this.entity.DSJustificativa = linesRow[6];
+
+
+        count++;
+        let fnSuccess = () => { };
+        if (count >= csv.length) {
+          fnSuccess = () => {
+            this.indexTab = 0;
+
+            this.addSnackBar(AppMessages.getObj(MSG002));
+            this.novo();
+            this.recuperaTodosPorProjeto();
+          };
+        }
+        this.saveEntity(fnSuccess);
+
+      }
+    }
+
+  }
+
+  private findTipoApropriacao(desc: string) {
+    const obj = this.apropriacoes.find(d => d.NOTipoApropriacao === desc);
+    if (obj) {
+      this.entity.CDTipoApropriacao = obj.CDTipoApropriacao;
+    }
+  }
+
+  private findTipoDispendio(desc: string) {
+    const objTipoDispendio = this.dispendios.find(d => d.NOTipoDispendio === desc);
+    if (objTipoDispendio) {
+      this.entity.CDTipoDispendio = objTipoDispendio.CDTipoDispendio;
+    }
+  }
+
+  private saveEntity(callBackSucess: any) {
+    this.entity[this.data.name] = this.data.id;
+
+    delete this.entity.NOTipoDispendio;
+    delete this.entity.NOTipoApropriacao;
+
+    this.entity.DTAquisicao = moment(this.entity.DTAquisicao).toDate();
+
+    this.sepinService.salvar(MODULE_EQUIPAMENTO_SOFTWARE, this.entity).subscribe(() => {
+    }, onError => {
+      if (onError.error) {
+        this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
+      } else {
+        this.addSnackBar(AppMessages.getObj(MSG101));
+      }
+    }, callBackSucess);
+  }
+
+  novo(): void {
+    this.entity = {};
+    this.activeForm = false;
+    setTimeout(() => this.activeForm = true, 0);
   }
 
   initForDevelop() {

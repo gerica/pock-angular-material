@@ -2,7 +2,7 @@
   <mat-card-header>
     <mat-card-title>Equipamento de software</mat-card-title>
   </mat-card-header>
-  <mat-tab-group (selectedTabChange)="tabChanged($event)">
+  <mat-tab-group (selectedTabChange)="tabChanged($event)" [selectedIndex]="indexTab">
     <mat-tab label="{{title}}">
       <form class="app-form" #form="ngForm" (submit)="gravar($event, form)" *ngIf="activeForm">
         <mat-card class="app-card">
@@ -10,7 +10,7 @@
             <mat-form-field style="width: 30%; padding-left: 0.5em;">
               <mat-select placeholder="Dispêndio" [(ngModel)]="entity.CDTipoDispendio" name="CDTipoDispendio"
                 #CDTipoDispendio="ngModel" required>
-                <mat-option *ngFor="let obj of dispendios | async" [value]="obj.CDTipoDispendio">
+                <mat-option *ngFor="let obj of dispendios" [value]="obj.CDTipoDispendio">
                   {{obj.NOTipoDispendio}}
                 </mat-option>
               </mat-select>
@@ -18,13 +18,13 @@
             </mat-form-field>
             <mat-form-field style="width: 40%; padding-left: 0.5em;">
               <input matInput placeholder="Descrição" name="DSTipoDispendio" [(ngModel)]="entity.DSTipoDispendio"
-                #DSTipoDispendio="ngModel" required max="10" maxlength="10">
+                #DSTipoDispendio="ngModel" required max="50" maxlength="50">
               <mat-error *ngIf="DSTipoDispendio.invalid">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
             <mat-form-field style="width: 30%; padding-left: 0.5em;">
               <mat-select placeholder="Tipo Apropriação" [(ngModel)]="entity.CDTipoApropriacao" name="CDTipoApropriacao"
                 #CDTipoApropriacao="ngModel" required>
-                <mat-option *ngFor="let obj of apropriacoes | async" [value]="obj.CDTipoApropriacao">
+                <mat-option *ngFor="let obj of apropriacoes" [value]="obj.CDTipoApropriacao">
                   {{obj.NOTipoApropriacao}}
                 </mat-option>
               </mat-select>
@@ -60,7 +60,7 @@
 
 
             <mat-form-field style="width: 100%; padding-left: 0.5em;">
-              <textarea matInput placeholder="Atuação no projeto" name="DSJustificativa" [(ngModel)]="entity.DSJustificativa"
+              <textarea matInput placeholder="Justificativa" name="DSJustificativa" [(ngModel)]="entity.DSJustificativa"
                 #DSJustificativa="ngModel" required rows="1"></textarea>
               <mat-error *ngIf="DSJustificativa.invalid">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>

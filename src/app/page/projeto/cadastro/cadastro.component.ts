@@ -34,7 +34,6 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   private subscription: Subscription;
   entity: any;
   idEntity = `ID${MODULE_PROJETO.name}`;
-  // entityStep2: any;
   entities: any[];
   areaAplicacoes: any;
   types: any;
@@ -101,7 +100,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
             this.currentAreaAplicacao = `${areaAplicacao.CDCodigo} - ${areaAplicacao.NRNome}`;
           }
         });
-        this.recuperarValoresDispendios();
+        // this.recuperarValoresDispendios();
       }
     );
   }
@@ -112,18 +111,6 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
 
   recuperarTodasAreasAplicacao(): void {
     this.areaAplicacoes = this.sepinService.fetchAll(MODULE_AREA_APLICACAO);
-    // this.sepinService.fetchAll(MODULE_AREA_APLICACAO).subscribe(
-    //   onNext => {
-    //     this.areaAplicacoes = onNext;
-    //   }, onError => {
-    //     if (onError.error) {
-    //       this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
-    //     } else {
-    //       this.addSnackBar(AppMessages.getObj(MSG101));
-    //     }
-    //   }, () => {
-    //   }
-    // );
   }
 
   recuperarValoresDispendios(): void {
@@ -136,11 +123,17 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
         const es = onNext[1];
         const result = [];
 
+        this.entity.VLRecursosHumanoa = 0;
         for (const r of rh) {
           this.entity.VLRecursosHumanoa += r.VLRecurso;
         }
 
+        this.entity.VLEquipamentoSoftware = 0;
         for (const e of es) {
+          console.log(this.entity.VLEquipamentoSoftware);
+          console.log(e.VLDispendio);
+          console.log(e.VLDepreciacao);
+          console.log(e.VLDispendio + e.VLDepreciacao);
           this.entity.VLEquipamentoSoftware += (e.VLDispendio + e.VLDepreciacao);
         }
 
@@ -158,28 +151,6 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
 
   routerConsulta(): void {
     this.router.navigate([URL_PROJETO]);
-  }
-
-  gravar(event: any, form1: any): void {
-    event.preventDefault();
-    if (!form1.valid) {
-      this.addSnackBar(AppMessages.getObj(MSG001));
-      return;
-    }
-
-    this.sepinService.salvarAndReturnId(MODULE_PROJETO, this.entity).subscribe(
-      onNext => {
-        this.entity[this.idEntity] = onNext.value;
-      }, onError => {
-        if (onError.error) {
-          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
-        } else {
-          this.addSnackBar(AppMessages.getObj(MSG101));
-        }
-      }, () => {
-        this.routerConsulta();
-      }
-    );
   }
 
   doFilterAreaAplicacao() {
@@ -256,8 +227,8 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
           this.entity.VLRecursosHumanoa += e.VLRecurso;
         }
         this.calcularTotalDispendio();
-        //   this.entity.IDEstrangeiro = result.id;
-        //   this.entity.NRNomeColaborador = result.name;
+        const fnSuccess = () => { };
+        this.saveEntity(fnSuccess);
       }
     });
   }
@@ -267,15 +238,14 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     const dialogRef = this.dialog.open(DialogEquipamentoSoftwareComponent, { width: '90%', height: '90%', data });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
       if (result && result.dados) {
         this.entity.VLEquipamentoSoftware = 0;
         for (const e of result.dados) {
           this.entity.VLEquipamentoSoftware += (e.VLDispendio + e.VLDepreciacao);
         }
         this.calcularTotalDispendio();
-        //   this.entity.IDEstrangeiro = result.id;
-        //   this.entity.NRNomeColaborador = result.name;
+        const fnSuccess = () => { };
+        this.saveEntity(fnSuccess);
       }
     });
   }
@@ -284,48 +254,53 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     stepper.previous();
   }
 
+  concluir(event: any, form: any): void {
+    event.preventDefault();
+    if (!form.valid) {
+      this.addSnackBar(AppMessages.getObj(MSG001));
+      return;
+    }
+    const fnSuccess = () => {
+      this.routerConsulta();
+    };
+    this.saveEntity(fnSuccess);
+  }
+
   irPaginaDispendio(stepper: MatStepper, form: NgForm) {
     event.preventDefault();
     if (!form.valid) {
       this.addSnackBar(AppMessages.getObj(MSG001));
       return;
     }
-    this.sepinService.salvarAndReturnId(MODULE_PROJETO, this.entity).subscribe(
-      onNext => {
-        this.entity[this.idEntity] = onNext.value;
-      }, onError => {
-        if (onError.error) {
-          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
-        } else {
-          this.addSnackBar(AppMessages.getObj(MSG101));
-        }
-      }, () => {
-        stepper.next();
-      }
-    );
+    const fnSuccess = () => {
+      stepper.next();
+    };
+    this.saveEntity(fnSuccess);
   }
 
   irPaginaDescricao(stepper: MatStepper) {
-    event.preventDefault();
-    this.sepinService.salvarAndReturnId(MODULE_PROJETO, this.entity).subscribe(
-      onNext => {
-        this.entity[this.idEntity] = onNext.value;
-      }, onError => {
-        if (onError.error) {
-          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
-        } else {
-          this.addSnackBar(AppMessages.getObj(MSG101));
-        }
-      }, () => {
-        stepper.next();
-      }
-    );
+    const fnSuccess = () => {
+      stepper.next();
+    };
+    this.saveEntity(fnSuccess);
   }
 
   onChangeStepper(event: any, stepper: MatStepper): void {
     // console.log(event);
     // console.log(stepper);
     // stepper.selectedIndex = 0;
+  }
+
+  private saveEntity(callBackSuccess: any) {
+    this.sepinService.salvarAndReturnId(MODULE_PROJETO, this.entity).subscribe(onNext => {
+      this.entity[this.idEntity] = onNext.value;
+    }, onError => {
+      if (onError.error) {
+        this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
+      } else {
+        this.addSnackBar(AppMessages.getObj(MSG101));
+      }
+    }, callBackSuccess);
   }
 
   private _filter(values) {
