@@ -1,4 +1,4 @@
-<mat-horizontal-stepper class="containerProjeto" #stepper>
+<mat-horizontal-stepper linear class="containerProjeto" #stepper>
   <mat-step>
     <form class="app-form" #form1="ngForm" (submit)="irPaginaDispendio(stepper, form1)">
       <ng-template matStepLabel>Dados Básicos</ng-template>
@@ -202,8 +202,8 @@
       </div>
     </form>
   </mat-step>
-  <mat-step>
-    <form class="app-form" #form2="ngForm" (submit)="irPaginaDescricao(stepper, form2)">
+  <mat-step >
+    <form class="app-form" (submit)="irPaginaDescricao(stepper)">
       <ng-template matStepLabel>Despêndio</ng-template>
       <mat-card class="app-card">
         <mat-card-header>
@@ -232,7 +232,7 @@
               (ngModelChange)="calcularTotalDispendio()" disabled>
           </mat-form-field>
           <button mat-icon-button *ngIf="entity.IDProjeto" type="button" (click)="openDialogEquipamentoSoftware()">
-            <mat-icon matTooltip="Selecionar">add_circle</mat-icon>
+            <mat-icon matTooltip="Adicionar Dispêndio de Equipament de Software">add_circle</mat-icon>
           </button>
           <br>
           <!-- final da linha -->
@@ -309,7 +309,7 @@
         <!-- <button mat-button matStepperPrevious>Voltar</button>
         <button mat-button matStepperNext>Próximo</button> -->
         <button mat-button type="button" (click)="voltar(stepper)">Voltar</button>
-        <button mat-raised-button type="submit" color="primary">Próximo</button>
+        <button mat-raised-button type="submit" color="primary" *ngIf="entity.IDProjeto">Próximo</button>
       </div>
     </form>
   </mat-step>

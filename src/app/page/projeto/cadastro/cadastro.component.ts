@@ -305,13 +305,27 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     );
   }
 
-  irPaginaDescricao(stepper: MatStepper, form: NgForm) {
+  irPaginaDescricao(stepper: MatStepper) {
     event.preventDefault();
-    // if (!form.valid) {
-    //   this.addSnackBar(AppMessages.getObj(MSG001));
-    //   return;
-    // }
-    stepper.next();
+    this.sepinService.salvarAndReturnId(MODULE_PROJETO, this.entity).subscribe(
+      onNext => {
+        this.entity[this.idEntity] = onNext.value;
+      }, onError => {
+        if (onError.error) {
+          this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
+        } else {
+          this.addSnackBar(AppMessages.getObj(MSG101));
+        }
+      }, () => {
+        stepper.next();
+      }
+    );
+  }
+
+  onChangeStepper(event: any, stepper: MatStepper): void {
+    // console.log(event);
+    // console.log(stepper);
+    // stepper.selectedIndex = 0;
   }
 
   private _filter(values) {

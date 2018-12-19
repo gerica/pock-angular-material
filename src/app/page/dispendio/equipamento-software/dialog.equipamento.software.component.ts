@@ -9,7 +9,7 @@ import * as moment from 'moment';
 import { NgForm, NgModel } from '@angular/forms';
 import { map, switchMap, } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/page/base.component';
-import { MatDialog, MatDialogRef, MatTableDataSource, MatPaginator, MatSort, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MatTableDataSource, MatPaginator, MatSort, MAT_DIALOG_DATA, MatTabChangeEvent } from '@angular/material';
 import { forkJoin } from 'rxjs';
 import { DeleteDialogData, DeleteDialogComponent } from '../../shared/utils/modal/delete/delete.dialog.component';
 
@@ -18,6 +18,7 @@ const MODULE_TIPO_APROPRIACAO = environment.moduleTipoApropriacao;
 const MODULE_TIPO_DISPENDIO_RH = { name: environment.moduleTipoDispendio.name, id: 'TPDispendio' };
 const MODULE_HIBRIDO_ES_PROJETO = { name: MODULE_EQUIPAMENTO_SOFTWARE.name, id: 'IDProjeto' };
 
+const TYPE_FILE = 'text/csv';
 @Component({
   selector: 'app-equipamento-software-dialog',
   templateUrl: './dialog.equipamento.software.component.html',
@@ -46,6 +47,9 @@ export class DialogEquipamentoSoftwareComponent extends BaseComponent implements
   ];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  indexTab = 0;
+  fileName: String;
+  fileToImport: any;
 
   constructor(
     public dialogRef: MatDialogRef<DialogEquipamentoSoftwareComponent>,
@@ -104,7 +108,6 @@ export class DialogEquipamentoSoftwareComponent extends BaseComponent implements
   montarApropriacoes(): void {
     this.apropriacoes = this.sepinService.fetchAll(MODULE_TIPO_APROPRIACAO);
   }
-
 
   gravar(event: any, form1: any): void {
     event.preventDefault();
@@ -186,6 +189,43 @@ export class DialogEquipamentoSoftwareComponent extends BaseComponent implements
 
   fechar(): void {
     this.dialogRef.close();
+  }
+
+  tabChanged(tabChangeEvent: MatTabChangeEvent): void {
+    this.indexTab = tabChangeEvent.index;
+  }
+
+  importar(event: Event, form: NgForm): void {
+    event.preventDefault();
+    if (!form.valid) {
+      this.addSnackBar(AppMessages.getObj(MSG001));
+      return;
+    }
+    console.log('importar');
+
+
+    if (this.fileToImport) {
+      const reader = new FileReader();
+      reader.readAsDataURL(this.fileToImport);
+      reader.onload = () => {
+
+      };
+    }
+  }
+
+  onFileChange(event) {
+
+    if (event.target.files && event.target.files.length) {
+
+      const temp = event.target.files[0];
+      if (temp.type === TYPE_FILE) {
+        this.fileToImport = event.target.files[0];
+        console.log(this.fileToImport);
+        this.fileName = this.fileToImport.name;
+      } else {
+        this.addSnackBar({ id: MSG001, msg: 'Selecione um arquivo do tipo CSV.', type: 'Alerta' });
+      }
+    }
   }
 
   initForDevelop() {

@@ -1,4 +1,7 @@
 <mat-card class="app-card">
+  <mat-card-header>
+    <mat-card-title>Recursos Humanos</mat-card-title>
+  </mat-card-header>
   <mat-tab-group>
     <mat-tab label="{{title}}">
       <form class="app-form" #form="ngForm" (submit)="gravar($event, form)" *ngIf="activeForm">
