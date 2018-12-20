@@ -6,6 +6,8 @@ import { AreaAplicacaoRoutes } from './page/areaAplicacao/area.aplicacao-routing
 import { ProjetoConveniadoRoutes } from './page/conveniado/conveniado-routing.module';
 import { InstituicaoRoutes } from './page/instituicao/instituicao-routing.module';
 import { DashboardRoutes } from './page/dashboard/dashboard-routing.module';
+import { NotFoundComponent } from './page/notFound/not.found.component';
+import { PathResolveService } from './page/notFound/path.resolve.service';
 
 const routes: Routes = [
   ...ProjetoRoutes,
@@ -14,6 +16,13 @@ const routes: Routes = [
   ...ProjetoConveniadoRoutes,
   ...InstituicaoRoutes,
   ...DashboardRoutes,
+  {
+    path: '**',
+    resolve: {
+      path: PathResolveService
+    },
+    component: NotFoundComponent
+  }
 ];
 
 @NgModule({

@@ -8,11 +8,13 @@ import { ProjetoConveniadoModule } from './conveniado/conveniado.module';
 import { InstituicaoModule } from './instituicao/instituicao.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { SharedModule } from './shared/shared.module';
+import { NotFoundComponent } from './notFound/not.found.component';
 
 @NgModule({
   declarations: [
     PageComponent,
     DeleteDialogComponent,
+    NotFoundComponent,
   ],
   entryComponents: [
     DeleteDialogComponent,

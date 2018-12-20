@@ -35,6 +35,7 @@ import { AppSnackBarService } from './utils/snackbar/app-snackbar.component';
 import localePt from '@angular/common/locales/pt';
 import { NgxCurrencyModule } from 'ngx-currency';
 import { TextMaskModule } from 'angular2-text-mask';
+import { RouterModule } from '@angular/router';
 registerLocaleData(localePt);
 
 const MATERIAL_MODULES = [
@@ -77,6 +78,7 @@ const NGX_MODULES = [
         FormsModule,
         HttpClientModule,
         TextMaskModule,
+        RouterModule,
         ...MATERIAL_MODULES,
         ...NGX_MODULES,
     ]

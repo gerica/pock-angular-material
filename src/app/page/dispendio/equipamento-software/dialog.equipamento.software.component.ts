@@ -22,7 +22,7 @@ const TYPE_FILE = 'text/csv';
 @Component({
   selector: 'app-equipamento-software-dialog',
   templateUrl: './dialog.equipamento.software.component.html',
-  styleUrls: ['./dialog.equipamento.software.component.scss'],
+  styleUrls: ['./dialog.equipamento.software.scss'],
   providers: [SepinService]
 })
 export class DialogEquipamentoSoftwareComponent extends BaseComponent implements OnInit {

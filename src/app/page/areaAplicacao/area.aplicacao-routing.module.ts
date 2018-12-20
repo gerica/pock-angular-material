@@ -1,10 +1,11 @@
 import { Route } from '@angular/router';
 import { ListaComponent } from './lista/lista.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
+import { paths } from '../app-paths';
 
 export const AreaAplicacaoRoutes: Route[] = [
   {
-    path: 'area_aplicacao',
+    path: paths.area_aplicacao,
     children: [
       {
         path: '',

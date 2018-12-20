@@ -1,10 +1,11 @@
 import { Route } from '@angular/router';
 import { ListaComponent } from './lista/lista.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
+import { paths } from '../app-paths';
 
 export const ProjetoConveniadoRoutes: Route[] = [
   {
-    path: 'conveniado',
+    path: paths.conveniado,
     children: [
       {
         path: '',
