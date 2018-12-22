@@ -14,6 +14,7 @@ import { MatDialog, MatStepper } from '@angular/material';
 import { DialogRecursoHumanoComponent } from '../../dispendio/recurso-humano/dialog.recurso.humano.component';
 import { DialogEquipamentoSoftwareComponent } from '../../dispendio/equipamento-software/dialog.equipamento.software.component';
 import { forkJoin } from 'rxjs';
+import { DialogPropriedadeIntelectualComponent } from '../../propriedadeIntelectual/dialog.propriedade.intelectual.component';
 
 const MODULE_PROJETO = environment.moduleProjeto;
 const MODULE_RECURSO_HUMANO = environment.moduleRecursoHumano;
@@ -22,6 +23,7 @@ const MODULE_HIBRIDO_RH_PROJETO = { name: MODULE_RECURSO_HUMANO.name, id: 'IDPro
 const MODULE_HIBRIDO_ES_PROJETO = { name: MODULE_EQUIPAMENTO_SOFTWARE.name, id: 'IDProjeto' };
 const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
 const MODULE_AREA_APLICACAO = environment.moduleAreaAplicacao;
+const MODULE_PROJETO_PROPRIEDADE_INTELECTUAL = environment.moduleProjetoPropriedadeIntelectual;
 const URL_PROJETO = 'projeto';
 @Component({
   selector: 'app-projeto-cadastro',
@@ -39,6 +41,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   types: any;
   currentAreaAplicacao: any;
   msgObrigatorio = AppMessages.getObj(MSG001);
+  listPropriedadeIntelectual: any;
 
   constructor(
     private projetoService: ProjetoService,
@@ -250,6 +253,19 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     });
   }
 
+  openDialogPropriedadeIntelectual(): void {
+    const data = { name: 'IDProjeto', id: this.entity.IDProjeto };
+    const dialogRef = this.dialog.open(DialogPropriedadeIntelectualComponent, { width: '90%', height: '90%', data });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.dados) {
+        this.listPropriedadeIntelectual = result.dados;
+        //   const fnSuccess = () => { };
+        //   this.saveEntity(fnSuccess);
+      }
+    });
+  }
+
   voltar(stepper: MatStepper) {
     stepper.previous();
   }
@@ -274,6 +290,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     }
     const fnSuccess = () => {
       stepper.next();
+
     };
     this.saveEntity(fnSuccess);
   }
@@ -294,6 +311,17 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   private saveEntity(callBackSuccess: any) {
     this.sepinService.salvarAndReturnId(MODULE_PROJETO, this.entity).subscribe(onNext => {
       this.entity[this.idEntity] = onNext.value;
+      if (this.listPropriedadeIntelectual) {
+        for (const e of this.listPropriedadeIntelectual) {
+          const entityPI = {
+            IDProjeto: this.entity[this.idEntity],
+            IDPropriedadeIntelectual: e.IDPropriedadeIntelectual,
+          };
+          this.sepinService.salvar(MODULE_PROJETO_PROPRIEDADE_INTELECTUAL, entityPI).subscribe(
+            () => { }
+          );
+        }
+      }
     }, onError => {
       if (onError.error) {
         this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));

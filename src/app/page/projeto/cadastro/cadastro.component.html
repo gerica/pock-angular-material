@@ -108,18 +108,22 @@
               </mat-autocomplete>
               <mat-error *ngIf="IDAreaAplicacao.invalid">{{msgObrigatorio.msg}}</mat-error>
             </mat-form-field>
-            <section class="section-group" [ngStyle]="getStyleRadioCheck(form1, BLPropriedadeIntelectual)">
+            <section class="section-group" [ngStyle]="getStyleRadioCheck(form1, BLPropriedadeIntelectual)" style="height: 50px;">
               <label style="padding-right: 10px;">Este projeto gerou Propriedade Intelectual?</label>
               <mat-radio-group [(ngModel)]="entity.BLPropriedadeIntelectual" name="BLPropriedadeIntelectual"
                 #BLPropriedadeIntelectual="ngModel" required>
                 <mat-radio-button value="sim" style="padding-right: 10px;">Sim</mat-radio-button>
                 <mat-radio-button value="não">Não</mat-radio-button>
               </mat-radio-group>
+              <div style="margin-left: 10px;" *ngIf="entity.BLPropriedadeIntelectual === 'sim'">
+                <button mat-raised-button type="button" color="primary" (click)="openDialogPropriedadeIntelectual()">Informar
+                  Propriedade Intelectual</button>
+              </div>
             </section>
             <div *ngIf="form1.invalid && form1.submitted && !BLPropriedadeIntelectual.value" class="mat-error" style="font-size: 75%;">
               {{msgObrigatorio.msg}}
             </div>
-            <section class="section-group" [ngStyle]="getStyleRadioCheck(form1, BLPublicacao)">
+            <section class="section-group" [ngStyle]="getStyleRadioCheck(form1, BLPublicacao)" style="height: 50px;">
               <label style="padding-right: 74px;">Este projeto possui publicações?</label>
               <mat-radio-group [(ngModel)]="entity.BLPublicacao" name="BLPublicacao" #BLPublicacao="ngModel" required>
                 <mat-radio-button value="sim" style="padding-right: 10px;">Sim</mat-radio-button>

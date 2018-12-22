@@ -7,6 +7,7 @@ import { DialogEstrangeiroComponent } from '../dispendio/recurso-humano/dialog.e
 import { DialogRHVisualizarComponent } from '../dispendio/recurso-humano/dialog.rh.visualizar.component';
 import { DialogEquipamentoSoftwareComponent } from '../dispendio/equipamento-software/dialog.equipamento.software.component';
 import { SharedModule } from '../shared/shared.module';
+import { DialogPropriedadeIntelectualComponent } from '../propriedadeIntelectual/dialog.propriedade.intelectual.component';
 
 @NgModule({
   declarations: [
@@ -16,12 +17,14 @@ import { SharedModule } from '../shared/shared.module';
     DialogEstrangeiroComponent,
     DialogRHVisualizarComponent,
     DialogEquipamentoSoftwareComponent,
+    DialogPropriedadeIntelectualComponent,
   ],
   entryComponents: [
     DialogRecursoHumanoComponent,
     DialogEstrangeiroComponent,
     DialogRHVisualizarComponent,
     DialogEquipamentoSoftwareComponent,
+    DialogPropriedadeIntelectualComponent,
   ],
   imports: [
     SharedModule,

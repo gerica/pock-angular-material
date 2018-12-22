@@ -1,0 +1,132 @@
+<mat-card class="app-card">
+  <mat-card-header>
+    <mat-card-title>Propriedade Intelectual</mat-card-title>
+  </mat-card-header>
+  <form class="app-form" #form="ngForm" (submit)="gravar($event, form)" *ngIf="activeForm">
+    <mat-card class="app-card">
+      <mat-card-content>
+        <mat-form-field style="width: 50%; padding-left: 0.5em;">
+          <input matInput placeholder="Descrição" name="NRDescricao" [(ngModel)]="entity.NRDescricao" #NRDescricao="ngModel"
+            required max="100" maxlength="100">
+          <mat-error *ngIf="NRDescricao.invalid">{{msgObrigatorio.msg}}</mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 50%; padding-left: 0.5em;">
+          <mat-select placeholder="Tipo da propriedade intelectual" [(ngModel)]="entity.NRTipoPropriedadeIntelectual"
+            name="NRTipoPropriedadeIntelectual" #NRTipoPropriedadeIntelectual="ngModel" required>
+            <mat-option *ngFor="let obj of tipos" [value]="obj.id">
+              {{obj.value}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="CDTipoDispendio">{{msgObrigatorio.msg}}</mat-error>
+        </mat-form-field>
+        <!-- final da linha -->
+
+        <mat-form-field style="width: 50%; padding-left: 0.5em;">
+          <input matInput placeholder="Registro do Pedido" name="NRRegistroPedido" [(ngModel)]="entity.NRRegistroPedido"
+            #NRRegistroPedido="ngModel" required max="100" maxlength="100">
+          <mat-error *ngIf="NRRegistroPedido.invalid">{{msgObrigatorio.msg}}</mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 50%; padding-left: 0.5em;">
+          <input matInput [matDatepicker]="picker1" [(ngModel)]="entity.DTPedido" name="DTPedido" placeholder="Data do Registro"
+            required #DTPedido="ngModel">
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+          <mat-error *ngIf="DTPedido">{{msgObrigatorio.msg}}</mat-error>
+        </mat-form-field>
+        <!-- final da linha -->
+
+        <mat-form-field style="width: 50%; padding-left: 0.5em;">
+          <mat-select placeholder="Tipo da propriedade intelectual" [(ngModel)]="entity.NRSituacao" name="NRSituacao"
+            #NRSituacao="ngModel" required>
+            <mat-option *ngFor="let obj of situacoes" [value]="obj.id">
+              {{obj.value}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="CDTipoDispendio">{{msgObrigatorio.msg}}</mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 50%; padding-left: 0.5em;">
+          <mat-select placeholder="Tipo da propriedade intelectual" [(ngModel)]="entity.NRLocal" name="NRLocal"
+            #NRLocal="ngModel" required>
+            <mat-option *ngFor="let obj of locais" [value]="obj.id">
+              {{obj.value}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="CDTipoDispendio">{{msgObrigatorio.msg}}</mat-error>
+        </mat-form-field>
+        <!-- final da linha -->
+
+      </mat-card-content>
+    </mat-card>
+    <mat-card-actions style="width: 100%; margin-left: 0px;">
+      <div class="app-button-row">
+        <button mat-raised-button type="button" *ngIf="entity.IDDispendioEquipamentoSoftware" (click)="novo()">Novo</button>
+        <button mat-raised-button type="submit" color="primary">Salvar</button>
+      </div>
+    </mat-card-actions>
+  </form>
+  <mat-divider></mat-divider>
+  <div class="mat-elevation-z8" style="margin-top: 3%">
+    <table mat-table [dataSource]="entities" matSort>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Ações </th>
+        <td mat-cell *matCellDef="let row; let i=index;">
+          <button mat-icon-button color="primary" (click)="preEdit(row)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="visualizar(row)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteRow(row)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="check">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let row; let i=index">
+          <mat-checkbox [checked]= "getRowChecked(row)" name="{{i}}" (click)="toogleCheckList(row)"></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="NRDescricao">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Descricao</th>
+        <td mat-cell *matCellDef="let element"> {{element.NRDescricao}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="NRTipoPropriedadeIntelectual">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+        <td mat-cell *matCellDef="let element"> {{element.NRTipoPropriedadeIntelectual}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="NRRegistroPedido">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Registro </th>
+        <td mat-cell *matCellDef="let element"> {{element.NRRegistroPedido}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="DTPedido">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.DTPedido | date:'dd/MM/yyyy'}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="NRLocal">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Local </th>
+        <td mat-cell *matCellDef="let element"> {{element.NRLocal}}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</mat-card>
+
+<div class="app-button-row">
+  <button mat-raised-button type="button" (click)="concluir()" color="primary">Concluir</button>
+  <button mat-raised-button type="button" (click)="fechar()">Fechar</button>
+</div>

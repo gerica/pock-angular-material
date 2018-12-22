@@ -19,6 +19,8 @@ export const environment = {
   moduleTipoApropriacao: { name: 'TipoApropriacao' },
   moduleTipoDispendio: { name: 'TipoDispendio', id: 'CDTipoDispendio' },
   moduleEscolaridade: { name: 'Escolaridade', id: 'CDEscolaridade' },
+  modulePropriedadeIntelectual: { name: 'PropriedadeIntelectual' },
+  moduleProjetoPropriedadeIntelectual: { name: 'ProjetoPropriedadeIntelectual' },
   isDevelope: true,
 };
 
