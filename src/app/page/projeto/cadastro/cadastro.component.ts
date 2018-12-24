@@ -4,12 +4,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppSnackBarService } from 'src/app/page/shared/utils/snackbar/app-snackbar.component';
 import { BaseComponent } from '../../base.component';
 import { AppMessages, MSG001, MSG101 } from 'src/app/page/shared/utils/app.messages';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription, Observable, concat } from 'rxjs';
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
 import { NgForm, NgModel } from '@angular/forms';
-import { map, find, tap, filter } from 'rxjs/operators';
+import { map, find, tap, filter, mergeMap } from 'rxjs/operators';
 import { MatDialog, MatStepper } from '@angular/material';
 import { DialogRecursoHumanoComponent } from '../../dispendio/recurso-humano/dialog.recurso.humano.component';
 import { DialogEquipamentoSoftwareComponent } from '../../dispendio/equipamento-software/dialog.equipamento.software.component';
@@ -24,6 +24,7 @@ const MODULE_HIBRIDO_ES_PROJETO = { name: MODULE_EQUIPAMENTO_SOFTWARE.name, id: 
 const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
 const MODULE_AREA_APLICACAO = environment.moduleAreaAplicacao;
 const MODULE_PROJETO_PROPRIEDADE_INTELECTUAL = environment.moduleProjetoPropriedadeIntelectual;
+const MODULE_HIBRIDO_PROJETO_PROPRIEDADE_INTELECTUAL = { name: MODULE_PROJETO_PROPRIEDADE_INTELECTUAL.name, id: 'IDProjeto' };
 const URL_PROJETO = 'projeto';
 @Component({
   selector: 'app-projeto-cadastro',
@@ -85,11 +86,19 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   }
 
   fetchById(id: any): any {
-    this.sepinService.fetchById(MODULE_PROJETO, id).subscribe(
+
+    forkJoin(
+      this.sepinService.fetchById(MODULE_PROJETO, id),
+      this.sepinService.fetchById(MODULE_HIBRIDO_PROJETO_PROPRIEDADE_INTELECTUAL, id),
+    ).subscribe(
       onNext => {
-        if (onNext && onNext.length > 0) {
-          this.entity = onNext[0];
+        if (onNext[0] && onNext[0].length > 0) {
+          this.entity = onNext[0][0];
         }
+        if (onNext[1] && onNext[1].length > 0) {
+          this.listPropriedadeIntelectual = onNext[1];
+        }
+
       }, onError => {
         if (onError.error) {
           this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
@@ -104,8 +113,24 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
           }
         });
         // this.recuperarValoresDispendios();
+        // console.log(this.entity);
+        // console.log(this.listPropriedadeIntelectual);
       }
     );
+
+    // this.sepinService.fetchById(MODULE_PROJETO, id).subscribe(
+    //   onNext => {
+    //     if (onNext && onNext.length > 0) {
+    //       this.entity = onNext[0];
+    //     }
+    //   }, onError => {
+    //     if (onError.error) {
+    //       this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
+    //     } else {
+    //       this.addSnackBar(AppMessages.getObj(MSG101));
+    //     }
+    //   }
+    // );
   }
 
   recuperarTodosTipoProjeto(): void {
@@ -260,9 +285,10 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.dados) {
         this.listPropriedadeIntelectual = result.dados;
-        //   const fnSuccess = () => { };
-        //   this.saveEntity(fnSuccess);
+      } else {
+        this.listPropriedadeIntelectual = [];
       }
+      console.log(this.listPropriedadeIntelectual);
     });
   }
 
@@ -311,17 +337,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   private saveEntity(callBackSuccess: any) {
     this.sepinService.salvarAndReturnId(MODULE_PROJETO, this.entity).subscribe(onNext => {
       this.entity[this.idEntity] = onNext.value;
-      if (this.listPropriedadeIntelectual) {
-        for (const e of this.listPropriedadeIntelectual) {
-          const entityPI = {
-            IDProjeto: this.entity[this.idEntity],
-            IDPropriedadeIntelectual: e.IDPropriedadeIntelectual,
-          };
-          this.sepinService.salvar(MODULE_PROJETO_PROPRIEDADE_INTELECTUAL, entityPI).subscribe(
-            () => { }
-          );
-        }
-      }
+      this.manterPropriedadeIntelectual();
     }, onError => {
       if (onError.error) {
         this.addSnackBar(AppMessages.getObjByMsg(onError.error.message, 'Erro'));
@@ -329,6 +345,27 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
         this.addSnackBar(AppMessages.getObj(MSG101));
       }
     }, callBackSuccess);
+  }
+
+  private manterPropriedadeIntelectual() {
+    this.sepinService.apagar(MODULE_HIBRIDO_PROJETO_PROPRIEDADE_INTELECTUAL, this.entity[this.idEntity])
+      .subscribe(() => {
+        this.savePropriedadeIntelectual();
+      });
+  }
+
+  savePropriedadeIntelectual() {
+    if (this.listPropriedadeIntelectual) {
+      for (const e of this.listPropriedadeIntelectual) {
+        const entityPI = {
+          IDProjeto: this.entity[this.idEntity],
+          IDPropriedadeIntelectual: e.IDPropriedadeIntelectual,
+        };
+        console.log(entityPI);
+        const salvar$ = this.sepinService.salvar(MODULE_PROJETO_PROPRIEDADE_INTELECTUAL, entityPI);
+        salvar$.subscribe();
+      }
+    }
   }
 
   private _filter(values) {

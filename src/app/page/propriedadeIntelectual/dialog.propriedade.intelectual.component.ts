@@ -114,6 +114,12 @@ export class DialogPropriedadeIntelectualComponent extends BaseComponent impleme
       onNext => {
         const list = onNext[0];
         this.propriedades = onNext[1];
+
+        if (this.propriedades && this.propriedades.length > 0) {
+          this.propriedades.forEach(e => {
+            this.listEnitiesCheck.push(e);
+          });
+        }
         // this.apropriacoes = onNext[2];
         // const result = [];
 
