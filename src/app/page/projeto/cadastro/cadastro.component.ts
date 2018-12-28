@@ -4,16 +4,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppSnackBarService } from 'src/app/page/shared/utils/snackbar/app-snackbar.component';
 import { BaseComponent } from '../../base.component';
 import { AppMessages, MSG001, MSG101 } from 'src/app/page/shared/utils/app.messages';
-import { Subscription, Observable, concat } from 'rxjs';
+import { Subscription, Observable, concat, forkJoin, of } from 'rxjs';
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
 import { NgForm, NgModel } from '@angular/forms';
-import { map, find, tap, filter, mergeMap } from 'rxjs/operators';
+import { map, find, tap, filter, mergeMap, switchMap } from 'rxjs/operators';
 import { MatDialog, MatStepper } from '@angular/material';
 import { DialogRecursoHumanoComponent } from '../../dispendio/recurso-humano/dialog.recurso.humano.component';
 import { DialogEquipamentoSoftwareComponent } from '../../dispendio/equipamento-software/dialog.equipamento.software.component';
-import { forkJoin } from 'rxjs';
 import { DialogPropriedadeIntelectualComponent } from '../../propriedadeIntelectual/dialog.propriedade.intelectual.component';
 
 const MODULE_PROJETO = environment.moduleProjeto;
@@ -348,13 +347,19 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   }
 
   private manterPropriedadeIntelectual() {
+    // const apagar$ = this.sepinService.apagar(MODULE_HIBRIDO_PROJETO_PROPRIEDADE_INTELECTUAL, this.entity[this.idEntity])
+    //   .pipe(switchMap((val) => {
+    //     console.log(val);
+    //     return this.savePropriedadeIntelectual();
+    //   }));
+    // apagar$.subscribe();
     this.sepinService.apagar(MODULE_HIBRIDO_PROJETO_PROPRIEDADE_INTELECTUAL, this.entity[this.idEntity])
       .subscribe(() => {
         this.savePropriedadeIntelectual();
       });
   }
 
-  savePropriedadeIntelectual() {
+  savePropriedadeIntelectual(): void {
     if (this.listPropriedadeIntelectual) {
       for (const e of this.listPropriedadeIntelectual) {
         const entityPI = {
@@ -362,10 +367,11 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
           IDPropriedadeIntelectual: e.IDPropriedadeIntelectual,
         };
         console.log(entityPI);
-        const salvar$ = this.sepinService.salvar(MODULE_PROJETO_PROPRIEDADE_INTELECTUAL, entityPI);
-        salvar$.subscribe();
+        const save$ = this.sepinService.salvar(MODULE_PROJETO_PROPRIEDADE_INTELECTUAL, entityPI);
+        save$.subscribe();
       }
     }
+    // return of(null);
   }
 
   private _filter(values) {
