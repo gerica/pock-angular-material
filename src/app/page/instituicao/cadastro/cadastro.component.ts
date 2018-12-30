@@ -6,10 +6,11 @@ import { AppMessages, MSG001, MSG101 } from 'src/app/page/shared/utils/app.messa
 import { Subscription } from 'rxjs';
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
+import { paths } from '../../app-paths';
 // import * as moment from 'moment';
 
 const MODULE_INSTITUICAO = environment.moduleInstituicao;
-const URL_AREA_APLICACAO = 'instituicao';
+const URL_AREA_APLICACAO = `${paths.page}/${paths.instituicao}`;
 @Component({
   selector: 'app-area.instituicao-cadastro',
   templateUrl: './cadastro.component.html',

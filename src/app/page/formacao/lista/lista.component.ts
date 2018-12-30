@@ -7,10 +7,11 @@ import { BaseComponent } from '../../base.component';
 import { AppMessages, MSG100, MSG002, MSG101, AppMessage } from 'src/app/page/shared/utils/app.messages';
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
+import { paths } from '../../app-paths';
 
 const MODULE_FORMACAO = environment.moduleFormacao;
 
-const URL_FORMACAO_CADASTRO = 'formacao/cadastro';
+const URL_FORMACAO_CADASTRO = `${paths.page}/${paths.formacao}/cadastro`;
 @Component({
   selector: 'app-formacao-lista',
   templateUrl: './lista.component.html',

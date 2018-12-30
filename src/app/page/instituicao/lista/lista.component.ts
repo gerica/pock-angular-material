@@ -7,9 +7,11 @@ import { BaseComponent } from '../../base.component';
 import { AppMessages, MSG100, MSG002, MSG101, AppMessage } from 'src/app/page/shared/utils/app.messages';
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
+import { paths } from '../../app-paths';
 
 const MODULE_INSTITUICAO = environment.moduleInstituicao;
-const URL_CADASTRO = 'instituicao/cadastro';
+const URL_CADASTRO = `${paths.page}/${paths.instituicao}/cadastro`;
+
 
 @Component({
   selector: 'app-area.instituicao-lista',

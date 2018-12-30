@@ -6,11 +6,13 @@ import { AppMessages, MSG001, MSG101 } from 'src/app/page/shared/utils/app.messa
 import { Subscription } from 'rxjs';
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
+import { paths } from '../../app-paths';
 // import * as moment from 'moment';
 
 const MODULE_FORMACAO = environment.moduleFormacao;
 
-const URL_FORMACAO = 'formacao';
+const URL_FORMACAO = `${paths.page}/${paths.formacao}`;
+
 @Component({
   selector: 'app-formacao-cadastro',
   templateUrl: './cadastro.component.html',

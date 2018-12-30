@@ -1,0 +1,31 @@
+<div class="add-div-center ">
+  <div class="app-title">
+    SEPIN
+  </div>
+  <mat-card class="app-card">
+    <form class="app-form" #form="ngForm" (submit)="login($event, form)">
+      <mat-card class="app-card">
+        <mat-card-header>
+          <mat-card-title>Login</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field style="width: 99%; padding-left: 0.5em;">
+            <input matInput placeholder="Usuario" name="NRUser" [(ngModel)]="entity.NRUser" #NRUser="ngModel" required
+              max="255" maxlength="255">
+            <mat-error *ngIf="NRUser.invalid">{{msgObrigatorio.msg}}</mat-error>
+          </mat-form-field>
+          <mat-form-field style="width: 99%; padding-left: 0.5em;">
+            <input matInput placeholder="Senha" name="NRPassword" [(ngModel)]="entity.NRPassword" #NRPassword="ngModel"
+              required max="255" maxlength="255" type="password">
+            <mat-error *ngIf="NRPassword.invalid">{{msgObrigatorio.msg}}</mat-error>
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+      <mat-card-actions>
+        <div class="app-button-row">
+          <button mat-raised-button type="submit" color="primary">Enrar</button>
+        </div>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>

@@ -27,6 +27,7 @@ export class NotFoundComponent implements OnInit {
         this.route.data.pipe(take(1))
             .subscribe((data: { path: string }) => {
                 this.path = data.path;
+                // this.path = `../${paths.page}${data.path}`;
             });
     }
 }

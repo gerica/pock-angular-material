@@ -9,10 +9,12 @@ import { AppMessages, MSG100, MSG002, MSG101, AppMessage } from 'src/app/page/sh
 import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 import { forkJoin } from 'rxjs';
+import { paths } from '../../app-paths';
 
 const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
 const MODULE_PROJETO = environment.moduleProjeto;
-const URL_PROJETO_CADASTRO = 'projeto/cadastro';
+const URL_PROJETO_CADASTRO = `${paths.page}/${paths.projeto}/cadastro`;
+
 @Component({
   selector: 'app-projeto-lista',
   templateUrl: './lista.component.html',

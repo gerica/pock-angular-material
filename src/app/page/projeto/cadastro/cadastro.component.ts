@@ -14,6 +14,7 @@ import { MatDialog, MatStepper } from '@angular/material';
 import { DialogRecursoHumanoComponent } from '../../dispendio/recurso-humano/dialog.recurso.humano.component';
 import { DialogEquipamentoSoftwareComponent } from '../../dispendio/equipamento-software/dialog.equipamento.software.component';
 import { DialogPropriedadeIntelectualComponent } from '../../propriedadeIntelectual/dialog.propriedade.intelectual.component';
+import { paths } from '../../app-paths';
 
 const MODULE_PROJETO = environment.moduleProjeto;
 const MODULE_RECURSO_HUMANO = environment.moduleRecursoHumano;
@@ -24,7 +25,7 @@ const MODULE_TIPO_PROJETO = environment.moduleTipoProjeto;
 const MODULE_AREA_APLICACAO = environment.moduleAreaAplicacao;
 const MODULE_PROJETO_PROPRIEDADE_INTELECTUAL = environment.moduleProjetoPropriedadeIntelectual;
 const MODULE_HIBRIDO_PROJETO_PROPRIEDADE_INTELECTUAL = { name: MODULE_PROJETO_PROPRIEDADE_INTELECTUAL.name, id: 'IDProjeto' };
-const URL_PROJETO = 'projeto';
+const URL_PROJETO = `${paths.page}/${paths.projeto}`;
 @Component({
   selector: 'app-projeto-cadastro',
   templateUrl: './cadastro.component.html',
