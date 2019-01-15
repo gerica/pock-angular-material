@@ -14,6 +14,7 @@ import { DialogEstrangeiroComponent } from './dialog.estrangeiro.component';
 import { forkJoin } from 'rxjs';
 import { DeleteDialogData, DeleteDialogComponent } from '../../shared/utils/modal/delete/delete.dialog.component';
 import { DialogRHVisualizarComponent } from './dialog.rh.visualizar.component';
+import { BaseService } from '../../shared/utils/service/base.service';
 
 const MODULE_RECURSO_HUMANO = environment.moduleRecursoHumano;
 const MODULE_TIPO_DISPENDIO = environment.moduleTipoDispendio;
@@ -66,6 +67,7 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
     private router: Router,
     private actionRoute: ActivatedRoute,
     private sepinService: SepinService,
+    private baseService: BaseService,
     public appSnackBarService: AppSnackBarService,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -149,7 +151,7 @@ export class DialogRecursoHumanoComponent extends BaseComponent implements OnIni
   }
 
   montarFormacoes(): void {
-    this.formacoes = this.sepinService.fetchAll(MODULE_FORMACAO);
+    this.formacoes = this.baseService.fetchAll(MODULE_FORMACAO);
   }
 
   montarEstrangeiros(): void {

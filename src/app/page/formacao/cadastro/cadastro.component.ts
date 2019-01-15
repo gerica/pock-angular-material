@@ -4,9 +4,9 @@ import { AppSnackBarService } from 'src/app/page/shared/utils/snackbar/app-snack
 import { BaseComponent } from '../../base.component';
 import { AppMessages, MSG001, MSG101 } from 'src/app/page/shared/utils/app.messages';
 import { Subscription } from 'rxjs';
-import { SepinService } from 'src/app/page/shared/utils/service/sepin.service';
 import { environment } from 'src/environments/environment';
 import { paths } from '../../app-paths';
+import { BaseService } from '../../shared/utils/service/base.service';
 // import * as moment from 'moment';
 
 const MODULE_FORMACAO = environment.moduleFormacao;
@@ -17,7 +17,6 @@ const URL_FORMACAO = `${paths.page}/${paths.formacao}`;
   selector: 'app-formacao-cadastro',
   templateUrl: './cadastro.component.html',
   styleUrls: ['./cadastro.component.scss'],
-  providers: [SepinService]
 })
 export class CadastroComponent extends BaseComponent implements OnInit, OnDestroy {
   activeForm = true;
@@ -28,7 +27,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   constructor(
     private router: Router,
     private actionRoute: ActivatedRoute,
-    private sepinService: SepinService,
+    private baseService: BaseService,
     public appSnackBarService: AppSnackBarService,
   ) {
     super(appSnackBarService);
@@ -44,7 +43,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
   }
 
   fetchById(id: any): any {
-    this.sepinService.fetchById(MODULE_FORMACAO, id).subscribe(
+    this.baseService.fetchById(MODULE_FORMACAO, id).subscribe(
       onNext => {
         if (onNext && onNext.length > 0) {
           this.entity = onNext[0];
@@ -74,7 +73,7 @@ export class CadastroComponent extends BaseComponent implements OnInit, OnDestro
       this.addSnackBar(AppMessages.getObj(MSG001));
       return;
     }
-    this.sepinService.salvar(MODULE_FORMACAO, this.entity).subscribe(
+    this.baseService.salvar(MODULE_FORMACAO, this.entity).subscribe(
       onNext => {
       }, onError => {
         if (onError.error) {

@@ -4,40 +4,55 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 
-const URL_BASE = environment.urlBase;
-const SAVE_RETURN_ID = `${URL_BASE}/saveAndReturnId`;
-@Injectable({
-    providedIn: 'root',
-})
-export class SepinService {
+const SAVE_RETURN_ID = 'saveAndReturnId';
+@Injectable()
+export class BaseTempService {
+    private msgErrorURl = 'Informa a url';
 
-    constructor(public http: HttpClient) {
+    constructor(public http: HttpClient, public urlBase: string) {
+        if (!this.urlBase) {
+            throw new Error(this.msgErrorURl);
+        }
     }
 
     fetchAll(objModule: any): Observable<any> {
-        // const params = new HttpParams().set('_page', "1").set('_limit', "1");
-        return this.http.get(URL_BASE, this.getHeader(objModule));
+        if (!this.urlBase) {
+            throw new Error(this.msgErrorURl);
+        }
+        return this.http.get(this.urlBase, this.getHeader(objModule));
     }
 
     salvar(objModule: any, entity: any): Observable<any> {
+        if (!this.urlBase) {
+            throw new Error(this.msgErrorURl);
+        }
         const body = {
             ...entity
         };
-        return this.http.post(URL_BASE, body, this.getHeader(objModule));
+        return this.http.post(this.urlBase, body, this.getHeader(objModule));
     }
     salvarAndReturnId(objModule: any, entity: any): Observable<any> {
+        if (!this.urlBase) {
+            throw new Error(this.msgErrorURl);
+        }
         const body = {
             ...entity
         };
-        return this.http.post(SAVE_RETURN_ID, body, this.getHeader(objModule));
+        return this.http.post(`${this.urlBase}/${SAVE_RETURN_ID}`, body, this.getHeader(objModule));
     }
 
     apagar(objModule: any, id: any): Observable<any> {
-        return this.http.delete(`${URL_BASE}/${id}`, this.getHeader(objModule));
+        if (!this.urlBase) {
+            throw new Error(this.msgErrorURl);
+        }
+        return this.http.delete(`${this.urlBase}/${id}`, this.getHeader(objModule));
     }
 
     fetchById(objModule: any, id: any): Observable<any> {
-        return this.http.get(`${URL_BASE}/${id}`, this.getHeader(objModule));
+        if (!this.urlBase) {
+            throw new Error(this.msgErrorURl);
+        }
+        return this.http.get(`${this.urlBase}/${id}`, this.getHeader(objModule));
     }
 
     getHeader(config: any): object {
